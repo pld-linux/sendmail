@@ -37,6 +37,7 @@ Source10:	%{name}.mailertable
 Source11:	%{name}.virtusertable
 Source12:	%{name}.domaintable
 Source13:	%{name}-smtp.pamd
+Source14:	%{name}-monitrc
 Patch0:		%{name}-makemapman.patch
 Patch1:		%{name}-smrsh-paths.patch
 Patch2:		%{name}-rmail.patch
@@ -223,12 +224,11 @@ m4 pld.mc > pld.cf
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,sysconfig,sasl,smrsh}} \
-	$RPM_BUILD_ROOT%{_bindir} $RPM_BUILD_ROOT%{_sbindir} $RPM_BUILD_ROOT%{_libdir} \
-	$RPM_BUILD_ROOT%{_mandir}/man{1,5,8} \
-	$RPM_BUILD_ROOT/var/log $RPM_BUILD_ROOT/var/spool/mqueue \
-	$RPM_BUILD_ROOT%{_libdir}/sendmail-cf \
-	$RPM_BUILD_ROOT/etc/pam.d $RPM_BUILD_ROOT%{_includedir}\
+install -d $RPM_BUILD_ROOT%{_mandir}/man{1,5,8} \
+	$RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,monit,sysconfig,sasl,smrsh} \
+	$RPM_BUILD_ROOT{%{_bindir},%{_sbindir},%{_libdir}/sendmail-cf} \
+	$RPM_BUILD_ROOT/var/{log,spool/mqueue} \
+	$RPM_BUILD_ROOT{%{_sysconfdir},%{_includedir}}
 
 OBJDIR=obj.$(uname -s).$(uname -r).$(arch)
 
@@ -304,6 +304,7 @@ install %{SOURCE9} $RPM_BUILD_ROOT%{_sysconfdir}/access
 install %{SOURCE10} $RPM_BUILD_ROOT%{_sysconfdir}/mailertable
 install %{SOURCE11} $RPM_BUILD_ROOT%{_sysconfdir}/virtusertable
 install %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable
+install %{SOURCE14} $RPM_BUILD_ROOT/etc/monit/
 
 mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
@@ -454,6 +455,7 @@ fi
 %config(noreplace) %verify(not md5 size mtime) /etc/sysconfig/sendmail
 %config(noreplace) %verify(not md5 size mtime) /etc/sasl/Sendmail.conf
 %config(noreplace) %verify(not md5 size mtime) /etc/pam.d/smtp
+%attr(750,root,root) %config(noreplace) %verify(not md5 size mtime) /etc/monit/*.monitrc
 
 %dir %{_libdir}/sendmail-cf
 %dir %{_libdir}/sendmail-cf/cf
