@@ -56,9 +56,9 @@ BuildRequires:	cyrus-sasl-devel
 %{!?with_db3:BuildRequires:	db-devel >= 4.1.25}
 BuildRequires:	man
 %{?with_ldap:BuildRequires:	openldap-devel}
-#%{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
+%{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
-#BuildRequires:	rpmbuild(macros) >= 1.159
+BuildRequires:	rpmbuild(macros) >= 1.159
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
