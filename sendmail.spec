@@ -1,10 +1,10 @@
-Summary:	A widely used Mail Transport Agent (MTA).
+Summary:	A widely used Mail Transport Agent (MTA)
 Summary(pl):	Sendmail -- aplikacja do obs³ugi poczty elektronicznej
 Name:		sendmail
 Version:	8.10.1
 Release:	1
 License:	BSD
-Group:		System Environment/Daemons
+Group:		Networking/Daemons
 Group(pl):	Sieciowe/Serwery
 Provides:	smtpdaemon
 Source0:	ftp://ftp.cs.berkeley.edu/ucb/sendmail/%{name}.%{version}.tar.gz
@@ -25,7 +25,7 @@ Obsoletes:	smtpdaemon
 Obsoletes:	zmail
 Obsoletes:	qmail
 Obsoletes:	smail
-
+Obsoletes:	sendmail-cf
 
 %description
 The Sendmail program is a very widely used Mail Transport Agent (MTA).
@@ -52,10 +52,11 @@ Je¿eli masz zamiar korzystaæ z poczty elektronicznej w sieci internet
 oraz 6bone to zainstaluj ten pakiet
 
 %package doc
-Summary:	Documentation about the Sendmail Mail Transport Agent program.
-Summary(pl):	Dokumentacja do Sendmaila.
-Group(pl):	Serwery
+Summary:	Documentation about the Sendmail Mail Transport Agent program
+Summary(pl):	Dokumentacja do Sendmaila
 Group:		Documentation
+Group(pl):	Dokumentacja
+Requires:	%{name} = %{version}
 
 %description doc
 The sendmail-doc package contains documentation about the Sendmail
@@ -72,34 +73,6 @@ Agent (MTA). Dokumentacja zwawiera informacje o zmianach w bie¿±cej
 wersji, FAQ - najczêsciej zadawane pytania. Dokumentacja dostêpna jest
 w formacie PostScript(TM) oraz troff. Je¿eli potrzebujesz dokumntacji
 - zainstaluj ten pakiet.
-
-%package cf
-Summary:	The files needed to reconfigure Sendmail.
-Summary(pl):	Pliki konfiguracyjne oraz makra m4 dla sendmaila
-Group:		System Environment/Daemons
-Group(pl):	Serwery
-Requires:	%{name} = %{version}
-
-
-%description cf
-This package includes the configuration files which you'd need to
-generate the sendmail.cf file distributed with the sendmail package.
-You'll need the sendmail-cf package if you ever need to reconfigure
-and rebuild your sendmail.cf file. For example, the default
-sendmail.cf file is not configured for UUCP. If someday you needed to
-send and receive mail over UUCP, you'd need to install the sendmail-cf
-package to help you reconfigure Sendmail.
-
-Install the sendmail-cf package if you need to reconfigure your
-sendmail.cf file.
-
-%description -l pl cf
-Pakiet ten zawiera wszystkie pliki konfiguracyjne u¿ywane do gene-
-rowania pliku sendmail.cf, znajduj±cego siê w pakiecie bazowym.
-Bêdziesz potrzebowa³ tego pakietu je¿eli chcesz zmieniæ i przebudowaæ
-konfiguracjê swojego sendmaila. Na przyk³ad, standardowy plik konfigu-
-racyjny nie zawiera wspomagania dla poczty po UUCP. Je¿eli chcesz wy-
-sy³aæ i odbieraæ pocztê po UUCP bêdziesz potrzebowa³ tego pakietu.
 
 %prep
 %setup -q
@@ -277,7 +250,7 @@ fi
 
 %preun
 if [ $1 = 0 ]; then
-   /sbin/chkconfig --del sendmail
+	/sbin/chkconfig --del sendmail
 fi
 
 # removal of compatibility links
@@ -298,6 +271,7 @@ fi
 %attr(755,root,root) %{_bindir}/mailq
 %attr(755,root,root) %{_sbindir}/smrsh
 %{_libdir}/sendmail
+%{_libdir}/sendmail-cf
 
 %{_mandir}/man8/rmail.8*
 %{_mandir}/man8/praliases.8*
@@ -320,27 +294,21 @@ fi
 %dir %{_sysconfdir}/mail
 
 %config %{_sysconfdir}/mail/Makefile
-%attr(0644,root,root) %ghost %{_sysconfdir}/mail/virtusertable.db
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/mail/virtusertable
+%ghost %{_sysconfdir}/mail/virtusertable.db
+%config(noreplace) %{_sysconfdir}/mail/virtusertable
 
-%attr(0644,root,root) %ghost %{_sysconfdir}/mail/access.db
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/mail/access
+%ghost %{_sysconfdir}/mail/access.db
+%config(noreplace) %{_sysconfdir}/mail/access
 
-%attr(0644,root,root) %ghost %{_sysconfdir}/mail/domaintable.db
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/mail/domaintable
+%ghost %{_sysconfdir}/mail/domaintable.db
+%config(noreplace) %{_sysconfdir}/mail/domaintable
 
-%attr(0644,root,root) %ghost %{_sysconfdir}/mail/mailertable.db
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/mail/mailertable
+%ghost %{_sysconfdir}/mail/mailertable.db
+%config(noreplace) %{_sysconfdir}/mail/mailertable
+%config(noreplace) %{_sysconfdir}/mail/helpfile
 
-%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/mail/helpfile
-
-%config /etc/sysconfig/sendmail
-
-%config /etc/rc.d/init.d/sendmail
-
-%files cf
-%defattr(644,root,root,755)
-%{_libdir}/sendmail-cf
+%attr(754,root,root) /etc/rc.d/init.d/sendmail
+%config(noreplace) /etc/sysconfig/sendmail
 
 %files doc
 %defattr(644,root,root,755)
