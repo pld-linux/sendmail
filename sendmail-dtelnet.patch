@@ -1,56 +1,57 @@
-diff -Nur sendmail-8.9.3/src/conf.c sendmail-8.9.3.pld/src/conf.c
---- sendmail-8.9.3/src/conf.c	Wed Feb 10 18:23:27 1999
-+++ sendmail-8.9.3.pld/src/conf.c	Wed Feb 10 18:22:45 1999
-@@ -284,6 +284,8 @@
+diff -Nur sendmail-8.11.0.orig/sendmail/conf.c sendmail-8.11.0/sendmail/conf.c
+--- sendmail-8.11.0.orig/sendmail/conf.c	Sat Jul 15 19:35:18 2000
++++ sendmail-8.11.0/sendmail/conf.c	Sat Dec 23 00:58:26 2000
+@@ -311,6 +311,8 @@
  	ColonOkInAddr = TRUE;
  	DontLockReadFiles = TRUE;
  	DoubleBounceAddr = "postmaster";
 +	DetectTelnet = FALSE;
 +	ExitOnTelnet = TRUE;
  	MaxHeadersLength = MAXHDRSLEN;
- 	snprintf(buf, sizeof buf, "%s%sdead.letter",
- 		_PATH_VARTMP,
-diff -Nur sendmail-8.9.3/src/err.c sendmail-8.9.3.pld/src/err.c
---- sendmail-8.9.3/src/err.c	Tue Dec 29 18:42:18 1998
-+++ sendmail-8.9.3.pld/src/err.c	Wed Feb 10 18:18:33 1999
-@@ -543,15 +543,18 @@
+ 	MaxForwardEntries = 0;
+ #if SASL
+diff -Nur sendmail-8.11.0.orig/sendmail/err.c sendmail-8.11.0/sendmail/err.c
+--- sendmail-8.11.0.orig/sendmail/err.c	Fri May 26 02:08:29 2000
++++ sendmail-8.11.0/sendmail/err.c	Sat Dec 23 01:00:25 2000
+@@ -786,15 +786,15 @@
  		(void) snprintf(eb, spaceleft, "%s... ",
  			shortenstring(to, MAXSHORTSTR));
  		spaceleft -= strlen(eb);
-+	/*
- 		while (*eb != '\0')
- 			*eb++ &= 0177;
-+	*/
+-		while (*eb != '\0')
+-			*eb++ &= 0177;
++/*		while (*eb != '\0')
++			*eb++ &= 0177; */
  	}
  
  	/* output the message */
  	(void) vsnprintf(eb, spaceleft, fmt, ap);
  	spaceleft -= strlen(eb);
 -	while (*eb != '\0')
+-		*eb++ &= 0177;
 +/*	while (*eb != '\0')
- 		*eb++ &= 0177;
-+*/
++		*eb++ &= 0177; */
  
  	/* output the error code, if any */
  	if (eno != 0)
-diff -Nur sendmail-8.9.3/src/readcf.c sendmail-8.9.3.pld/src/readcf.c
---- sendmail-8.9.3/src/readcf.c	Fri Jan 29 00:28:53 1999
-+++ sendmail-8.9.3.pld/src/readcf.c	Wed Feb 10 18:18:33 1999
-@@ -1523,6 +1523,10 @@
- #define O_MAXMIMEHDRLEN	0xa8
- 	{ "MaxMimeHeaderLength",	O_MAXMIMEHDRLEN,	FALSE	},
- #endif
-+#define	O_DETECTTELNET	0xa6
-+	{ "DetectTelnet",		O_DETECTTELNET,	TRUE	},
-+#define O_EXITONTELNET	0xa7
-+	{ "ExitOnTelnet",		O_EXITONTELNET,	TRUE	},
- #if _FFR_CONTROL_SOCKET
- #define O_CONTROLSOCKET	0xa9
- 	{ "ControlSocketName",		O_CONTROLSOCKET,	FALSE	},
-@@ -2479,6 +2483,13 @@
- 			printf("Warning: MaxHeadersLength: headers length limit set lower than %d\n", MAXHDRSLEN);
+diff -Nur sendmail-8.11.0.orig/sendmail/readcf.c sendmail-8.11.0/sendmail/readcf.c
+--- sendmail-8.11.0.orig/sendmail/readcf.c	Wed Jul 12 18:44:09 2000
++++ sendmail-8.11.0/sendmail/readcf.c	Sat Dec 23 01:08:28 2000
+@@ -1709,6 +1709,10 @@
+ # endif /* _FFR_TLS_1 */
+ # define O_RANDFILE	0xc1
+ 	{ "RandFile",			O_RANDFILE,	OI_NONE	},
++#define O_DETECTTELNET	0xc2
++	{ "DetectTelnet",		O_DETECTTELNET,	OI_NONE },
++#define O_EXITONTELNET	0xc3
++	{ "ExitOnTelnet",		O_EXITONTELNET,	OI_NONE },
+ 	{ NULL,				'\0',		OI_NONE	}
+ };
+ 
+@@ -2943,6 +2947,14 @@
+ 		QueueFileMode = atooct(val) & 0777;
  		break;
- #endif
+ #endif /* _FFR_QUEUE_FILE_MODE */
++
 +	  case O_DETECTTELNET:	/* detect telnet */
 +		DetectTelnet = atobool(val);
 +		break;
@@ -61,75 +62,72 @@ diff -Nur sendmail-8.9.3/src/readcf.c sendmail-8.9.3.pld/src/readcf.c
  
  	  default:
  		if (tTd(37, 1))
-diff -Nur sendmail-8.9.3/src/sendmail.h sendmail-8.9.3.pld/src/sendmail.h
---- sendmail-8.9.3/src/sendmail.h	Wed Feb 10 18:23:27 1999
-+++ sendmail-8.9.3.pld/src/sendmail.h	Wed Feb 10 18:18:33 1999
-@@ -1182,6 +1182,8 @@
- EXTERN bool	UseNameServer;	/* using DNS -- interpret h_errno & MX RRs */
+diff -Nur sendmail-8.11.0.orig/sendmail/sendmail.h sendmail-8.11.0/sendmail/sendmail.h
+--- sendmail-8.11.0.orig/sendmail/sendmail.h	Tue Jul 18 04:24:47 2000
++++ sendmail-8.11.0/sendmail/sendmail.h	Sat Dec 23 01:12:30 2000
+@@ -1682,6 +1682,8 @@
+ EXTERN bool	UseErrorsTo;	/* use Errors-To: header (back compat) */
  EXTERN bool	UseHesiod;	/* using Hesiod -- interpret Hesiod errors */
- EXTERN bool	SevenBitInput;	/* force 7-bit data on input */
+ EXTERN bool	UseNameServer;	/* using DNS -- interpret h_errno & MX RRs */
 +EXTERN bool	DetectTelnet;	/* force telnet detection on/off */
 +EXTERN bool	ExitOnTelnet;	/* exit if telnet detected */
- EXTERN bool	HasEightBits;	/* has at least one eight bit input byte */
- EXTERN bool	ConfigFileRead;	/* configuration file has been read */
- EXTERN time_t	SafeAlias;	/* interval to wait until @:@ in alias file */
-diff -Nur sendmail-8.9.3/src/srvrsmtp.c sendmail-8.9.3.pld/src/srvrsmtp.c
---- sendmail-8.9.3/src/srvrsmtp.c	Tue Dec 29 18:42:21 1998
-+++ sendmail-8.9.3.pld/src/srvrsmtp.c	Wed Feb 10 18:18:33 1999
-@@ -21,6 +21,7 @@
- #endif /* not lint */
+ EXTERN char	InetMode;		/* default network for daemon mode */
+ EXTERN char	OpMode;		/* operation mode, see below */
+ EXTERN char	SpaceSub;	/* substitution for <lwsp> */
+diff -Nur sendmail-8.11.0.orig/sendmail/srvrsmtp.c sendmail-8.11.0/sendmail/srvrsmtp.c
+--- sendmail-8.11.0.orig/sendmail/srvrsmtp.c	Wed Jul 19 22:21:35 2000
++++ sendmail-8.11.0/sendmail/srvrsmtp.c	Sat Dec 23 01:41:30 2000
+@@ -13,6 +13,7 @@
  
- # include <errno.h>
+ 
+ #include <sendmail.h>
 +#include <arpa/telnet.h>
  
+ #ifndef lint
  # if SMTP
- 
-@@ -139,6 +140,9 @@
- 	QUEUE_CHAR *new;
+@@ -207,6 +208,9 @@
+ 	char *args[MAXSMTPARGS];
  	char inp[MAXLINE];
  	char cmdbuf[MAXLINE];
 +	char telnet_request[] = {IAC, DO, TELOPT_SGA, 0};
 +	char telnet_response[] = {IAC, WILL, TELOPT_SGA, 0};
 +	char *telnet_tmp;
- 	extern ENVELOPE BlankEnvelope;
- 	extern void help __P((char *));
- 	extern void settime __P((ENVELOPE *));
-@@ -182,8 +186,15 @@
+ # if SASL
+ 	sasl_conn_t *conn;
+ 	volatile bool sasl_ok;
+@@ -429,12 +433,8 @@
  	id = strchr(inp, ' ');
  	if (id == NULL)
  		id = &inp[strlen(inp)];
--	cmd = p == NULL ? "220 %.*s ESMTP%s" : "220-%.*s ESMTP%s";
--	message(cmd, id - inp, inp, id);
-+	if (DetectTelnet)
-+	{
-+	  cmd = p == NULL ? "220 %.*s ESMTP%s%s" : "220-%.*s ESMTP%s%s";
-+	  message(cmd, id - inp, inp, id, telnet_request);
-+	} else
-+	{
-+	  cmd = p == NULL ? "220 %.*s ESMTP%s" : "220-%.*s ESMTP%s";
-+	  message(cmd, id - inp, inp, id);
-+	}
+-	if (p == NULL)
+-		snprintf(cmdbuf, sizeof cmdbuf,
+-			 "%s %%.*s ESMTP%%s", greetcode);
+-	else
+-		snprintf(cmdbuf, sizeof cmdbuf,
+-			 "%s-%%.*s ESMTP%%s", greetcode);
++	snprintf(cmdbuf,sizeof cmdbuf,"%s%c%%.*s ESMTP%%s%s", greetcode,
++		(p == NULL)? ' ' : '-', DetectTelnet ? telnet_request : "");
+ 	message(cmdbuf, id - inp, inp, id);
  
  	/* output remaining lines */
- 	while ((id = p) != NULL && (p = strchr(id, '\n')) != NULL)
-@@ -253,6 +264,20 @@
- 				ExitStat = EX_QUIT;
- 			finis(TRUE, ExitStat);
+@@ -520,6 +520,20 @@
+ 				e->e_sendqueue = NULL;
+ 			goto doquit;
  		}
 +
 +		if (DetectTelnet && strlen(inp) >= 3)
-+		   for (telnet_tmp = inp; *(telnet_tmp+2); telnet_tmp++)
-+		     if (!strncmp(telnet_tmp, telnet_response, 3))
-+		     {
-+			  sm_syslog(LOG_CRIT, e->e_id,
-+	                    "telnet detected from from %.100s (%.100s)",
-+			    CurSmtpClient, anynet_ntoa(&RealHostAddr));
-+			  if (ExitOnTelnet)
-+			  {
-+			     message("571 Unauthorized usage prohibited");
-+			     goto doquit;
-+			  }
-+		     }
++			for (telnet_tmp = inp; *(telnet_tmp+2); telnet_tmp++)
++				if (!strncmp(telnet_tmp, telnet_response, 3))
++				{
++					sm_syslog(LOG_NOTICE, e->e_id,
++					  "telnet detected from %.100s (%.100s)",
++					  CurSmtpClient, anynet_ntoa(&RealHostAddr));
++					if (ExitOnTelnet)
++					{
++						message("571 Unauthorized usage prohibited");
++						goto doquit;
++					}
++				}
  
  		/* clean up end of line */
  		fixcrlf(inp, TRUE);
