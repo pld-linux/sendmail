@@ -1,4 +1,9 @@
 #
+# TODO:
+# - make sid-milter support:
+#   http://sourceforge.net/projects/sid-milter/
+#   http://www.sendmail.net/
+#
 # Conditional build:
 %bcond_without	db3	# use db instead of db3 package
 %bcond_without	ldap	# without LDAP support
@@ -16,12 +21,12 @@ Summary(ru):	Почтовый транспортный агент sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.12.11
-Release:	8.1
+Version:	8.13.1
+Release:	1.1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	fafda7f8043f0c34b9aa295618aa598c
+# Source0-md5:	5407db289086261d7e7a09920d2ea14e
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
@@ -37,6 +42,7 @@ Source10:	%{name}.mailertable
 Source11:	%{name}.virtusertable
 Source12:	%{name}.domaintable
 Source13:	%{name}-smtp.pamd
+Source14:	%{name}.monitrc
 Patch0:		%{name}-makemapman.patch
 Patch1:		%{name}-smrsh-paths.patch
 Patch2:		%{name}-rmail.patch
@@ -66,7 +72,6 @@ Requires:	m4
 Requires:	procmail
 Requires:	pam >= 0.77.3
 Provides:	smtpdaemon
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	courier
 Obsoletes:	exim
 Obsoletes:	masqmail
@@ -80,6 +85,7 @@ Obsoletes:	smail
 Obsoletes:	smtpdaemon
 Obsoletes:	ssmtp
 Obsoletes:	zmailer
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/mail
 
@@ -218,12 +224,11 @@ m4 pld.mc > pld.cf
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,sysconfig,sasl,smrsh}} \
-	$RPM_BUILD_ROOT%{_bindir} $RPM_BUILD_ROOT%{_sbindir} $RPM_BUILD_ROOT%{_libdir} \
-	$RPM_BUILD_ROOT%{_mandir}/man{1,5,8} \
-	$RPM_BUILD_ROOT/var/log $RPM_BUILD_ROOT/var/spool/mqueue \
-	$RPM_BUILD_ROOT%{_libdir}/sendmail-cf \
-	$RPM_BUILD_ROOT/etc/pam.d $RPM_BUILD_ROOT%{_includedir}\
+install -d $RPM_BUILD_ROOT%{_mandir}/man{1,5,8} \
+	$RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,monit,sysconfig,sasl,smrsh} \
+	$RPM_BUILD_ROOT{%{_bindir},%{_sbindir},%{_libdir}/sendmail-cf} \
+	$RPM_BUILD_ROOT/var/{log,spool/mqueue} \
+	$RPM_BUILD_ROOT{%{_sysconfdir},%{_includedir}}
 
 OBJDIR=obj.$(uname -s).$(uname -r).$(arch)
 
@@ -251,6 +256,7 @@ SMINSTOPT="DESTDIR=$RPM_BUILD_ROOT SBINOWN=$IDNU SBINGRP=$IDNG \
 	LIBDIR=%{_libdir}
 
 ln -sf %{_sbindir}/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
+
 # install the cf files
 cd cf
 rm -f cf/{Build,Makefile} feature/*~
@@ -298,6 +304,7 @@ install %{SOURCE9} $RPM_BUILD_ROOT%{_sysconfdir}/access
 install %{SOURCE10} $RPM_BUILD_ROOT%{_sysconfdir}/mailertable
 install %{SOURCE11} $RPM_BUILD_ROOT%{_sysconfdir}/virtusertable
 install %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable
+install %{SOURCE14} $RPM_BUILD_ROOT/etc/monit
 
 mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
@@ -323,7 +330,8 @@ if [ -n "`/bin/id -u smmsp 2>/dev/null`" ]; then
 		exit 1
 	fi
 else
-	/usr/sbin/useradd -u 25 -r -d /var/spool/clientqueue -s /bin/false -c "Sendmail Message Submission Program" -g smmsp smmsp 1>&2
+	/usr/sbin/useradd -u 25 -r -d /var/spool/clientqueue -s /bin/false \
+		-c "Sendmail Message Submission Program" -g smmsp smmsp 1>&2
 fi
 
 %post
@@ -447,6 +455,7 @@ fi
 %config(noreplace) %verify(not md5 size mtime) /etc/sysconfig/sendmail
 %config(noreplace) %verify(not md5 size mtime) /etc/sasl/Sendmail.conf
 %config(noreplace) %verify(not md5 size mtime) /etc/pam.d/smtp
+%attr(750,root,root) %config(noreplace) %verify(not md5 size mtime) /etc/monit/*.monitrc
 
 %dir %{_libdir}/sendmail-cf
 %dir %{_libdir}/sendmail-cf/cf
