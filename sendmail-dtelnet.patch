@@ -107,7 +107,7 @@ diff -Nur sendmail-8.12.0.orig/sendmail/srvrsmtp.c sendmail-8.12.0/sendmail/srvr
 -	else
 -		(void) sm_snprintf(cmdbuf, sizeof cmdbuf,
 -			 "%s-%%.*s ESMTP%%s", greetcode);
-+	sm_snprintf(cmdbuf, sizeof cmdbuf, "%s%c%%.*s ESMTP%%s", greetcode,
++	sm_snprintf(cmdbuf, sizeof cmdbuf, "%s%c%%.*s ESMTP%%s%s", greetcode,
 +		(p == NULL) ? ' ' : '-', DetectTelnet ? telnet_request : "");
  	message(cmdbuf, (int) (id - inp), inp, id);
  

@@ -1,6 +1,7 @@
 #
 # Conditional build:
-# _without_ldap - without LDAP
+# _without_ldap		without LDAP support
+# _without_tls		without TLS (SSL) support
 #
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-Übertragungsagent
@@ -38,6 +39,7 @@ BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
 BuildRequires:	pam-devel
 %{!?_without_ldap:BuildRequires:	openldap-devel}
+%{!?_without_tls:BuildRequires:	openssl-devel}
 Requires:	m4
 Prereq:		/sbin/chkconfig
 Prereq:		/usr/sbin/groupadd
@@ -117,11 +119,15 @@ install %{SOURCE7} config.m4
 
 %build
 %if %{?debug:0}%{!?debug:1}
-echo "define(\`confLDOPTS\', \`-s\')" >> config.m4
+echo "define(\`confLDOPTS', \`-s')" >> config.m4
 %endif
 %if %{?_without_ldap:0}%{!?_without_ldap:1}
-echo "APPENDDEF(\`confMAPDEF\', \`-DLDAPMAP\')" >> config.m4
-echo "APPENDDEF(\`confLIBS\', \`-lldap -llber\')" >> config.m4
+echo "APPENDDEF(\`confMAPDEF', \`-DLDAPMAP')" >> config.m4
+echo "APPENDDEF(\`confLIBS', \`-lldap -llber')" >> config.m4
+%endif
+%if %{?_without_tls:0}%{!?_without_tls:1}
+echo "APPENDDEF(\`confENVDEF', \`-DSTARTTLS')" >> config.m4
+echo "APPENDDEF(\`confLIBS', \`-lssl -lcrypto')" >> config.m4
 %endif
 
 RPM_OPT_FLAGS="%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6"
@@ -215,7 +221,7 @@ mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
 mv -f doc/op/op.me .
 
-gzip -9nf FAQ KNOWNBUGS README* doc/op/op.me RELEASE_NOTES
+gzip -9nf FAQ KNOWNBUGS README* op.me RELEASE_NOTES
 
 %clean
 rm -rf $RPM_BUILD_ROOT

@@ -1,5 +1,48 @@
---- ./sendmail/Makefile.m4.org	Thu Sep 20 01:30:44 2001
-+++ ./sendmail/Makefile.m4	Thu Sep 20 01:42:20 2001
+diff -Nur sendmail-8.12.0.orig/cf/cf/Makefile sendmail-8.12.0/cf/cf/Makefile
+--- sendmail-8.12.0.orig/cf/cf/Makefile	Mon Aug 20 17:16:48 2001
++++ sendmail-8.12.0/cf/cf/Makefile	Wed Sep 26 01:33:48 2001
+@@ -76,10 +76,10 @@
+ install-cf:  install-sendmail-cf install-submit-cf
+ 
+ install-sendmail-cf: $(CF).cf
+-	$(INSTALL) -c -o $(CFOWN) -g $(CFGRP) -m $(CFMODE) $(CF).cf ${DESTDIR}$(MAILDIR)/sendmail.cf
++	$(INSTALL) -c -m $(CFMODE) $(CF).cf ${DESTDIR}$(MAILDIR)/sendmail.cf
+ 
+ install-submit-cf: $(SUBMIT).cf
+-	$(INSTALL) -c -o $(CFOWN) -g $(CFGRP) -m $(CFMODE) $(SUBMIT).cf ${DESTDIR}$(MAILDIR)/submit.cf
++	$(INSTALL) -c -m $(CFMODE) $(SUBMIT).cf ${DESTDIR}$(MAILDIR)/submit.cf
+ 
+ depend:
+ 
+diff -Nur sendmail-8.12.0.orig/sendmail/Makefile.m4 sendmail-8.12.0/sendmail/Makefile.m4
+--- sendmail-8.12.0.orig/sendmail/Makefile.m4	Sat Jun 16 18:54:49 2001
++++ sendmail-8.12.0/sendmail/Makefile.m4	Wed Sep 26 01:35:09 2001
+@@ -11,7 +11,7 @@
+ 
+ dnl hack: /etc/mail is not defined as "location of .cf" in the build system
+ define(`bldTARGET_INST_DEP', ifdef(`confINST_DEP', `confINST_DEP',
+-`/etc/mail/submit.cf ${MSPQ}'))dnl
++`${DESTDIR}/etc/mail/submit.cf ${DESTDIR}${MSPQ}'))dnl
+ define(`bldTARGET_LINKS', ifdef(`confLINKS', `confLINKS',
+ `${DESTDIR}${UBINDIR}/newaliases ${DESTDIR}${UBINDIR}/mailq ${DESTDIR}${UBINDIR}/hoststat ${DESTDIR}${UBINDIR}/purgestat')
+ )dnl
+@@ -36,14 +36,14 @@
+ statistics:
+ 	${CP} /dev/null statistics
+ 
+-/etc/mail/submit.cf:
++${DESTDIR}/etc/mail/submit.cf:
+ 	@echo "Please read INSTALL if anything fails while installing the binary."
+ 	@echo "/etc/mail/submit.cf will be installed now."
+ 	cd ${SRCDIR}/cf/cf && make install-submit-cf
+ 
+ MSPQ=ifdef(`confMSP_QUEUE_DIR', `confMSP_QUEUE_DIR', `/var/spool/clientmqueue')
+ 
+-${MSPQ}:
++${DESTDIR}${MSPQ}:
+ 	@echo "Please read INSTALL if anything fails while installing the binary."
+ 	@echo "You must have setup a new user ${MSPQOWN} and a new group ${GBINGRP}"
+ 	@echo "as explained in sendmail/SECURITY."
 @@ -61,7 +61,7 @@
  divert(bldTARGETS_SECTION)
  
@@ -18,18 +61,3 @@
  	for i in confMTA_LINKS; do \
  		rm -f $$i; \
  		ln -s ${M`'BINDIR}/sm-mta $$i; \
---- ./cf/cf/Makefile.org	Thu Sep 20 01:04:53 2001
-+++ ./cf/cf/Makefile	Thu Sep 20 01:05:25 2001
-@@ -76,10 +76,10 @@
- install-cf:  install-sendmail-cf install-submit-cf
- 
- install-sendmail-cf: $(CF).cf
--	$(INSTALL) -c -o $(CFOWN) -g $(CFGRP) -m $(CFMODE) $(CF).cf ${DESTDIR}$(MAILDIR)/sendmail.cf
-+	$(INSTALL) -c -m $(CFMODE) $(CF).cf ${DESTDIR}$(MAILDIR)/sendmail.cf
- 
- install-submit-cf: $(SUBMIT).cf
--	$(INSTALL) -c -o $(CFOWN) -g $(CFGRP) -m $(CFMODE) $(SUBMIT).cf ${DESTDIR}$(MAILDIR)/submit.cf
-+	$(INSTALL) -c -m $(CFMODE) $(SUBMIT).cf ${DESTDIR}$(MAILDIR)/submit.cf
- 
- depend:
- 
