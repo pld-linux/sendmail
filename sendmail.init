@@ -1,44 +1,46 @@
-#!/bin/sh
+#! /bin/sh
 #
 # sendmail      This shell script takes care of starting and stopping
 #               sendmail.
 #
-# chkconfig: 2345 80 30
-# description: Sendmail is a Mail Transport Agent, which is the program \
-# that moves mail from one machine to another.
+# chkconfig:	2345 80 30
+# description:	Sendmail is a Mail Transport Agent, which is the program \
+#		that moves mail from one machine to another.
+# pidfile:	/var/run/sendmail.pid
 
-# Source function library.
+
+# Source function library
 . /etc/rc.d/init.d/functions
 
-# Source networking configuration.
+# Get network config
 . /etc/sysconfig/network
 
+# Get service config
+[ -f /etc/sysconfig/sendmail ] && . /etc/sysconfig/sendmail
+
 # Check that networking is up.
-[ "${NETWORKING}" = "no" ] && exit 0
+[ "${NETWORKING}" = "no" ] && echo "Error: Networking is down"; exit 0
 
-[ -f /usr/sbin/sendmail ] || exit 0
-
-# Get config from /etc/sysconfig ... 
-if [ -f /etc/sysconfig/sendmail ]; then
-    . /etc/sysconfig/sendmail
-fi    
 
 # See how we were called.
 case "$1" in
   start)
-	# Start daemons.
-	show Prepare sendmail db
-	busy
-	newaliases &>/dev/null
-	for i in virtusertable access domaintable mailertable 
-	do
-	if [ -f /etc/mail/$i ] ; then
-	   makemap -v hash /etc/mail/$i < /etc/mail/$i
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/sendmail ]; then
+		show Prepare sendmail db
+		busy
+		newaliases &>/dev/null
+		for i in virtusertable access domaintable mailertable; do
+			if [ -f /etc/mail/$i ] ; then
+				makemap -v hash /etc/mail/$i < /etc/mail/$i
+			fi
+		done 
+		deltext;ok
+		show Starting sendmail
+		daemon sendmail $SENDMAIL_CF
+	else
+		echo "sendmail already is running"
 	fi
-	done 
-	deltext;ok
-	show Starting sendmail
-	daemon sendmail $SENDMAIL_CF
 	touch /var/lock/subsys/sendmail
 	;;
   stop)
@@ -47,7 +49,7 @@ case "$1" in
 	killproc sendmail
 	rm -f /var/lock/subsys/sendmail
 	;;
-  restart)
+  restart|reload)
 	$0 stop
 	$0 start
 	;;
@@ -55,7 +57,7 @@ case "$1" in
 	status sendmail
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart|status}"
+	echo "Usage: $0 {start|stop|staus|restart|reload}"
 	exit 1
 esac
 
