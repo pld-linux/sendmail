@@ -2,7 +2,7 @@ Summary:	Sendmail -- mail transport agent
 Summary(pl):	Sendmail -- aplikacja do obs³ugi poczty elektronicznej
 Name:		sendmail
 Version:	8.9.3
-Release:	2
+Release:	3
 Copyright:	distributable (similar to, but not quite BSD)
 Group:		Daemons
 Group(pl):	Serwery
@@ -19,10 +19,10 @@ Patch3:		%{name}-rmail.patch
 Patch4:		%{name}-pld.mc.patch
 Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-smrsh.patch
+Patch7:		%{name}-release.patch
 BuildRoot:	/tmp/%{name}-%{version}-root
 URL:		http://www.sendmail.org
 Prereq:		/sbin/chkconfig
-Provides:	smtpdaemon
 Obsoletes:	zmail
 Obsoletes:	qmail
 Obsoletes:	smail
@@ -81,6 +81,7 @@ sy³aæ i odbieraæ pocztê po UUCP bêdziesz potrzebowa³ tego pakietu.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7	-p1
 
 %build
 ID="`id -u`"
@@ -104,8 +105,8 @@ cd cf/cf
 rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT/etc/{mail,rc.d/init.d,sysconfig}
-install -d $RPM_BUILD_ROOT%{_prefix}/{bin,lib,sbin,share/sendmail-cf,libexec}
-install -d $RPM_BUILD_ROOT%{_datadir}/{man/man{1,5,8},misc}
+install -d $RPM_BUILD_ROOT/usr/{bin,lib,sbin,share/sendmail-cf,libexec}
+install -d $RPM_BUILD_ROOT/usr/share/{man/man{1,5,8},misc}
 install -d $RPM_BUILD_ROOT/var/{run,spool/{mqueue,mail}}
 
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/mail/aliases
@@ -126,13 +127,18 @@ make DESTDIR=$RPM_BUILD_ROOT OPTIONS=force-install rmail
 for i in hoststat mailq newaliases purgestat
 	do ln -sf ../sbin/sendmail  $RPM_BUILD_ROOT/usr/bin/$i
 done
-ln -sf ../sbin/sendmail $RPM_BUILD_ROOT%{_libdir}/sendmail
+ln -sf ../sbin/sendmail $RPM_BUILD_ROOT/usr/lib/sendmail
 
 install cf/cf/sendmail.cf $RPM_BUILD_ROOT/etc/mail
 
 cp cf/* $RPM_BUILD_ROOT/usr/share/sendmail-cf/ -a
 
-mv $RPM_BUILD_ROOT/etc/mail/*.hf $RPM_BUILD_ROOT%{_datadir}/misc
+mv $RPM_BUILD_ROOT/etc/mail/*.hf $RPM_BUILD_ROOT/usr/share/misc
+
+cat $RPM_BUILD_ROOT/etc/mail/sendmail.cf |sed s/DZ8.9.3/DZLinux/g > \
+    $RPM_BUILD_ROOT/etc/mail/sendmail.cf.new
+
+mv $RPM_BUILD_ROOT/etc/mail/sendmail.cf.new $RPM_BUILD_ROOT/etc/mail/sendmail.cf    
 
 cp smrsh/README smrsh/SMRSH.txt
 
@@ -166,27 +172,27 @@ rm -rf $RPM_BUILD_ROOT
 %attr(640,root,root) %config %verify(not size mtime md5) /etc/sysconfig/*
 %attr(755,root,root) /etc/rc.d/init.d/*
 
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) /usr/bin/*
 
-%attr(755,root,root) %{_sbindir}/mailstats
-%attr(755,root,root) %{_sbindir}/makemap
-%attr(755,root,root) %{_sbindir}/praliases
+%attr(755,root,root) /usr/sbin/mailstats
+%attr(755,root,root) /usr/sbin/makemap
+%attr(755,root,root) /usr/sbin/praliases
 
-%attr(4711,root,root) %{_sbindir}/sendmail
+%attr(4711,root,root) /usr/sbin/sendmail
 
-%attr(755,root,root) %{_libdir}/sendmail
-%attr(755,root,root) %{_sbindir}/smrsh
+%attr(755,root,root) /usr/lib/sendmail
+%attr(755,root,root) /usr/sbin/smrsh
 
-%{_mandir}/man[158]/*
-%{_datadir}/misc/*.hf
+/usr/share/man/man[158]/*
+/usr/share/misc/*.hf
 
 %ghost /var/run/sendmail.st
 
 %files cf
 %defattr(644,root,root,755)
 
-%dir %{_datadir}/sendmail-cf
-%attr(-,root,root) %{_datadir}/sendmail-cf/*
+%dir /usr/share/sendmail-cf
+%attr(-,root,root) /usr/share//sendmail-cf/*
 
 %changelog
 * Fri Jan 22 1999 Wojtek ¦lusarczyk <wojtek@shadow.eu.org>
