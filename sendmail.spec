@@ -48,8 +48,8 @@ Patch8:         %{name}-parseaddr.patch
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
 %{!?_without_ldap:BuildRequires:	openldap-devel}
-%{!?_without_tls:BuildRequires:		openssl-devel >= 0.9.6i}
-%{?_with_pgsql:BuildRequires:		postgresql-devel}
+%{!?_without_tls:BuildRequires:	openssl-devel >= 0.9.6m}
+%{?_with_pgsql:BuildRequires:	postgresql-devel}
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
