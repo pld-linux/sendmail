@@ -1,6 +1,8 @@
 # 
 # TODO:
-# - upgrade to 8.13.*
+# - make sid-milter support:
+#   http://sourceforge.net/projects/sid-milter/
+#   http://www.sendmail.net/
 #
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
@@ -19,12 +21,12 @@ Summary(ru):	Почтовый транспортный агент sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.12.11
-Release:	9
+Version:	8.13.1
+Release:	1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	fafda7f8043f0c34b9aa295618aa598c
+# Source0-md5:	5407db289086261d7e7a09920d2ea14e
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
@@ -54,9 +56,9 @@ BuildRequires:	cyrus-sasl-devel
 %{!?with_db3:BuildRequires:	db-devel >= 4.1.25}
 BuildRequires:	man
 %{?with_ldap:BuildRequires:	openldap-devel}
-%{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
+#%{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
-BuildRequires:	rpmbuild(macros) >= 1.159
+#BuildRequires:	rpmbuild(macros) >= 1.159
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
