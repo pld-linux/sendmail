@@ -46,7 +46,6 @@ Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
 Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
 Patch8:		%{name}-parseaddr.patch
-Patch9:		%{name}-prescan.patch
 BuildRequires:	cyrus-sasl-devel
 %{?_with_db3:BuildRequires:	db3-devel}
 %{!?_with_db3:BuildRequires:	db-devel >= 4.1.25}
@@ -162,7 +161,6 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 %patch7 -p1
 %endif
 %patch8 -p1
-%patch9 -p1
 
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
