@@ -16,18 +16,18 @@ Summary(ru):	Почтовый транспортный агент sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.12.9
-Release:	3
+Version:	8.12.10
+Release:	2
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	3dba3b6d769b3681640d0a38b0eba48c
+# Source0-md5: 393f5d09d462f522c8288363870b2b42
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
 # From http://doc.phpauction.org/sendmail/examples/
 Source4:	%{name}-examples.tar.bz2
-# Source4-md5:	d00d817cd456a947a7fc6c04072a7d68
+# Source4-md5:  d00d817cd456a947a7fc6c04072a7d68
 Source5:	%{name}-etc-mail-Makefile
 Source6:	%{name}.mc
 Source7:	%{name}-config.m4
@@ -45,7 +45,6 @@ Patch4:		%{name}-m4path.patch
 Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
 Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
-Patch8:		%{name}-parseaddr.patch
 BuildRequires:	cyrus-sasl-devel
 %{?_with_db3:BuildRequires:	db3-devel}
 %{!?_with_db3:BuildRequires:	db-devel >= 4.1.25}
@@ -151,7 +150,7 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
+#%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
@@ -160,7 +159,6 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 %if %{?_with_pgsql:1}%{!?_with_pgsql:0}
 %patch7 -p1
 %endif
-%patch8 -p1
 
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
@@ -229,6 +227,7 @@ SMINSTOPT="DESTDIR=$RPM_BUILD_ROOT SBINOWN=$IDNU SBINGRP=$IDNG \
 	$SMINSTOPT
 
 ln -sf %{_sbindir}/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
+
 # install the cf files
 cd cf
 rm -f cf/{Build,Makefile} feature/*~
