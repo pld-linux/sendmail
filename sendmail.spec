@@ -27,6 +27,7 @@ Obsoletes:	smtpdaemon
 Obsoletes:	zmail
 Obsoletes:	qmail
 Obsoletes:	smail
+Obsoletes:	exim
 Obsoletes:	sendmail-cf
 
 %description
