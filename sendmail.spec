@@ -40,6 +40,7 @@ BuildRequires:	db3-devel
 %{!?_without_ldap:BuildRequires:	openldap-devel}
 %{!?_without_tls:BuildRequires:	openssl-devel}
 Requires:	m4
+Requires:	procmail
 PreReq:		/sbin/chkconfig
 PreReq:		/usr/sbin/groupadd
 PreReq:		/usr/sbin/useradd
