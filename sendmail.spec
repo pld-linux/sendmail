@@ -9,7 +9,7 @@ Summary(pl):	Sendmail -- aplikacja do obs³ugi poczty elektronicznej
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
 Version:	8.11.4
-Release:	1
+Release:	2
 License:	BSD
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
