@@ -17,7 +17,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.12.11
-Release:	5
+Release:	6
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -252,7 +252,8 @@ SMINSTOPT="DESTDIR=$RPM_BUILD_ROOT SBINOWN=$IDNU SBINGRP=$IDNG \
 %{__make} -C $OBJDIR/smrsh install \
 	$SMINSTOPT
 %{__make} -C $OBJDIR/libmilter install \
-	$SMINSTOPT
+	$SMINSTOPT \
+	LIBDIR=%{_libdir}
 
 ln -sf %{_sbindir}/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
 
