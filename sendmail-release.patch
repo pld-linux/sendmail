@@ -1,0 +1,9 @@
+diff -Nur sendmail-8.9.3/src/version.c sendmail-8.9.3.pld/src/version.c
+--- sendmail-8.9.3/src/version.c	Fri Feb  5 01:38:46 1999
++++ sendmail-8.9.3.pld/src/version.c	Fri May 28 19:47:25 1999
+@@ -14,4 +14,4 @@
+ static char sccsid[] = "@(#)version.c	8.9.3.1 (Berkeley) 2/4/1999";
+ #endif /* not lint */
+ 
+-char	Version[] = "8.9.3";
++char	Version[] = "PLD";
