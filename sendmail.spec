@@ -168,8 +168,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc {README,KNOWNBUGS,RELEASE_NOTES}.gz 
 %doc smrsh/SMRSH.txt.gz
 
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/mail/*
-%attr(640,root,root) %config %verify(not size mtime md5) /etc/sysconfig/*
+%attr(644,root,root) %config(noreplace) %verify(not size mtime md5) /etc/mail/*
+%attr(644,root,root) %config %verify(not size mtime md5) /etc/sysconfig/*
 %attr(755,root,root) /etc/rc.d/init.d/*
 
 %attr(755,root,root) /usr/bin/*
@@ -178,7 +178,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) /usr/sbin/makemap
 %attr(755,root,root) /usr/sbin/praliases
 
-%attr(4711,root,root) /usr/sbin/sendmail
+%attr(755,root,root) /usr/sbin/sendmail
 
 %attr(755,root,root) /usr/lib/sendmail
 %attr(755,root,root) /usr/sbin/smrsh
