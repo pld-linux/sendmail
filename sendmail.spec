@@ -6,7 +6,7 @@ Release:	3d
 Copyright:	distributable (similar to, but not quite BSD)
 Group:		Networking/Daemons
 Group(pl):	Sieci/Demony
-Provides:	smtpdaemon
+URL:		http://www.sendmail.org
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
 Source1:	site.Linux.m4
 Source2:	aliases
@@ -19,12 +19,10 @@ Patch3:		%{name}-rmail.patch
 Patch4:		%{name}-pld.mc.patch
 Patch5:		%{name}-DoS.patch
 Patch6:		%{name}-redirect.patch
-BuildRoot:	/tmp/%{name}-%{version}-root
-URL:		http://www.sendmail.org
+Provides:	smtpdaemon
+Obsoletes:	smtpdaemon
 Prereq:		/sbin/chkconfig
-Obsoletes:	zmail
-Obsoletes:	qmail
-Obsoletes:	smail
+BuildRoot:	/tmp/%{name}-%{version}-root
 
 %description 
 Sendmail is a Mail Transport Agent, which is the program
@@ -38,14 +36,14 @@ you'll need sendmail.
 
 %description -l pl
 Sendmail jest programem umo¿liwiaj±cym wymianê poczty elektronicznej
-miêdzy komputerami w sieci internet. Zajmuje siê przekazywaniem poczty
+miêdzy komputerami w sieci Internet. Zajmuje siê przekazywaniem poczty
 elektronicznej miêdzy bramkami pocztowymi i dostarczaniem przesy³ek na 
 konta docelowe. Bardzo dobrze obs³uguje aliasy pocztowe a jego dodatkowym 
 atutem jest prosta konfiguracja. Dziêki rozbudowanym mo¿liwo¶ciom 
 konfiguracyjnym jest w stanie dostarczaæ przesy³ki za po¶rednictwem 
 protoko³ów: SMTP, ESMTP, UUCP, X.400 i innych.
 
-Je¿eli masz zamiar korzystaæ z poczty elektronicznej w sieci internet
+Je¿eli masz zamiar korzystaæ z poczty elektronicznej w sieci Internet
 oraz 6bone to zainstaluj ten pakiet.
 
 %package	cf
@@ -131,8 +129,8 @@ cp cf/* $RPM_BUILD_ROOT/usr/lib/sendmail-cf/ -a
 
 cp smrsh/README smrsh/SMRSH.txt
 
-bzip2 -9 $RPM_BUILD_ROOT/usr/man/{man1/*,man5/*,man8/*}
-bzip2 -9 README KNOWNBUGS RELEASE_NOTES smrsh/SMRSH.txt
+gzip -9nf $RPM_BUILD_ROOT/usr/man/{man1/*,man5/*,man8/*}
+gzip -9nf README KNOWNBUGS RELEASE_NOTES smrsh/SMRSH.txt
 
 %post
 /sbin/chkconfig --add sendmail
@@ -151,7 +149,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc README.bz2 KNOWNBUGS.bz2 RELEASE_NOTES.bz2 smrsh/SMRSH.txt.bz2
+%doc README.gz KNOWNBUGS.gz RELEASE_NOTES.gz smrsh/SMRSH.txt.gz
 
 %attr(711,root,root) /usr/bin/hoststat
 %attr(711,root,root) /usr/bin/mailq
@@ -180,12 +178,17 @@ rm -rf $RPM_BUILD_ROOT
 %files cf
 %defattr(644,root,root,755)
 
-%dir /usr/lib/sendmail-cf
-/usr/lib/sendmail-cf/*
+/usr/lib/sendmail-cf
 
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/mail/*
 
 %changelog
+* Thu Feb 10 1999 Micha³ Kuratczyk <kurkens@polbox.com>
+  [8.9.2-3d]
+- "Obsoletes: smtpdaemon" instead a lot of obsoletes
+- simplification in %files
+- gzipping instead bzipping
+
 * Fri Jan 22 1999 Wojtek ¦lusarczyk <wojtek@shadow.eu.org>
 [8.9.2-3d]
 - fixed group && owner ELF bineries,
