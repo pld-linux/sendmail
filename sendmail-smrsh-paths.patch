@@ -1,5 +1,5 @@
---- ./smrsh/README.org	Wed Jan 24 01:05:58 2001
-+++ ./smrsh/README	Tue Jun  4 14:25:06 2002
+--- ./smrsh/README.org	Tue Sep 30 09:59:46 2003
++++ ./smrsh/README	Tue Sep 30 10:04:24 2003
 @@ -6,7 +6,7 @@
  intended as a supplement to the CERT advisory CA-93:16.sendmail.vulnerability,
  and to the software, smrsh.c, written by Eric Allman.
@@ -9,9 +9,20 @@
  
  The smrsh(8) program is intended as a replacement for /bin/sh in the
  program mailer definition of sendmail(8).  This README file describes
-@@ -46,15 +46,15 @@
+@@ -47,24 +47,24 @@
+ The following C defines can be set defined to change the search path and
+ the bin directory used by smrsh.
  
- 
+--DSMRSH_PATH=\"path\"	\"/bin:/usr/bin:/usr/ucb\"	The default search
++-DSMRSH_PATH=\"path\"	\"/bin:/usr/bin:/usr/bin\"	The default search
+ 							path.
+--DSMRSH_CMDDIR=\"dir\"	\"/usr/adm/sm.bin\"		The default smrsh
++-DSMRSH_CMDDIR=\"dir\"	\"/etc/smrsh\"		The default smrsh
+ 							program directory
+  
+ These can be added to the devtools/Site/site.config.m4 file using the
+ global M4 macro confENVDEF or the smrsh specific M4 macro
+ conf_smrsh_ENVDEF.
  
 -As root, install smrsh in /usr/libexec.  Using the Build script:
 +As root, install smrsh in /usr/sbin.  Using the Build script:
@@ -29,7 +40,15 @@
  
  
  
-@@ -76,7 +76,7 @@
+@@ -79,14 +79,14 @@
+ 
+ See the man page for aliases(5) if you are unfamiliar with the format of
+ these specifications. Additionally, you should include in the list,
+-popular commands such as /usr/ucb/vacation.
++popular commands such as /usr/bin/vacation.
+ 
+ You should NOT include interpreter programs such as sh(1), csh(1),
+ perl(1), uudecode(1) or the stream editor sed(1) in your list of
  acceptable commands.
  
  If your platform doesn't have a default SMRSH_CMDDIR setting, you will
@@ -38,7 +57,7 @@
  it with the programs that your site feels are allowable for sendmail
  to execute.   This directory is explicitly specified in the source
  code for smrsh, so changing this directory must be accompanied with
-@@ -85,22 +85,22 @@
+@@ -95,22 +95,22 @@
  
  You will have to be root to make these modifications.
  
@@ -67,7 +86,7 @@
  sendmail to use the restricted shell.  Save the current sendmail.cf
  file prior to modifying it, as a prudent precaution.
  
-@@ -115,7 +115,7 @@
+@@ -125,7 +125,7 @@
  
  In order to configure sendmail to use smrsh, you must modify the Mprog
  definition in the sendmail.cf file, by replacing the /bin/sh specification
@@ -76,7 +95,7 @@
  
  As an example:
  
-@@ -123,14 +123,14 @@
+@@ -133,14 +133,14 @@
  Mprog,	P=/bin/sh,   F=lsDFMeuP,  S=10, R=20, A=sh -c $u
  
  which should be changed to:
@@ -93,7 +112,7 @@
  
  
  After modifying the Mprog definition in the sendmail.cf file, if a frozen
-@@ -141,7 +141,7 @@
+@@ -151,7 +151,7 @@
  a search of the strings(1) output of the sendmail binary.
  
  In order to create a new frozen configuration, if it is required:
@@ -102,8 +121,8 @@
  
  Now re-start the sendmail process.  An example of how to do this on
  a typical system follows:
---- ./smrsh/smrsh.8.org	Thu Apr 25 15:33:40 2002
-+++ ./smrsh/smrsh.8	Tue Jun  4 14:27:48 2002
+--- ./smrsh/smrsh.8.org	Tue Sep 30 10:04:39 2003
++++ ./smrsh/smrsh.8	Tue Sep 30 10:12:49 2003
 @@ -39,7 +39,7 @@
  .I smrsh
  limits programs to be in a single directory,
@@ -113,16 +132,14 @@
  allowing the system administrator to choose the set of acceptable commands,
  and to the shell builtin commands ``exec'', ``exit'', and ``echo''.
  It also rejects any commands with the characters
-@@ -47,7 +47,7 @@
- or `\en' (newline)
- on the command line to prevent ``end run'' attacks.
- It allows ``||'' and ``&&'' to enable commands like:
--``"|exec /usr/local/bin/procmail -f- /etc/procmailrcs/user || exit 75"''
-+``"|exec /usr/bin/procmail -f- /etc/procmailrcs/user || exit 75"''
+@@ -50,16 +50,16 @@
+ ``"|exec /usr/local/bin/filter || exit 75"''
  .PP
  Initial pathnames on programs are stripped,
- so forwarding to ``/usr/ucb/vacation'',
-@@ -56,10 +56,10 @@
+-so forwarding to ``/usr/ucb/vacation'',
++so forwarding to ``/usr/bin/vacation'',
+ ``/usr/bin/vacation'',
+ ``/home/server/mydir/bin/vacation'',
  and
  ``vacation''
  all actually forward to
@@ -131,20 +148,27 @@
  .PP
  System administrators should be conservative about populating
 -the sm.bin directory.
-+the /etc/smrsh/ directory.
- Reasonable additions are
++the /etc/smrsh directory.
+ For example, a reasonable additions is
  .IR vacation (1),
- .IR procmail (1),
-@@ -69,20 +69,12 @@
+ and the like.
+@@ -68,10 +68,10 @@
  (such as
  .IR perl (1))
  in the
 -sm.bin
-+/etc/smrsh/
++/etc/smrsh
  directory.
  Note that this does not restrict the use of shell or perl scripts
- in the sm.bin directory (using the ``#!'' syntax);
+-in the sm.bin directory (using the ``#!'' syntax);
++in the /etc/smrsh directory (using the ``#!'' syntax);
  it simply disallows execution of arbitrary programs.
+ Also, including mail filtering programs such as
+ .IR procmail (1)
+@@ -79,15 +79,7 @@
+ .IR procmail (1)
+ allows users to run arbitrary programs in their
+ .IR procmailrc (5).
 -.SH COMPILATION
 -Compilation should be trivial on most systems.
 -You may need to use \-DSMRSH_PATH=\e"\fIpath\fP\e"
@@ -155,12 +179,12 @@
 -(defaults to ``/usr/adm/sm.bin'').
  .SH FILES
 -/usr/adm/sm.bin \- directory for restricted programs
-+/etc/smrsh/ \- directory for restricted programs
++/etc/smrsh \- directory for restricted programs
  .SH SEE ALSO
  sendmail(8)
---- ./smrsh/smrsh.c.org	Sat May 25 04:41:31 2002
-+++ ./smrsh/smrsh.c	Tue Jun  4 14:29:28 2002
-@@ -75,7 +75,7 @@
+--- ./smrsh/smrsh.c.org	Tue Sep 30 10:12:59 2003
++++ ./smrsh/smrsh.c	Tue Sep 30 10:14:02 2003
+@@ -77,7 +77,7 @@
  # ifdef SMRSH_CMDDIR
  #  define CMDDIR	SMRSH_CMDDIR
  # else /* SMRSH_CMDDIR */
@@ -169,12 +193,12 @@
  # endif /* SMRSH_CMDDIR */
  #endif /* ! CMDDIR */
  
-@@ -87,7 +87,7 @@
+@@ -89,7 +89,7 @@
  # ifdef SMRSH_PATH
  #  define PATH		SMRSH_PATH
  # else /* SMRSH_PATH */
 -#  define PATH		"/bin:/usr/bin:/usr/ucb"
-+#  define PATH		"/bin:/usr/bin"
++#  define PATH		"/bin:/usr/bin:/usr/sbin"
  # endif /* SMRSH_PATH */
  #endif /* ! PATH */
  
