@@ -24,7 +24,8 @@ Source5:	%{name}-etc-mail-Makefile
 Source6:	%{name}.mc
 Source7:	%{name}-config.m4
 Source8:	%{name}.sasl
-Patch0:		%{name}-redhat.patch
+Patch0:		%{name}-makefile.patch
+#Patch0:		%{name}-redhat.patch
 Patch1:		%{name}-makemapman.patch
 Patch2:		%{name}-smrsh-paths.patch
 Patch3:		%{name}-rmail.patch
@@ -93,7 +94,7 @@ istiyorsanýz bu pakete gereksiniminiz olacaktýr.
 
 %prep
 %setup -q
-#%patch0 -p1
+%patch0 -p1
 #%patch1 -p1
 #%patch2 -p1
 #%patch3 -p1
@@ -148,7 +149,9 @@ OBJDIR=obj.$(uname -s).$(uname -r).$(arch)
 IDNU=`id -nu`
 IDNG=`id -ng`
 SMINSTOPT="DESTDIR=$RPM_BUILD_ROOT SBINOWN=$IDNU SBINGRP=$IDNG \
-	UBINOWN=$IDNU UBINGRP=$IDNG MANOWN=$IDNU MANGRP=$IDNG"
+	UBINOWN=$IDNU UBINGRP=$IDNG MANOWN=$IDNU MANGRP=$IDNG \
+	CFOWN=$IDNU CFGRP=$IDNG MSPQOWN=$IDNU GBINGRP=$IDNG \
+	BINOWN=$IDNU BINGRP=$IDNG"
 %{__make} $SMINSTOPT install -C $OBJDIR/sendmail
 %{__make} $SMINSTOPT install -C $OBJDIR/mailstats
 %{__make} $SMINSTOPT install -C $OBJDIR/praliases
