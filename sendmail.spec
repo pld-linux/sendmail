@@ -8,8 +8,8 @@ Summary(fr):	Agent de transport de courrier sendmail
 Summary(pl):	Sendmail - serwer poczty elektronicznej
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
-Version:	8.11.6
-Release:	4
+Version:	8.12.0
+Release:	1
 License:	BSD
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
@@ -93,17 +93,17 @@ istiyorsanýz bu pakete gereksiniminiz olacaktýr.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p0
-%patch5 -p1
-%patch6 -p1
+#%patch0 -p1
+#%patch1 -p1
+#%patch2 -p1
+#%patch3 -p1
+#%patch4 -p0
+#%patch5 -p1
+#%patch6 -p1
 %patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
+#%patch8 -p1
+#%patch9 -p1
+#%patch10 -p1
 
 # seems to be obsoleted...
 #tar xf %{SOURCE2} -C cf
@@ -127,13 +127,13 @@ RPM_OPT_FLAGS="%{rpmcflags} \
 export RPM_OPT_FLAGS
 
 cd sendmail	&& sh Build -f ../config.m4
-cd ../mailstats	&& sh Build -f ../config.m4
-cd ../rmail	&& sh Build -f ../config.m4
-cd ../makemap	&& sh Build -f ../config.m4
-cd ../praliases	&& sh Build -f ../config.m4
-cd ../smrsh	&& sh Build -f ../config.m4
-cd ../cf/cf
-m4 redhat.mc > redhat.cf
+#cd ../mailstats	&& sh Build -f ../config.m4
+#cd ../rmail	&& sh Build -f ../config.m4
+#cd ../makemap	&& sh Build -f ../config.m4
+#cd ../praliases	&& sh Build -f ../config.m4
+#cd ../smrsh	&& sh Build -f ../config.m4
+#cd ../cf/cf
+#m4 redhat.mc > redhat.cf
 
 %install
 rm -rf $RPM_BUILD_ROOT
