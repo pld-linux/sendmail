@@ -26,7 +26,7 @@ fi
 
 # Check that networking is up.
 if is_no "${NETWORKING}"; then
-	msg_Network_Down Sendmail
+	msg_network_down Sendmail
 	exit 1
 fi
 
@@ -52,7 +52,7 @@ case "$1" in
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/sendmail
 	else
-		msg_Already_Running sendmail
+		msg_already_running sendmail
 		exit 1
 	fi
 	;;
