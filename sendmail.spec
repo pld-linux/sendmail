@@ -209,7 +209,7 @@ install %{SOURCE8} $RPM_BUILD_ROOT/etc/sasl/sendmail
 
 mv $RPM_BUILD_ROOT/usr/share/doc/sendmail/{FAQ,KNOWNBUGS,LICENSE,README,README.cf,doc/op/op.me} .
 
-gzip -9nf FAQ KNOWNBUGS README README.cf op.me
+gzip -9nf FAQ KNOWNBUGS README README.cf op.me RELEASE_NOTES
 
 %clean
 rm -rf $RPM_BUILD_ROOT
