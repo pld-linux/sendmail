@@ -229,11 +229,12 @@ install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/sendmail
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sendmail
 install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/Makefile
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/sasl/Sendmail.conf
-install %{SOURCE9} $RPM_BUILD_ROOT%{_sysconfdir}/access.sample
-install %{SOURCE10} $RPM_BUILD_ROOT%{_sysconfdir}/mailertable.sample
-install %{SOURCE11} $RPM_BUILD_ROOT%{_sysconfdir}/virtusertable.sample
-install %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable.sample
 install %{SOURCE13} $RPM_BUILD_ROOT/etc/pam.d/smtp
+
+cp -f %{SOURCE9} ./access.sample
+cp -f %{SOURCE10} ./mailertable.sample
+cp -f %{SOURCE11} ./virtusertable.sample
+cp -f %{SOURCE12} ./domaintable.sample
 
 mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
@@ -329,7 +330,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz
+%doc *.gz *.sample
 %attr(755,root,root) %{_sbindir}/mailstats
 %attr(755,root,root) %{_sbindir}/praliases
 %attr(755,root,root) %{_bindir}/hoststat
@@ -368,16 +369,12 @@ fi
 
 %config %{_sysconfdir}/Makefile
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/access
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/access.sample
 %ghost %{_sysconfdir}/access.db
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/domaintable
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/domaintable.sample
 %ghost %{_sysconfdir}/domaintable.db
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/mailertable
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/mailertable.sample
 %ghost %{_sysconfdir}/mailertable.db
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/virtusertable
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/virtusertable.sample
 %ghost %{_sysconfdir}/virtusertable.db
 %config(noreplace) %{_sysconfdir}/helpfile
 
