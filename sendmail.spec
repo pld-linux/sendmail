@@ -29,7 +29,7 @@ Patch0:		%{name}-makefile.patch
 Patch1:		%{name}-makemapman.patch
 Patch2:		%{name}-smrsh-paths.patch
 Patch3:		%{name}-rmail.patch
-Patch4:		%{name}-manpath.patch
+Patch4:		%{name}-os-paths.patch
 Patch5:		%{name}-m4path.patch
 Patch6:		%{name}-dtelnet.patch
 Patch7:		%{name}-pld.mc.patch
@@ -42,7 +42,7 @@ BuildRequires:	db3-devel
 %{!?_without_ldap:BuildRequires:	openldap-devel}
 BuildRequires:	pam-devel
 Requires:	m4
-Prereq:		/sbin/chkconfig
+Prereq:		chkconfig
 Provides:	smtpdaemon
 Obsoletes:	smtpdaemon
 Obsoletes:	exim
@@ -95,16 +95,16 @@ istiyorsanýz bu pakete gereksiniminiz olacaktýr.
 %prep
 %setup -q
 %patch0 -p1
-#%patch1 -p1
-#%patch2 -p1
-#%patch3 -p1
-#%patch4 -p0
-#%patch5 -p1
-#%patch6 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
 %patch7 -p1
-#%patch8 -p1
-#%patch9 -p1
-#%patch10 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
 
 # seems to be obsoleted...
 #tar xf %{SOURCE2} -C cf
@@ -163,8 +163,8 @@ ln -sf ../sbin/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
 # install docs by hand
 install -d $RPM_BUILD_ROOT%{_docdir}/sendmail
 cp -ar FAQ LICENSE KNOWNBUGS README RELEASE_NOTES doc $RPM_BUILD_ROOT%{_docdir}/sendmail
-cp smrsh/README $RPM_BUILD_ROOT%{_docdir}/sendmail/README.smrsh
-cp cf/README $RPM_BUILD_ROOT%{_docdir}/sendmail/README.cf
+cp -f smrsh/README $RPM_BUILD_ROOT%{_docdir}/sendmail/README.smrsh
+cp -f cf/README $RPM_BUILD_ROOT%{_docdir}/sendmail/README.cf
 
 # install the cf files
 cd cf
