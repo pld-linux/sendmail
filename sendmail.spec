@@ -80,7 +80,7 @@ w formacie PostScript(TM) oraz troff. Je¿eli potrzebujesz dokumentacji
 %patch2 -p1
 %patch3 -p1
 
-# XXX REVERTING[B
+# XXX REVERTING
 #tar xf $RPM_SOURCE_DIR/check.tar -C cf
 #chown root.root cf/hack/* cf/README.check
 
