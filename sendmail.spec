@@ -8,8 +8,8 @@ Summary(fr):	Agent de transport de courrier sendmail
 Summary(pl):	Sendmail - serwer poczty elektronicznej
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
-Version:	8.11.5
-Release:	2
+Version:	8.11.6
+Release:	1
 License:	BSD
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
