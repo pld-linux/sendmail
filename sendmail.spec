@@ -102,7 +102,7 @@ rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT/etc/{mail,rc.d/init.d}
 install -d $RPM_BUILD_ROOT/usr/{bin,sbin,lib/sendmail-cf,libexec}
-install -d $RPM_BUILD_ROOT/usr/man/man{1,5,8}
+install -d $RPM_BUILD_ROOT%{_mandir}/man{1,5,8}
 install -d $RPM_BUILD_ROOT/var/{run,spool/{mqueue,mail}}
 
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/mail/aliases
@@ -129,7 +129,7 @@ cp cf/* $RPM_BUILD_ROOT/usr/lib/sendmail-cf/ -a
 
 cp smrsh/README smrsh/SMRSH.txt
 
-gzip -9nf $RPM_BUILD_ROOT/usr/man/{man1/*,man5/*,man8/*}
+gzip -9nf $RPM_BUILD_ROOT%{_mandir}/{man1/*,man5/*,man8/*}
 gzip -9nf README KNOWNBUGS RELEASE_NOTES smrsh/SMRSH.txt
 
 %post
@@ -167,7 +167,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) /usr/libexec/mail.local
 %attr(755,root,root) /usr/libexec/smrsh
 
-%attr(644,root, man) /usr/man/man[158]/*
+%attr(644,root, man) %{_mandir}/man[158]/*
 
 %attr(640,root,root) %config %verify(not size mtime md5) /var/run/sendmail.st
 
