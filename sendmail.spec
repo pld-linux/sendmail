@@ -10,7 +10,7 @@ Summary(pl):	Sendmail - serwer poczty elektronicznej
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
 Version:	8.12.2
-Release:	3
+Release:	4
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
