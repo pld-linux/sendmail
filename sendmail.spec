@@ -17,7 +17,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.12.10
-Release:	4
+Release:	5
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -186,6 +186,7 @@ echo "APPENDDEF(\`confLIBS', \`-lsasl -lcrypto')" >> config.m4
 %endif
 %if %{?_without_tls:0}%{!?_without_tls:1}
 echo "APPENDDEF(\`confENVDEF', \`-DSTARTTLS')" >> config.m4
+echo "APPENDDEF(\`confENVDEF', \`-D_FFR_DEAL_WITH_ERROR_SSL')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lssl -lcrypto')" >> config.m4
 %endif
 
