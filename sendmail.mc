@@ -35,17 +35,6 @@ FEATURE(use_cw_file)
 FEATURE(local_procmail)
 FEATURE(`access_db')
 FEATURE(`blacklist_recipients')
-
-dnl define(`confCACERT_PATH',`/usr/share/ssl')
-dnl define(`confCACERT',`/usr/share/ssl/ca-bundle.crt')
-dnl define(`confSERVER_CERT',`/var/lib/openssl/certs/sendmail.pem')
-dnl define(`confSERVER_KEY',`/var/lib/openssl/certs/sendmail.pem')
-dnl DAEMON_OPTIONS(`Port=smtp, Name=MTA')dnl
-dnl DAEMON_OPTIONS(`Family=inet, Port=smtps, Name=MTA-SSL, M=s')dnl
-
-dnl define(`MILTER', 1)
-dnl INPUT_MAIL_FILTER(`milter-amavis', `S=local:/var/spool/amavis/runtime/amavis-milter.sock, F=T, T=S:10m; R:10m;E:10m')
-
 dnl We strongly recommend to comment this one out if you want to protect
 dnl yourself from spam. However, the laptop and users on computers that do
 dnl not hav 24x7 DNS do need this.

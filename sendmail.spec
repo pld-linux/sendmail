@@ -1,8 +1,8 @@
 #
 # Conditional build:
+%bcond_without	db3	# use db instead of db3 package
 %bcond_without	ldap	# without LDAP support
 %bcond_without	tls	# without TLS (SSL) support
-%bcond_with	db3	# use db3 instead of db package
 %bcond_with	pgsql	# with PostgreSQL support (bluelabs)
 #
 Summary:	A widely used Mail Transport Agent (MTA)
@@ -17,7 +17,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.12.11
-Release:	8
+Release:	8.1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -50,7 +50,7 @@ BuildRequires:	cyrus-sasl-devel
 %{!?with_db3:BuildRequires:	db-devel >= 4.1.25}
 BuildRequires:	man
 %{?with_ldap:BuildRequires:	openldap-devel}
-%{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
+%{?with_tls:BuildRequires:	openssl-devel >= 0.9.6m}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
@@ -178,11 +178,6 @@ sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
 install %{SOURCE7} config.m4
 
-# Ac-specific hack - ac-i386 builder has not fully operational shm
-%ifarch i386
-%{__perl} -pi -e 's/^(smtest.*t-shm)/dnl $1/' libsm/Makefile.m4
-%endif
-
 %build
 echo "define(\`confCC', \`%{__cc}')" >> config.m4
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
@@ -256,7 +251,6 @@ SMINSTOPT="DESTDIR=$RPM_BUILD_ROOT SBINOWN=$IDNU SBINGRP=$IDNG \
 	LIBDIR=%{_libdir}
 
 ln -sf %{_sbindir}/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
-
 # install the cf files
 cd cf
 rm -f cf/{Build,Makefile} feature/*~
@@ -308,7 +302,6 @@ install %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable
 mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
 mv -f doc/op/op.me .
-
 
 bzip2 -dc %{SOURCE4} | tar xf -
 
