@@ -21,7 +21,7 @@ Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-smrsh.patch
 Patch7:		%{name}-release.patch
 URL:		http://www.sendmail.org
-BuildRoot:	/tmp/%{name}-%{version}-root
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Prereq:		/sbin/chkconfig
 BuildRequires:	glibc-static
 Requires:	rc-scripts
