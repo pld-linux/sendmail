@@ -38,7 +38,7 @@ FEATURE(`blacklist_recipients')
 dnl We strongly recommend to comment this one out if you want to protect
 dnl yourself from spam. However, the laptop and users on computers that do
 dnl not hav 24x7 DNS do need this.
-FEATURE(`accept_unresolvable_domains')
+dnl FEATURE(`accept_unresolvable_domains')
 dnl FEATURE(`relay_based_on_MX')
 MAILER(smtp)
 MAILER(procmail)
