@@ -46,13 +46,13 @@ BuildRequires:	db3-devel
 %{?_with_pgsql:BuildRequires: postgresql-devel}
 Requires:	m4
 Requires:	procmail
-PreReq:		/sbin/chkconfig
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires(post):	awk
 Requires(post):	textutils
+Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
 Provides:	smtpdaemon
@@ -250,7 +250,7 @@ rm -rf $RPM_BUILD_ROOT
 %pre
 if [ -n "`/usr/bin/getgid smmsp`" ]; then
 	if [ "`/usr/bin/getgid smmsp`" != "25" ]; then
-		echo "Warning: group smmsp haven't gid=25. Correct this before installing sendmail." 1>&2
+		echo "Error: group smmsp doesn't have gid=25. Correct this before installing sendmail." 1>&2
 		exit 1
 	fi
 else
@@ -258,7 +258,7 @@ else
 fi
 if [ -n "`/bin/id -u smmsp 2>/dev/null`" ]; then
 	if [ "`/bin/id -u smmsp`" != "25" ]; then
-		echo "Warning: user smmsp haven't uid=25. Correct this before installing sendmail." 1>&2
+		echo "Error: user smmsp doesn't have uid=25. Correct this before installing sendmail." 1>&2
 		exit 1
 	fi
 else
