@@ -1,0 +1,18 @@
+--- sendmail.mc	Sun Aug 12 21:27:16 2001
++++ sendmail.mc	Tue Jan 22 17:35:09 2002
+@@ -20,8 +20,8 @@
+ define(`PROCMAIL_MAILER_PATH',`/usr/bin/procmail')
+ define('ALIAS_FILE','/etc/mail/aliases')
+ define(`confPRIVACY_FLAGS',`novrfy,noexpn')
+-TRUST_AUTH_MECH(`PLAIN GSSAPI KERBEROS_V4 DIGEST-MD5 CRAM-MD5')
+-define(`confAUTH_MECHANISMS',`PLAIN GSSAPI KERBEROS_V4 DIGEST-MD5 CRAM-MD5')
++TRUST_AUTH_MECH(`LOGIN PLAIN GSSAPI KERBEROS_V4 DIGEST-MD5 CRAM-MD5')
++define(`confAUTH_MECHANISMS',`LOGIN PLAIN GSSAPI KERBEROS_V4 DIGEST-MD5 CRAM-MD5')
+ FEATURE(`smrsh',`/usr/sbin/smrsh')
+ FEATURE(`mailertable',`hash -o /etc/mail/mailertable')
+ FEATURE(`virtusertable',`hash -o /etc/mail/virtusertable')
+@@ -41,3 +41,4 @@
+ dnl FEATURE(`relay_based_on_MX')
+ MAILER(smtp)
+ MAILER(procmail)
++define(`confPRIVACY_FLAGS', `restrictqrun,authwarnings,needmailhelo,needexpnhelo,noexpn,needvrfyhelo,novrfy,noetrn,noverb,authwarnings,goaway')
