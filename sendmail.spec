@@ -52,6 +52,7 @@ Obsoletes:	sendmail-cf
 Obsoletes:	sendmail-doc
 Obsoletes:	smail
 Obsoletes:	zmailer
+Obsoletes:	omta
 
 %define		_sysconfdir	/etc/mail
 
