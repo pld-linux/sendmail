@@ -347,7 +347,7 @@ fi
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/aliases
 %attr(0644,root,mail) %ghost %{_sysconfdir}/aliases.db
 %attr(0770,root,smmsp) %dir /var/spool/clientmqueue
-%attr(0770,root,mail) %dir /var/spool/mqueue
+%attr(0750,root,mail) %dir /var/spool/mqueue
 
 %config %{_sysconfdir}/Makefile
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/access
