@@ -17,7 +17,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.12.9
-Release:	1
+Release:	2
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -45,6 +45,7 @@ Patch4:		%{name}-m4path.patch
 Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
 Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
+Patch8:		%{name}-parseaddr.patch
 BuildRequires:	cyrus-sasl-devel
 %{?_with_db3:BuildRequires:	db3-devel}
 %{!?_with_db3:BuildRequires:	db-devel >= 4.1.25}
@@ -159,6 +160,7 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 %if %{?_with_pgsql:1}%{!?_with_pgsql:0}
 %patch7 -p1
 %endif
+%patch8 -p1
 
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
