@@ -256,20 +256,10 @@ fi
  done
 } > /dev/null 2>&1
 
-/sbin/chkconfig --add sendmail
-if [ -f /var/lock/subsys/sendmail ]; then
-	/etc/rc.d/init.d/sendmail restart >&2
-else
-	echo "Run \"/etc/rc.d/init.d/sendmail start\" to start sendmail daemon." >&2
-fi
+DESC="sendmail daemon"; %chkconfig_add
 
 %preun
-if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/sendmail ]; then
-		/etc/rc.d/init.d/sendmail stop >&2
-	fi
-	/sbin/chkconfig --del sendmail
-fi
+%chkconfig_del
 
 # removal of compatibility links
 %triggerpostun -- sendmail < 8.10.1
