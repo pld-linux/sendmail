@@ -37,7 +37,7 @@ Source10:	%{name}.mailertable
 Source11:	%{name}.virtusertable
 Source12:	%{name}.domaintable
 Source13:	%{name}-smtp.pamd
-Source14:	%{name}-monitrc
+Source14:	%{name}.monitrc
 Patch0:		%{name}-makemapman.patch
 Patch1:		%{name}-smrsh-paths.patch
 Patch2:		%{name}-rmail.patch
