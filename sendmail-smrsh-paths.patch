@@ -1,11 +1,12 @@
---- sendmail-8.10.0/smrsh/README.smrsh	Tue Apr 27 22:26:10 1999
-+++ sendmail-8.10.0/smrsh/README	Thu Mar  9 13:21:10 2000
+diff -Nur sendmail-8.11.2.orig/smrsh/README sendmail-8.11.2/smrsh/README
+--- sendmail-8.11.2.orig/smrsh/README	Thu Oct 12 18:32:50 2000
++++ sendmail-8.11.2/smrsh/README	Thu Jan  4 21:07:51 2001
 @@ -6,7 +6,7 @@
  intended as a supplement to the CERT advisory CA-93:16.sendmail.vulnerability,
  and to the software, smrsh.c, written by Eric Allman.
  
 -
-+* Modified by Red Hat Software to reflect different paths. *
++* Modified by PLD Team to reflect different paths. *
  
  The smrsh(8) program is intended as a replacement for /bin/sh in the
  program mailer definition of sendmail(8).  This README file describes
@@ -32,9 +33,9 @@
 @@ -76,7 +76,7 @@
  acceptable commands.
  
- 
--You will next need to create the directory /usr/adm/sm.bin and populate
-+You will next need to create the directory /etc/smrsh and populate
+ If your platform doesn't have a default CMDDIR setting, you will
+-next need to create the directory /usr/adm/sm.bin and populate
++next need to create the directory /etc/smrsh and populate
  it with the programs that your site feels are allowable for sendmail
  to execute.   This directory is explicitly specified in the source
  code for smrsh, so changing this directory must be accompanied with
@@ -55,8 +56,9 @@
 +/etc/smrsh directory, you should:
  
 -	host.domain# cd /usr/adm/sm.bin
+-	host.domain# ln -s /usr/ucb/vacation vacation
 +	host.domain# cd /etc/smrsh
- 	host.domain# ln -s /usr/ucb/vacation vacation
++	host.domain# ln -s /usr/bin/vacation vacation
  
  
  
@@ -80,8 +82,9 @@
  
  which should be changed to:
 -Mprog,	P=/usr/libexec/smrsh,   F=lsDFMeuP,  S=10, R=20, A=sh -c $u
+-          ^^^^^^^^^^^^^^^^^^
 +Mprog,	P=/usr/sbin/smrsh,   F=lsDFMeuP,  S=10, R=20, A=sh -c $u
-           ^^^^^^^^^^^^^^^^^^
++          ^^^^^^^^^^^^^^^
  
  A more generic line may be:
  Mprog,		P=/bin/sh, F=lsDFM, A=sh -c $u
@@ -101,18 +104,28 @@
  
  Now re-start the sendmail process.  An example of how to do this on
  a typical system follows:
---- sendmail-8.10.0/smrsh/smrsh.8.smrsh	Tue Jun 15 00:50:19 1999
-+++ sendmail-8.10.0/smrsh/smrsh.8	Thu Mar  9 13:21:40 2000
-@@ -38,7 +38,7 @@
- Briefly,
+diff -Nur sendmail-8.11.2.orig/smrsh/smrsh.8 sendmail-8.11.2/smrsh/smrsh.8
+--- sendmail-8.11.2.orig/smrsh/smrsh.8	Sat Dec 16 00:18:40 2000
++++ sendmail-8.11.2/smrsh/smrsh.8	Thu Jan  4 21:11:31 2001
+@@ -39,7 +39,7 @@
  .I smrsh
- limits programs to be in the directory
+ limits programs to be in a single directory,
+ by default
 -/usr/adm/sm.bin,
 +/etc/smrsh,
  allowing the system administrator to choose the set of acceptable commands,
  and to the shell builtin commands ``exec'', ``exit'', and ``echo''.
  It also rejects any commands with the characters
-@@ -55,10 +55,10 @@
+@@ -47,7 +47,7 @@
+ or `\en' (newline)
+ on the command line to prevent ``end run'' attacks.
+ It allows ``||'' and ``&&'' to enable commands like:
+-``"|exec /usr/local/bin/procmail -f- /etc/procmailrcs/user || exit 75"''
++``"|exec /usr/bin/procmail -f- /etc/procmailrcs/user || exit 75"''
+ .PP
+ Initial pathnames on programs are stripped,
+ so forwarding to ``/usr/ucb/vacation'',
+@@ -56,10 +56,10 @@
  and
  ``vacation''
  all actually forward to
@@ -120,12 +133,12 @@
 +``/etc/smrsh/vacation''.
  .PP
  System administrators should be conservative about populating
--/usr/adm/sm.bin.
-+/etc/smrsh
+-the sm.bin directory.
++the /etc/smrsh directory.
  Reasonable additions are
  .IR vacation (1),
  .IR procmail (1),
-@@ -68,20 +68,12 @@
+@@ -69,20 +69,12 @@
  (such as
  .IR perl (1))
  in the
@@ -133,8 +146,7 @@
 +/etc/smrsh
  directory.
  Note that this does not restrict the use of shell or perl scripts
--in the sm.bin directory (using the ``#!'' syntax);
-+in the /etc/smrsh directory (using the ``#!'' syntax);
+ in the sm.bin directory (using the ``#!'' syntax);
  it simply disallows execution of arbitrary programs.
 -.SH COMPILATION
 -Compilation should be trivial on most systems.
@@ -149,23 +161,24 @@
 +/etc/smrsh \- directory for restricted programs
  .SH SEE ALSO
  sendmail(8)
---- sendmail-8.10.0/smrsh/smrsh.c.smrsh2	Tue Oct 26 22:49:51 1999
-+++ sendmail-8.10.0/smrsh/smrsh.c	Thu Mar  9 13:28:37 2000
-@@ -76,7 +76,7 @@
- 
- /* directory in which all commands must reside */
- #ifndef CMDDIR
--# define CMDDIR		"/usr/adm/sm.bin"
-+# define CMDDIR		"/etc/smrsh"
+diff -Nur sendmail-8.11.2.orig/smrsh/smrsh.c sendmail-8.11.2/smrsh/smrsh.c
+--- sendmail-8.11.2.orig/smrsh/smrsh.c	Thu Oct 12 18:32:50 2000
++++ sendmail-8.11.2/smrsh/smrsh.c	Thu Jan  4 21:12:54 2001
+@@ -77,7 +77,7 @@
+ # if defined(HPUX10) || defined(HPUX11) || SOLARIS >= 20800
+ #  define CMDDIR	"/var/adm/sm.bin"
+ # else /* HPUX10 || HPUX11 || SOLARIS > 20800 */
+-#  define CMDDIR	"/usr/adm/sm.bin"
++#  define CMDDIR	"/etc/smrsh"
+ # endif /* HPUX10 || HPUX11 || SOLARIS > 20800 */
  #endif /* ! CMDDIR */
  
- /* characters disallowed in the shell "-c" argument */
-@@ -84,7 +84,7 @@
+@@ -86,7 +86,7 @@
  
  /* default search path */
  #ifndef PATH
 -# define PATH		"/bin:/usr/bin:/usr/ucb"
-+# define PATH		"/bin:/usr/bin:"
++# define PATH		"/bin:/usr/bin"
  #endif /* ! PATH */
  
  #ifndef __P

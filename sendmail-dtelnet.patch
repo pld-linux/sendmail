@@ -1,7 +1,7 @@
-diff -Nur sendmail-8.11.0.orig/sendmail/conf.c sendmail-8.11.0/sendmail/conf.c
---- sendmail-8.11.0.orig/sendmail/conf.c	Sat Jul 15 19:35:18 2000
-+++ sendmail-8.11.0/sendmail/conf.c	Sat Dec 23 00:58:26 2000
-@@ -311,6 +311,8 @@
+diff -Nur sendmail-8.11.2.orig/sendmail/conf.c sendmail-8.11.2/sendmail/conf.c
+--- sendmail-8.11.2.orig/sendmail/conf.c	Fri Dec 29 00:51:54 2000
++++ sendmail-8.11.2/sendmail/conf.c	Thu Jan  4 21:17:50 2001
+@@ -317,6 +317,8 @@
  	ColonOkInAddr = TRUE;
  	DontLockReadFiles = TRUE;
  	DoubleBounceAddr = "postmaster";
@@ -10,17 +10,18 @@ diff -Nur sendmail-8.11.0.orig/sendmail/conf.c sendmail-8.11.0/sendmail/conf.c
  	MaxHeadersLength = MAXHDRSLEN;
  	MaxForwardEntries = 0;
  #if SASL
-diff -Nur sendmail-8.11.0.orig/sendmail/err.c sendmail-8.11.0/sendmail/err.c
---- sendmail-8.11.0.orig/sendmail/err.c	Fri May 26 02:08:29 2000
-+++ sendmail-8.11.0/sendmail/err.c	Sat Dec 23 01:00:25 2000
-@@ -786,15 +786,15 @@
+diff -Nur sendmail-8.11.2.orig/sendmail/err.c sendmail-8.11.2/sendmail/err.c
+--- sendmail-8.11.2.orig/sendmail/err.c	Fri May 26 02:08:29 2000
++++ sendmail-8.11.2/sendmail/err.c	Thu Jan  4 21:19:05 2001
+@@ -786,15 +786,17 @@
  		(void) snprintf(eb, spaceleft, "%s... ",
  			shortenstring(to, MAXSHORTSTR));
  		spaceleft -= strlen(eb);
 -		while (*eb != '\0')
 -			*eb++ &= 0177;
-+/*		while (*eb != '\0')
-+			*eb++ &= 0177; */
++		if(!DetectTelnet)
++			while (*eb != '\0')
++				*eb++ &= 0177;
  	}
  
  	/* output the message */
@@ -28,15 +29,16 @@ diff -Nur sendmail-8.11.0.orig/sendmail/err.c sendmail-8.11.0/sendmail/err.c
  	spaceleft -= strlen(eb);
 -	while (*eb != '\0')
 -		*eb++ &= 0177;
-+/*	while (*eb != '\0')
-+		*eb++ &= 0177; */
++	if(!DetectTelnet)
++		while (*eb != '\0')
++			*eb++ &= 0177;
  
  	/* output the error code, if any */
  	if (eno != 0)
-diff -Nur sendmail-8.11.0.orig/sendmail/readcf.c sendmail-8.11.0/sendmail/readcf.c
---- sendmail-8.11.0.orig/sendmail/readcf.c	Wed Jul 12 18:44:09 2000
-+++ sendmail-8.11.0/sendmail/readcf.c	Sat Dec 23 01:08:28 2000
-@@ -1709,6 +1709,10 @@
+diff -Nur sendmail-8.11.2.orig/sendmail/readcf.c sendmail-8.11.2/sendmail/readcf.c
+--- sendmail-8.11.2.orig/sendmail/readcf.c	Tue Dec 19 04:18:30 2000
++++ sendmail-8.11.2/sendmail/readcf.c	Thu Jan  4 21:22:52 2001
+@@ -1739,6 +1739,10 @@
  # endif /* _FFR_TLS_1 */
  # define O_RANDFILE	0xc1
  	{ "RandFile",			O_RANDFILE,	OI_NONE	},
@@ -47,25 +49,25 @@ diff -Nur sendmail-8.11.0.orig/sendmail/readcf.c sendmail-8.11.0/sendmail/readcf
  	{ NULL,				'\0',		OI_NONE	}
  };
  
-@@ -2943,6 +2947,14 @@
+@@ -2990,6 +2994,14 @@
  		QueueFileMode = atooct(val) & 0777;
  		break;
  #endif /* _FFR_QUEUE_FILE_MODE */
 +
-+	  case O_DETECTTELNET:	/* detect telnet */
++	  case O_DETECTTELNET:		/* detect telnet */
 +		DetectTelnet = atobool(val);
 +		break;
 +
-+	  case O_EXITONTELNET:	/* exit if telnet detected */
++	  case O_EXITONTELNET:		/* exit if telnet detected */
 +		ExitOnTelnet = atobool(val);
 +		break;
  
  	  default:
  		if (tTd(37, 1))
-diff -Nur sendmail-8.11.0.orig/sendmail/sendmail.h sendmail-8.11.0/sendmail/sendmail.h
---- sendmail-8.11.0.orig/sendmail/sendmail.h	Tue Jul 18 04:24:47 2000
-+++ sendmail-8.11.0/sendmail/sendmail.h	Sat Dec 23 01:12:30 2000
-@@ -1682,6 +1682,8 @@
+diff -Nur sendmail-8.11.2.orig/sendmail/sendmail.h sendmail-8.11.2/sendmail/sendmail.h
+--- sendmail-8.11.2.orig/sendmail/sendmail.h	Fri Dec 29 00:52:07 2000
++++ sendmail-8.11.2/sendmail/sendmail.h	Thu Jan  4 21:24:09 2001
+@@ -1695,6 +1695,8 @@
  EXTERN bool	UseErrorsTo;	/* use Errors-To: header (back compat) */
  EXTERN bool	UseHesiod;	/* using Hesiod -- interpret Hesiod errors */
  EXTERN bool	UseNameServer;	/* using DNS -- interpret h_errno & MX RRs */
@@ -74,9 +76,9 @@ diff -Nur sendmail-8.11.0.orig/sendmail/sendmail.h sendmail-8.11.0/sendmail/send
  EXTERN char	InetMode;		/* default network for daemon mode */
  EXTERN char	OpMode;		/* operation mode, see below */
  EXTERN char	SpaceSub;	/* substitution for <lwsp> */
-diff -Nur sendmail-8.11.0.orig/sendmail/srvrsmtp.c sendmail-8.11.0/sendmail/srvrsmtp.c
---- sendmail-8.11.0.orig/sendmail/srvrsmtp.c	Wed Jul 19 22:21:35 2000
-+++ sendmail-8.11.0/sendmail/srvrsmtp.c	Sat Dec 23 01:41:30 2000
+diff -Nur sendmail-8.11.2.orig/sendmail/srvrsmtp.c sendmail-8.11.2/sendmail/srvrsmtp.c
+--- sendmail-8.11.2.orig/sendmail/srvrsmtp.c	Tue Dec 19 04:18:30 2000
++++ sendmail-8.11.2/sendmail/srvrsmtp.c	Thu Jan  4 21:30:38 2001
 @@ -13,6 +13,7 @@
  
  
@@ -85,7 +87,7 @@ diff -Nur sendmail-8.11.0.orig/sendmail/srvrsmtp.c sendmail-8.11.0/sendmail/srvr
  
  #ifndef lint
  # if SMTP
-@@ -207,6 +208,9 @@
+@@ -214,6 +215,9 @@
  	char *args[MAXSMTPARGS];
  	char inp[MAXLINE];
  	char cmdbuf[MAXLINE];
@@ -95,7 +97,7 @@ diff -Nur sendmail-8.11.0.orig/sendmail/srvrsmtp.c sendmail-8.11.0/sendmail/srvr
  # if SASL
  	sasl_conn_t *conn;
  	volatile bool sasl_ok;
-@@ -429,12 +433,8 @@
+@@ -437,12 +441,8 @@
  	id = strchr(inp, ' ');
  	if (id == NULL)
  		id = &inp[strlen(inp)];
@@ -105,12 +107,12 @@ diff -Nur sendmail-8.11.0.orig/sendmail/srvrsmtp.c sendmail-8.11.0/sendmail/srvr
 -	else
 -		snprintf(cmdbuf, sizeof cmdbuf,
 -			 "%s-%%.*s ESMTP%%s", greetcode);
-+	snprintf(cmdbuf,sizeof cmdbuf,"%s%c%%.*s ESMTP%%s%s", greetcode,
-+		(p == NULL)? ' ' : '-', DetectTelnet ? telnet_request : "");
- 	message(cmdbuf, id - inp, inp, id);
++	snprintf(cmdbuf, sizeof cmdbuf, "%s%c%%.*s ESMTP%%s%s", greetcode,
++		(p == NULL) ? ' ' : '-', DetectTelnet ? telnet_request : "");
+ 	message(cmdbuf, (int) (id - inp), inp, id);
  
  	/* output remaining lines */
-@@ -520,6 +520,20 @@
+@@ -528,6 +528,20 @@
  				e->e_sendqueue = NULL;
  			goto doquit;
  		}
