@@ -5,11 +5,11 @@
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-Übertragungsagent
 Summary(fr):	Agent de transport de courrier sendmail
-Summary(pl):	Sendmail -- aplikacja do obs³ugi poczty elektronicznej
+Summary(pl):	Sendmail - serwer poczty elektronicznej
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
 Version:	8.11.5
-Release:	1
+Release:	2
 License:	BSD
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
@@ -205,9 +205,9 @@ $RPM_BUILD_ROOT%{_bindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf h
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/sendmail
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sendmail
 install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/Makefile
-install %{SOURCE8} $RPM_BUILD_ROOT/etc/sasl/sendmail
+install %{SOURCE8} $RPM_BUILD_ROOT/etc/sasl/Sendmail.conf
 
-mv $RPM_BUILD_ROOT/usr/share/doc/sendmail/{FAQ,KNOWNBUGS,LICENSE,README,README.cf,doc/op/op.me} .
+mv -f $RPM_BUILD_ROOT/usr/share/doc/sendmail/{FAQ,KNOWNBUGS,LICENSE,README,README.cf,doc/op/op.me} .
 
 gzip -9nf FAQ KNOWNBUGS README README.cf op.me RELEASE_NOTES
 
@@ -322,7 +322,7 @@ fi
 
 %attr(754,root,root) /etc/rc.d/init.d/sendmail
 %config(noreplace) /etc/sysconfig/sendmail
-%config(noreplace) /etc/sasl/sendmail
+%config(noreplace) /etc/sasl/Sendmail.conf
 
 %dir %{_libdir}/sendmail-cf
 %dir %{_libdir}/sendmail-cf/cf
