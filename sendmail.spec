@@ -2,7 +2,6 @@
 # Conditional build:
 # _without_ldap		without LDAP support
 # _without_tls		without TLS (SSL) support
-# _with_db3		use db3 instead of db package
 # _with_pgsql		with PostgreSQL support (bluelabs)
 #
 Summary:	A widely used Mail Transport Agent (MTA)
@@ -16,18 +15,18 @@ Summary(ru):	Почтовый транспортный агент sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.12.9
+Version:	8.12.10
 Release:	1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	3dba3b6d769b3681640d0a38b0eba48c
+# Source0-md5: 393f5d09d462f522c8288363870b2b42
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
 # From http://doc.phpauction.org/sendmail/examples/
 Source4:	%{name}-examples.tar.bz2
-# Source4-md5:	d00d817cd456a947a7fc6c04072a7d68
+# Source4-md5:  d00d817cd456a947a7fc6c04072a7d68
 Source5:	%{name}-etc-mail-Makefile
 Source6:	%{name}.mc
 Source7:	%{name}-config.m4
@@ -45,12 +44,12 @@ Patch4:		%{name}-m4path.patch
 Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
 Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
+Patch8:         %{name}-parseaddr.patch
 BuildRequires:	cyrus-sasl-devel
-%{?_with_db3:BuildRequires:	db3-devel}
-%{!?_with_db3:BuildRequires:	db-devel >= 4.1.25}
+BuildRequires:	db3-devel
 %{!?_without_ldap:BuildRequires:	openldap-devel}
-%{!?_without_tls:BuildRequires:	openssl-devel >= 0.9.7}
-%{?_with_pgsql:BuildRequires:	postgresql-devel}
+%{!?_without_tls:BuildRequires:		openssl-devel >= 0.9.6i}
+%{?_with_pgsql:BuildRequires:		postgresql-devel}
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
@@ -60,7 +59,6 @@ Requires(post):	textutils
 Requires(post,preun):/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
-%{!?_with_db3:Requires:	db >= 4.1.25}
 Requires:	m4
 Requires:	procmail
 Provides:	smtpdaemon
@@ -150,7 +148,7 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
+#%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
@@ -159,6 +157,7 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 %if %{?_with_pgsql:1}%{!?_with_pgsql:0}
 %patch7 -p1
 %endif
+#%patch8 -p1
 
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
@@ -167,7 +166,6 @@ install %{SOURCE7} config.m4
 %build
 echo "define(\`confCC', \`%{__cc}')" >> config.m4
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
-echo "APPENDDEF(\`confINCDIRS', \`-I/usr/include/sasl')" >> config.m4
 echo "define(\`confLIBSEARCH', \`db resolv')" >> config.m4
 %if %{?debug:0}%{!?debug:1}
 echo "define(\`confLDOPTS', \`-s')" >> config.m4
@@ -213,14 +211,20 @@ SMINSTOPT="DESTDIR=$RPM_BUILD_ROOT SBINOWN=$IDNU SBINGRP=$IDNG \
 	UBINOWN=$IDNU UBINGRP=$IDNG MANOWN=$IDNU MANGRP=$IDNG \
 	CFOWN=$IDNU CFGRP=$IDNG MSPQOWN=$IDNU GBINGRP=$IDNG GBINOWN=$IDNU \
 	BINOWN=$IDNU BINGRP=$IDNG"
-%{__make} $SMINSTOPT install -C $OBJDIR/sendmail
-%{__make} $SMINSTOPT install -C $OBJDIR/mailstats
-%{__make} $SMINSTOPT install -C $OBJDIR/praliases
-%{__make} $SMINSTOPT force-install -C $OBJDIR/rmail
-%{__make} $SMINSTOPT install -C $OBJDIR/makemap
-ln -sf %{_sbindir}/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
-%{__make} $SMINSTOPT install -C $OBJDIR/smrsh
+%{__make} -C $OBJDIR/sendmail install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/mailstats install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/praliases install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/rmail force-install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/makemap install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/smrsh install \
+	$SMINSTOPT
 
+ln -sf /usr/sbin/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
 # install the cf files
 cd cf
 rm -f cf/{Build,Makefile} feature/*~
