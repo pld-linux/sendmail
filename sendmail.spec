@@ -211,14 +211,20 @@ SMINSTOPT="DESTDIR=$RPM_BUILD_ROOT SBINOWN=$IDNU SBINGRP=$IDNG \
 	UBINOWN=$IDNU UBINGRP=$IDNG MANOWN=$IDNU MANGRP=$IDNG \
 	CFOWN=$IDNU CFGRP=$IDNG MSPQOWN=$IDNU GBINGRP=$IDNG GBINOWN=$IDNU \
 	BINOWN=$IDNU BINGRP=$IDNG"
-%{__make} $SMINSTOPT install -C $OBJDIR/sendmail
-%{__make} $SMINSTOPT install -C $OBJDIR/mailstats
-%{__make} $SMINSTOPT install -C $OBJDIR/praliases
-%{__make} $SMINSTOPT force-install -C $OBJDIR/rmail
-%{__make} $SMINSTOPT install -C $OBJDIR/makemap
-ln -sf /usr/sbin/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
-%{__make} $SMINSTOPT install -C $OBJDIR/smrsh
+%{__make} -C $OBJDIR/sendmail install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/mailstats install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/praliases install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/rmail force-install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/makemap install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/smrsh install \
+	$SMINSTOPT
 
+ln -sf /usr/sbin/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
 # install the cf files
 cd cf
 rm -f cf/{Build,Makefile} feature/*~
