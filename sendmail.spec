@@ -2,8 +2,8 @@
 # Conditional build:
 # _without_ldap		without LDAP support
 # _without_tls		without TLS (SSL) support
-# _with_pgsql		without pgsql support (bluelabs)
-
+# _with_pgsql		with PostgreSQL support (bluelabs)
+#
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-эbertragungsagent
 Summary(es):	Sendmail - agente de transporte de mail
@@ -14,7 +14,7 @@ Summary(ru):	Почтовый транспортный агент sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.12.7
+Version:	8.12.8
 Release:	1
 License:	BSD
 Group:		Networking/Daemons
@@ -283,6 +283,7 @@ else
 fi
 
 %post
+umask 022
 #
 # Convert old format to new
 #
