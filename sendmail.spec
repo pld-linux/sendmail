@@ -4,8 +4,8 @@ Summary(fr):	Agent de transport de courrier sendmail
 Summary(pl):	Sendmail -- aplikacja do obs³ugi poczty elektronicznej
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
-Version:	8.11.2
-Release:	3
+Version:	8.11.3
+Release:	1
 License:	BSD
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
@@ -19,6 +19,7 @@ Source4:	%{name}.sysconfig
 Source5:	%{name}-etc-mail-Makefile
 Source6:	%{name}.mc
 Source7:	%{name}-config.m4
+Source8:	%{name}.sasl
 Patch0:		%{name}-redhat.patch
 Patch1:		%{name}-makemapman.patch
 Patch2:		%{name}-smrsh-paths.patch
@@ -29,10 +30,14 @@ Patch6:		%{name}-dtelnet.patch
 Patch7:		%{name}-pld.mc.patch
 Patch8:		%{name}-redirect.patch
 Patch9:		%{name}-ipv6-glibc-2.2.patch
+Patch10:	%{name}-hprescan-dos.patch
+Patch11:	%{name}-aliasesDoS.patch
+Patch12:	%{name}-fix.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
 BuildRequires:	gdbm-devel
+BuildRequires:	openldap-devel
 BuildRequires:	pam-devel
 Requires:	m4
 Prereq:		/sbin/chkconfig
@@ -45,6 +50,8 @@ Obsoletes:	exim
 Obsoletes:	postfix
 Obsoletes:	sendmail-cf
 Obsoletes:	sendmail-doc
+
+%define		_sysconfdir	/etc/mail
 
 %description
 The Sendmail program is a very widely used Mail Transport Agent (MTA).
@@ -93,6 +100,9 @@ istiyorsanýz bu pakete gereksiniminiz olacaktýr.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
 
 # seems to be obsoleted...
 #tar xf %{SOURCE2} -C cf
@@ -118,12 +128,11 @@ m4 redhat.mc > redhat.cf
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/{mail,smrsh}
-install -d $RPM_BUILD_ROOT/etc/rc.d/init.d $RPM_BUILD_ROOT/etc/sysconfig
-install -d $RPM_BUILD_ROOT%{_bindir} $RPM_BUILD_ROOT%{_sbindir} $RPM_BUILD_ROOT%{_libdir}
-install -d $RPM_BUILD_ROOT%{_mandir}/man{1,5,8}
-install -d $RPM_BUILD_ROOT/var/log $RPM_BUILD_ROOT/var/spool/mqueue
-install -d $RPM_BUILD_ROOT%{_libdir}/sendmail-cf
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,sysconfig,sasl,smrsh}} \
+	$RPM_BUILD_ROOT%{_bindir} $RPM_BUILD_ROOT%{_sbindir} $RPM_BUILD_ROOT%{_libdir} \
+	$RPM_BUILD_ROOT%{_mandir}/man{1,5,8} \
+	$RPM_BUILD_ROOT/var/log $RPM_BUILD_ROOT/var/spool/mqueue \
+	$RPM_BUILD_ROOT%{_libdir}/sendmail-cf \
 
 OBJDIR=obj.$(uname -s).$(uname -r).$(arch)
 
@@ -151,11 +160,11 @@ rm -f cf/{Build,Makefile} feature/*~
 cp -ar * $RPM_BUILD_ROOT%{_libdir}/sendmail-cf
 cd -
 
-install cf/cf/redhat.cf $RPM_BUILD_ROOT%{_sysconfdir}/mail/sendmail.cf
+install cf/cf/redhat.cf $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf
 sed -e 's|@@PATH@@|%{_libdir}/sendmail-cf|' < %{SOURCE6} \
-	> $RPM_BUILD_ROOT%{_sysconfdir}/mail/sendmail.mc
+	> $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.mc
 echo "# local-host-names - include all aliases for your machine here." \
-	> $RPM_BUILD_ROOT%{_sysconfdir}/mail/local-host-names
+	> $RPM_BUILD_ROOT%{_sysconfdir}/local-host-names
 
 ln -sf ../sbin/sendmail $RPM_BUILD_ROOT%{_libdir}/sendmail
 
@@ -164,7 +173,7 @@ for f in hoststat mailq newaliases purgestat ; do
   ln -sf ../sbin/sendmail $RPM_BUILD_ROOT%{_bindir}/${f}
 done
 
-cat <<EOF > $RPM_BUILD_ROOT%{_sysconfdir}/mail/access
+cat <<EOF > $RPM_BUILD_ROOT%{_sysconfdir}/access
 # Check the %{_prefix}/doc/sendmail-%{version}/README.cf file for a description
 # of the format of this file. (search for access_db in that file)
 # The %{_prefix}/doc/sendmail-%{version}/README.cf is part of the sendmail-doc
@@ -177,18 +186,19 @@ localhost			RELAY
 EOF
 
 for map in virtusertable access domaintable mailertable ; do
-	touch $RPM_BUILD_ROOT%{_sysconfdir}/mail/${map}
-		$RPM_BUILD_ROOT%{_bindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/mail/sendmail.cf hash \
-		$RPM_BUILD_ROOT%{_sysconfdir}/mail/${map}.db < $RPM_BUILD_ROOT%{_sysconfdir}/mail/${map}
+	touch $RPM_BUILD_ROOT%{_sysconfdir}/${map}
+		$RPM_BUILD_ROOT%{_bindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf hash \
+		$RPM_BUILD_ROOT%{_sysconfdir}/${map}.db < $RPM_BUILD_ROOT%{_sysconfdir}/${map}
 done
 
-install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/mail/aliases
-$RPM_BUILD_ROOT%{_bindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/mail/sendmail.cf hash \
-	$RPM_BUILD_ROOT%{_sysconfdir}/mail/aliases.db < %{SOURCE3}
+install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/aliases
+$RPM_BUILD_ROOT%{_bindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf hash \
+	$RPM_BUILD_ROOT%{_sysconfdir}/aliases.db < %{SOURCE3}
 
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/sendmail
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sendmail
-install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/mail/Makefile
+install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/Makefile
+install %{SOURCE8} $RPM_BUILD_ROOT/etc/sasl/sendmail
 
 mv $RPM_BUILD_ROOT/usr/share/doc/sendmail/{FAQ,KNOWNBUGS,LICENSE,README,README.cf,doc/op/op.me} .
 
@@ -283,28 +293,29 @@ fi
 
 /var/log/statistics
 # XXX can't do noreplace here or new sendmail will not deliver.
-%config %{_sysconfdir}/mail/sendmail.cf
-%config %{_sysconfdir}/mail/sendmail.mc
-%config(noreplace) %{_sysconfdir}/mail/local-host-names
-%config(noreplace) %{_sysconfdir}/mail/aliases
-%attr(0644,root,mail) %ghost %{_sysconfdir}/mail/aliases.db
+%config %{_sysconfdir}/sendmail.cf
+%config %{_sysconfdir}/sendmail.mc
+%config(noreplace) %{_sysconfdir}/local-host-names
+%config(noreplace) %{_sysconfdir}/aliases
+%attr(0644,root,mail) %ghost %{_sysconfdir}/aliases.db
 %attr(0755,root,mail) %dir /var/spool/mqueue
-%dir %{_sysconfdir}/smrsh
-%dir %{_sysconfdir}/mail
+%dir /etc/smrsh
+%dir %{_sysconfdir}
 
-%config %{_sysconfdir}/mail/Makefile
-%ghost %{_sysconfdir}/mail/virtusertable.db
-%config(noreplace) %{_sysconfdir}/mail/virtusertable
-%ghost %{_sysconfdir}/mail/access.db
-%config(noreplace) %{_sysconfdir}/mail/access
-%ghost %{_sysconfdir}/mail/domaintable.db
-%config(noreplace) %{_sysconfdir}/mail/domaintable
-%ghost %{_sysconfdir}/mail/mailertable.db
-%config(noreplace) %{_sysconfdir}/mail/mailertable
-%config(noreplace) %{_sysconfdir}/mail/helpfile
+%config %{_sysconfdir}/Makefile
+%ghost %{_sysconfdir}/virtusertable.db
+%config(noreplace) %{_sysconfdir}/virtusertable
+%ghost %{_sysconfdir}/access.db
+%config(noreplace) %{_sysconfdir}/access
+%ghost %{_sysconfdir}/domaintable.db
+%config(noreplace) %{_sysconfdir}/domaintable
+%ghost %{_sysconfdir}/mailertable.db
+%config(noreplace) %{_sysconfdir}/mailertable
+%config(noreplace) %{_sysconfdir}/helpfile
 
 %attr(754,root,root) /etc/rc.d/init.d/sendmail
 %config(noreplace) /etc/sysconfig/sendmail
+%config(noreplace) /etc/sasl/sendmail
 
 %dir %{_libdir}/sendmail-cf
 %dir %{_libdir}/sendmail-cf/cf
