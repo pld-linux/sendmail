@@ -22,7 +22,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.13.1
-Release:	2
+Release:	2.1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -234,7 +234,8 @@ m4 pld.mc > pld.cf
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_mandir}/man{1,5,8} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,monit,sysconfig,sasl,smrsh} \
-	$RPM_BUILD_ROOT{%{_bindir},%{_sbindir},%{_libdir}/sendmail-cf} \
+	$RPM_BUILD_ROOT{%{_bindir},%{_sbindir},%{_prefix}/lib} \
+	$RPM_BUILD_ROOT{%{_datadir}/sendmail-cf,%{_libdir}} \
 	$RPM_BUILD_ROOT/var/{log,spool/mqueue} \
 	$RPM_BUILD_ROOT{%{_sysconfdir},%{_includedir}}
 
@@ -268,12 +269,12 @@ ln -sf %{_sbindir}/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
 # install the cf files
 cd cf
 rm -f cf/{Build,Makefile} feature/*~
-cp -ar * $RPM_BUILD_ROOT%{_libdir}/sendmail-cf
+cp -ar * $RPM_BUILD_ROOT%{_datadir}/sendmail-cf
 cd -
 
 # sendmail.{cf,mc}
 install cf/cf/pld.cf $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf
-sed -e 's|@@PATH@@|%{_libdir}/sendmail-cf|' < %{SOURCE6} \
+sed -e 's|@@PATH@@|%{_datadir}/sendmail-cf|' < %{SOURCE6} \
 	> $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.mc
 
 %if %{with pgsql}
@@ -286,7 +287,7 @@ install cf/cf/submit.mc $RPM_BUILD_ROOT%{_sysconfdir}
 echo "# local-host-names - include all aliases for your machine here." \
 	> $RPM_BUILD_ROOT%{_sysconfdir}/local-host-names
 
-ln -sf /usr/sbin/sendmail $RPM_BUILD_ROOT%{_libdir}/sendmail
+ln -sf /usr/sbin/sendmail $RPM_BUILD_ROOT%{_prefix}/lib/sendmail
 
 # dangling symlinks
 for f in hoststat mailq newaliases purgestat ; do
@@ -423,7 +424,7 @@ fi
 %attr(755,root,root) %{_bindir}/newaliases
 %attr(755,root,root) %{_bindir}/mailq
 %attr(755,root,root) %{_sbindir}/smrsh
-%{_libdir}/sendmail
+%{_prefix}/lib/sendmail
 
 %{_mandir}/man1/mailq.1*
 %{_mandir}/man1/newaliases.1*
@@ -466,17 +467,17 @@ fi
 %config(noreplace) %verify(not md5 size mtime) /etc/pam.d/smtp
 %attr(750,root,root) %config(noreplace) %verify(not md5 size mtime) /etc/monit/*.monitrc
 
-%dir %{_libdir}/sendmail-cf
-%dir %{_libdir}/sendmail-cf/cf
-%{_libdir}/sendmail-cf/cf/pld.mc
-%{_libdir}/sendmail-cf/feature
-%{_libdir}/sendmail-cf/m4
-%{_libdir}/sendmail-cf/mailer
-%dir %{_libdir}/sendmail-cf/ostype
-%{_libdir}/sendmail-cf/ostype/linux.m4
-%dir %{_libdir}/sendmail-cf/sh
-%{_libdir}/sendmail-cf/sh/makeinfo.sh
-%{_libdir}/sendmail-cf/siteconfig
+%dir %{_datadir}/sendmail-cf
+%dir %{_datadir}/sendmail-cf/cf
+%{_datadir}/sendmail-cf/cf/pld.mc
+%{_datadir}/sendmail-cf/feature
+%{_datadir}/sendmail-cf/m4
+%{_datadir}/sendmail-cf/mailer
+%dir %{_datadir}/sendmail-cf/ostype
+%{_datadir}/sendmail-cf/ostype/linux.m4
+%dir %{_datadir}/sendmail-cf/sh
+%{_datadir}/sendmail-cf/sh/makeinfo.sh
+%{_datadir}/sendmail-cf/siteconfig
 
 %files devel
 %defattr(644,root,root,755)
