@@ -152,7 +152,7 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 %prep
 %setup -q
 %patch0 -p1
-#%patch1 -p1
+%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
@@ -188,7 +188,6 @@ echo "APPENDDEF(\`confLIBS', \`-lsasl -lcrypto')" >> config.m4
 echo "APPENDDEF(\`confENVDEF', \`-DSTARTTLS')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lssl -lcrypto')" >> config.m4
 %endif
-echo "APPENDDEF(\`confENVDEF' \`-DSMRSH_CMDDIR=\"dir\"  \"/etc/smrsh\"')" >> config.m4
 
 cd sendmail	&& sh Build -f ../config.m4
 cd ../mailstats	&& sh Build -f ../config.m4
