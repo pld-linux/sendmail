@@ -228,20 +228,20 @@ rm -rf $RPM_BUILD_ROOT
 
 %pre
 if [ -n "`/usr/bin/getgid smmsp`" ]; then
-	if [ "`/usr/bin/getgid smmsp`" != "72" ]; then
-		echo "Warning: group smmsp haven't gid=72. Correct this before installing sendmail." 1>&2
+	if [ "`/usr/bin/getgid smmsp`" != "25" ]; then
+		echo "Warning: group smmsp haven't gid=25. Correct this before installing sendmail." 1>&2
 		exit 1
 	fi
 else
-	/usr/sbin/groupadd -g 72 -r -f smmsp
+	/usr/sbin/groupadd -g 25 -r -f smmsp
 fi
 if [ -n "`/bin/id -u smmsp 2>/dev/null`" ]; then
-	if [ "`/bin/id -u smmsp`" != "72" ]; then
-		echo "Warning: user smmsp haven't uid=72. Correct this before installing sendmail." 1>&2
+	if [ "`/bin/id -u smmsp`" != "25" ]; then
+		echo "Warning: user smmsp haven't uid=25. Correct this before installing sendmail." 1>&2
 		exit 1
 	fi
 else
-	/usr/sbin/useradd -u 72 -r -d /var/spool/clientqueue -s /bin/false -c "Sendmail Message Submission Program" -g smmsp smmsp 1>&2
+	/usr/sbin/useradd -u 25 -r -d /var/spool/clientqueue -s /bin/false -c "Sendmail Message Submission Program" -g smmsp smmsp 1>&2
 fi
 
 %post
