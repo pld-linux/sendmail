@@ -10,11 +10,23 @@ Summary(pl):	Sendmail - serwer poczty elektronicznej
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
 Version:	8.12.1
-Release:	4
+Release:	5
 License:	BSD
 Group:		Networking/Daemons
+Group(cs):	SÌªovÈ/DÈmoni
+Group(da):	NetvÊrks/DÊmoner
 Group(de):	Netzwerkwesen/Server
+Group(es):	Red/Servidores
+Group(fr):	RÈseau/Serveurs
+Group(is):	Net/P˙kar
+Group(it):	Rete/Demoni
+Group(no):	Nettverks/Daemoner
 Group(pl):	Sieciowe/Serwery
+Group(pt):	Rede/Servidores
+Group(ru):	Û≈‘ÿ/‰≈ÕœŒŸ
+Group(sl):	Omreæni/Streæniki
+Group(sv):	N‰tverk/Demoner
+Group(uk):	Ì≈“≈÷¡/‰≈ÕœŒ…
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	http://www.informatik.uni-kiel.de/~ca/email/rules/check.tar
@@ -339,14 +351,13 @@ fi
 %dir /etc/smrsh
 %dir %{_sysconfdir}
 /var/log/statistics
-# XXX can't do noreplace here or new sendmail will not deliver.
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/sendmail.cf
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/sendmail.mc
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/submit.cf
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/submit.mc
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/local-host-names
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/aliases
-%attr(0644,root,mail) %ghost %{_sysconfdir}/aliases.db
+%ghost %{_sysconfdir}/aliases.db
 %attr(0770,root,smmsp) %dir /var/spool/clientmqueue
 %attr(0750,root,mail) %dir /var/spool/mqueue
 
