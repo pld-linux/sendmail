@@ -43,7 +43,7 @@ diff -Nur sendmail-8.12.0.orig/sendmail/readcf.c sendmail-8.12.0/sendmail/readcf
  	{ "SoftBounce",	O_SOFTBOUNCE,	OI_NONE	},
  #endif /* _FFR_SOFT_BOUNCE */
 +#define O_DETECTTELNET	0xd0
-+	{ "DetectTelnet",	O_DETECT_TELNET,	OI_NONE },
++	{ "DetectTelnet",	O_DETECTTELNET,		OI_NONE },
 +#define O_EXITONTELNET	0xd1
 +	{ "ExitOnTelnet",	O_EXITONTELNET,		OI_NONE },
  	{ NULL,				'\0',		OI_NONE	}
@@ -87,12 +87,13 @@ diff -Nur sendmail-8.12.0.orig/sendmail/srvrsmtp.c sendmail-8.12.0/sendmail/srvr
  #if MILTER
  # include <libmilter/mfdef.h>
  #endif /* MILTER */
-@@ -369,6 +370,8 @@
+@@ -369,6 +370,9 @@
  	char *args[MAXSMTPARGS];
  	char inp[MAXLINE];
  	char cmdbuf[MAXLINE];
 +	char telnet_request[] = {IAC, DO, TELOPT_SGA, 0};
 +	char telnet_response[] = {IAC, WILL, TELOPT_SGA, 0};
++	char *telnet_tmp;
  #if SASL
  	sasl_conn_t *conn;
  	volatile bool sasl_ok;
