@@ -10,7 +10,7 @@ Summary(pl):	Sendmail - serwer poczty elektronicznej
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
 Version:	8.12.1
-Release:	1
+Release:	2
 License:	BSD
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
@@ -51,13 +51,13 @@ Provides:	smtpdaemon
 Obsoletes:	smtpdaemon
 Obsoletes:	exim
 Obsoletes:	masqmail
+Obsoletes:	omta
 Obsoletes:	postfix
 Obsoletes:	qmail
 Obsoletes:	sendmail-cf
 Obsoletes:	sendmail-doc
 Obsoletes:	smail
 Obsoletes:	zmailer
-Obsoletes:	omta
 
 %define		_sysconfdir	/etc/mail
 
@@ -84,7 +84,7 @@ passerelles du réseau, et une configuration flexible.
 
 %description -l pl
 Sendmail jest programem umo¿liwiaj±cym wymianê poczty elektronicznej
-miêdzy komputerami w sieci internet. Zajmuje siê przekazywaniem poczty
+miêdzy komputerami w sieci (MTA). Zajmuje siê przekazywaniem poczty
 elektronicznej miêdzy bramkami pocztowymi i dostarczaniem przesy³ek na
 konta docelowe. Bardzo dobrze obs³uguje aliasy pocztowe a jego
 dodatkowym atutem jest prosta konfiguracja. Dziêki rozbudowanym
@@ -186,7 +186,7 @@ ln -sf ../sbin/sendmail $RPM_BUILD_ROOT%{_libdir}/sendmail
 
 # dangling symlinks
 for f in hoststat mailq newaliases purgestat ; do
-  ln -sf ../sbin/sendmail $RPM_BUILD_ROOT%{_bindir}/${f}
+	ln -sf ../sbin/sendmail $RPM_BUILD_ROOT%{_bindir}/${f}
 done
 
 cat <<EOF > $RPM_BUILD_ROOT%{_sysconfdir}/access
@@ -266,7 +266,7 @@ done
 # Oops, these files moved
 #
 if [ -f /etc/sendmail.cw ] ; then
-	cat /etc/sendmail.cw  | \
+	cat /etc/sendmail.cw | \
 		awk 'BEGIN { print "# Entries from obsoleted /etc/sendmail.cw" ;} \
 		{ print $1 }' >> /etc/mail/local-host-names
 	cp -f /etc/sendmail.cw /etc/sendmail.cw.rpmorig
@@ -333,34 +333,34 @@ fi
 %{_mandir}/man1/newaliases.1*
 %{_mandir}/man1/mailq.1*
 
-/var/log/statistics
-# XXX can't do noreplace here or new sendmail will not deliver.
-%config(noreplace) %{_sysconfdir}/sendmail.cf
-%config(noreplace) %{_sysconfdir}/sendmail.mc
-%config(noreplace) %{_sysconfdir}/submit.cf
-%config(noreplace) %{_sysconfdir}/submit.mc
-%config(noreplace) %{_sysconfdir}/local-host-names
-%config(noreplace) %{_sysconfdir}/aliases
-%attr(0644,root,mail) %ghost %{_sysconfdir}/aliases.db
-%attr(0770,root,mail) %dir /var/spool/mqueue
-%attr(0770,root,smmsp) %dir /var/spool/clientmqueue
 %dir /etc/smrsh
 %dir %{_sysconfdir}
+/var/log/statistics
+# XXX can't do noreplace here or new sendmail will not deliver.
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/sendmail.cf
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/sendmail.mc
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/submit.cf
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/submit.mc
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/local-host-names
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/aliases
+%attr(0644,root,mail) %ghost %{_sysconfdir}/aliases.db
+%attr(0770,root,smmsp) %dir /var/spool/clientmqueue
+%attr(0770,root,mail) %dir /var/spool/mqueue
 
 %config %{_sysconfdir}/Makefile
-%ghost %{_sysconfdir}/virtusertable.db
-%config(noreplace) %{_sysconfdir}/virtusertable
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/access
 %ghost %{_sysconfdir}/access.db
-%config(noreplace) %{_sysconfdir}/access
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/domaintable
 %ghost %{_sysconfdir}/domaintable.db
-%config(noreplace) %{_sysconfdir}/domaintable
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/mailertable
 %ghost %{_sysconfdir}/mailertable.db
-%config(noreplace) %{_sysconfdir}/mailertable
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/virtusertable
+%ghost %{_sysconfdir}/virtusertable.db
 %config(noreplace) %{_sysconfdir}/helpfile
 
 %attr(754,root,root) /etc/rc.d/init.d/sendmail
-%config(noreplace) /etc/sysconfig/sendmail
-%config(noreplace) /etc/sasl/Sendmail.conf
+%config(noreplace) %verify(not md5 size mtime) /etc/sysconfig/sendmail
+%config(noreplace) %verify(not md5 size mtime) /etc/sasl/Sendmail.conf
 
 %dir %{_libdir}/sendmail-cf
 %dir %{_libdir}/sendmail-cf/cf
