@@ -1,0 +1,2 @@
+- _without_ldap
+- don't use -s on %%{debug}
