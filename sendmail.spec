@@ -3,7 +3,7 @@
 # _without_ldap		without LDAP support
 # _without_tls		without TLS (SSL) support
 # _with_db3		use db3 instead of db package
-# _with_pgsql		without pgsql support (bluelabs)
+# _with_pgsql		with PostgreSQL support (bluelabs)
 #
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-Übertragungsagent
@@ -287,6 +287,7 @@ else
 fi
 
 %post
+umask 022
 #
 # Convert old format to new
 #
