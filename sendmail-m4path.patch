@@ -1,0 +1,16 @@
+--- sendmail-8.11.0/cf/cf/Build.m4	Fri Aug  4 01:16:25 2000
++++ sendmail-8.11.0/cf/cf/Build	Fri Aug  4 01:16:39 2000
+@@ -18,12 +18,11 @@
+ SMROOT=${SMROOT-../..}
+ BUILDTOOLS=${BUILDTOOLS-$SMROOT/devtools}
+ 
+-M4=`sh $BUILDTOOLS/bin/find_m4.sh`
++M4=/usr/bin/m4
+ ret=$?
+ if [ $ret -ne 0 ]
+ then
+ 	exit $ret
+ fi
+-echo "Using M4=$M4"
+ 
+ eval exec ${MAKE-make} M4=$M4 $*
