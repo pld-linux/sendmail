@@ -1,0 +1,79 @@
+#
+# This file controls and allow (or disallow) access to the MTA.
+# Check the /usr/share/doc/sendmail-{version}/README.cf file for a description
+# of the format of this file. (search for access_db in that file)
+# See also /usr/share/doc/sendmail-{version}/examples/.
+#
+# Don't forget to do
+#
+#    makemap hash access < access
+#
+# after modify of this file.
+#
+# Format:
+#    lhs:
+#        email addr      <user@[host.domain]>
+#        domain name     unless  FEATURE(relay_hosts_only) is used,
+#                        then this is a fqdn - and relay-domains ($=R)
+#                        must also be fqdns.
+#        network number  must end on an octet boundary, or
+#                        you're stuck going the longwinded way ;-{
+#                        you also should rember about IPv6: prefix
+#                        before IPv6 protocol adress.
+#        [network no.]   by default, sendmail will refuse any mail
+#                        from unresolvable domains. If you have problems
+#                        with your resolver you can still accept mail
+#                        from unresolvable domains marking their IP address
+#                        with '[]' quotes. Other way is add 
+#                        FEATURE(`accept_unresolvable_domains')
+#                        to your sendmail.mc and run
+#                        m4 sendmail.mc > sendmail.cf
+#
+#    rhs:
+#        OK              accept mail even if other rules in the
+#                        running ruleset would reject it.
+#        RELAY           Allow domain to relay through your SMTP
+#                        server.  RELAY also serves an implicit
+#                        OK for the other checks.
+#        REJECT          reject the sender/recipient with a general
+#                        purpose message that can be customized.
+#                        confREJECT_MSG [550 Access denied] will be issued
+#        DISCARD         discard the message completely using
+#                        the $#discard mailer.
+#        ### any text    where ### is an RFC 821 compliant error code
+#                        and "any text" is a message to return for
+#                        the command
+#                        The string should be quoted to avoid surprises,
+#                        e.g., sendmail may remove spaces otherwise.
+#                        This type is deprecated, use one the two
+#                        ERROR:  entries below instead.
+#        ERROR:### any text
+#                        as above, but useful to mark error messages as such.
+#        ERROR:D.S.N:### any text
+#                        where D.S.N is an RFC 1893 compliant error code
+#                        and the rest as above.
+#
+# Examples:
+#   spamhost.com                 ERROR:550 "We don't accept mail from spammers"
+#   okay.cyberspammer.com        OK
+#   sendmail.org                 RELAY
+#   128.32                       RELAY
+#   IPv6:1:2:3:4:5:6:7           RELAY
+#   [127.0.0.3]                  OK
+#   [IPv6:1:2:3:4:5:6:7:8]       OK
+#   spammer@aol.com              REJECT
+#   FREE.STEALTH.MAILER@         550 Spam not accepted
+#   spammer@aol.com              REJECT
+#   cyberspammer.com             REJECT
+#   .de                          REJECT
+#   192.168.212                  REJECT
+#   IPv6:2002:c0a8:02c7          RELAY
+#   IPv6:2002:c0a8:51d2::23f4    REJECT
+#
+# By default we allow relaying from localhost...
+#
+localhost.localdomain           RELAY
+localhost                       RELAY
+127.0.0.1                       RELAY
+
+
