@@ -8,6 +8,7 @@ Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-Übertragungsagent
 Summary(es):	Sendmail - agente de transporte de mail
 Summary(fr):	Agent de transport de courrier sendmail
+Summary(ko):	SMTP_AUTH¿Í TLS¸¦ Áö¿øÇÏ´Â Mail Àü¼Û ÇÁ·Î±×·¥(MTA)
 Summary(pl):	Sendmail - serwer poczty elektronicznej
 Summary(pt_BR):	Sendmail - agente de transporte de mail
 Summary(ru):	ğÏŞÔÏ×ÙÊ ÔÒÁÎÓĞÏÒÔÎÙÊ ÁÇÅÎÔ sendmail
@@ -100,6 +101,13 @@ transférent le courrier d'une machine à l'autre. Sendmail implémente
 une facilité générale de routage de courrier entre les réseaux, permet
 l'\"aliasing\" et le \"forwarding\", un routage automatique sur les
 passerelles du réseau, et une configuration flexible.
+
+%description -l ko
+SendamilÀº ¸Å¿ì ³Î¸® »ç¿ëµÇ´Â Mail Àü¼Û ÇÁ·Î±×·¥ÀÌ´Ù(MTA). Mail Àü¼Û
+ÇÁ·Î±×·¥µé(MTA)Àº ¾î¶°ÇÑ machine¿¡¼­ ´Ù¸¥ machineÀ¸·Î ¸ŞÀÏÀ» º¸³»¸ç
+SendmailÀº e-mailÀ» ÀĞ±âÀ§ÇØ »ç¿ëÇÏ´Â client programÀº ¾Æ´Ï´Ù.
+SendamilÀº ¿øÇÏ´Â °÷À¸·Î InternetÀÌ³ª Network¸¦ ÅëÇØ e-mailÀ» º¸³»´Â
+¿ªÇÒÀ» ÇÏ´Â backgrond¿¡¼­ ÀÛ¾÷À» ÇÏ´Â ÇÁ·Î±×·¥ÀÌ´Ù.
 
 %description -l pl
 Sendmail jest programem umo¿liwiaj±cym wymianê poczty elektronicznej
