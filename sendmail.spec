@@ -2,6 +2,7 @@
 # Conditional build:
 # _without_ldap		without LDAP support
 # _without_tls		without TLS (SSL) support
+# _with_auth		with AUTH support
 
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-Übertragungsagent
@@ -9,8 +10,8 @@ Summary(fr):	Agent de transport de courrier sendmail
 Summary(pl):	Sendmail - serwer poczty elektronicznej
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
-Version:	8.12.1
-Release:	5
+Version:	8.12.2
+Release:	1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -22,16 +23,16 @@ Source5:	%{name}-etc-mail-Makefile
 Source6:	%{name}.mc
 Source7:	%{name}-config.m4
 Source8:	%{name}.sasl
-Patch0:		%{name}-makefile.patch
-Patch1:		%{name}-makemapman.patch
-Patch2:		%{name}-smrsh-paths.patch
-Patch3:		%{name}-rmail.patch
-Patch4:		%{name}-os-paths.patch
-Patch5:		%{name}-m4path.patch
-Patch6:		%{name}-dtelnet.patch
-Patch7:		%{name}-pld.mc.patch
-Patch8:		%{name}-redirect.patch
-Patch9:		%{name}-hprescan-dos.patch
+Patch0:		%{name}-makemapman.patch
+Patch1:		%{name}-smrsh-paths.patch
+Patch2:		%{name}-rmail.patch
+Patch3:		%{name}-os-paths.patch
+Patch4:		%{name}-m4path.patch
+Patch5:		%{name}-dtelnet.patch
+Patch6:		%{name}-pld.mc.patch
+Patch7:		%{name}-redirect.patch
+Patch8:		%{name}-hprescan-dos.patch
+Patch9:		%{name}-auth.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
@@ -39,6 +40,7 @@ BuildRequires:	db3-devel
 %{!?_without_tls:BuildRequires:	openssl-devel}
 Requires:	m4
 Requires:	procmail
+%{?_with_auth:Requires: cyrus-sasl-plain}
 PreReq:		/sbin/chkconfig
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
@@ -108,7 +110,9 @@ istiyorsanýz bu pakete gereksiniminiz olacaktýr.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
-%patch9 -p1
+%if %{?_with_auth:1}%{!?_with_auth:0}
+patch -p0 %{SOURCE6} %{PATCH9}
+%endif
 
 # seems to be obsoleted...
 #tar xf %{SOURCE2} -C cf
@@ -343,7 +347,7 @@ fi
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/submit.mc
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/local-host-names
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/aliases
-%ghost %{_sysconfdir}/aliases.db
+%attr(0644,root,mail) %ghost %{_sysconfdir}/aliases.db
 %attr(0770,root,smmsp) %dir /var/spool/clientmqueue
 %attr(0750,root,mail) %dir /var/spool/mqueue
 
