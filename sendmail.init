@@ -23,6 +23,8 @@ else
 	QUEUE=1h
 	ENABLE_IPV6=yes
 fi
+[ -z "$SMQUEUE" ] && SMQUEUE="$QUEUE"
+[ -z "$SMQUEUE" ] && SMQUEUE=1h
 
 # Check that networking is up.
 if is_yes "${NETWORKING}"; then
@@ -60,6 +62,16 @@ case "$1" in
 	else
 		msg_already_running sendmail
 	fi
+	if [ ! -f /var/lock/subsys/sm-client ]; then
+		msg_starting sm-client
+		touch /var/run/sm-client.pid
+		chown smmsp:smmsp /var/run/sm-client.pid
+		daemon /usr/sbin/sendmail -L sm-msp-queue -Ac -q$SMQUEUE
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/sm-client
+	else
+		msg_already_running sm-client
+	fi
 	;;
   stop)
 	if [ -f /var/lock/subsys/sendmail ]; then
@@ -70,18 +82,38 @@ case "$1" in
 	else
 		msg_not_running sendmail
 	fi
+	if [ -f /var/lock/subsys/sm-client ]; then
+		msg_stopping sm-client
+		killproc sendmail
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && rm -f /var/run/sm-client.pid
+		[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/sm-client
+	else
+		msg_not_running sm-client
+	fi
 	;;
   restart|force-reload)
 	$0 stop
 	$0 start
 	exit $?
 	;;
+  reload)
+  	# TODO: make it better for sm-client
+	if [ -f /var/lock/subsys/sendmail ]; then
+		msg_reloading sendmail
+		busy
+		killproc sendmail -HUP
+		RETVAL=$?
+	else
+		msg_not_running sendmail
+	fi
+  	;;
   status)
 	status sendmail
 	exit $?
 	;;
   *)
-	msg_usage "$0 {start|stop|restart|force-reload|status}"
+	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
 	exit 3
 esac
 
