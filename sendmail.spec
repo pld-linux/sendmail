@@ -17,7 +17,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.12.11
-Release:	3
+Release:	3.1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -152,6 +152,15 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 маршрутизац╕╖ пошти, aliasing, forwarding, автоматичну маршрутизац╕ю
 для мережевих шлюз╕в та гнучкий механ╕зм маршрутизац╕╖.
 
+%package devel
+Summary:	Header files for sendmail
+Summary(pl):	Pliki nagЁСwkowe 
+Group:		Development/Libraries
+
+%description devel
+This package contains the files necessary to develop applications
+using sendmail libraries.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -206,6 +215,7 @@ cd ../rmail	&& sh Build -f ../config.m4
 cd ../makemap	&& sh Build -f ../config.m4
 cd ../praliases	&& sh Build -f ../config.m4
 cd ../smrsh	&& sh Build -f ../config.m4
+cd ../libmilter	&& sh Build -f ../config.m4
 cd ../cf/cf
 m4 pld.mc > pld.cf
 
@@ -216,7 +226,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,sysconfig,sasl,smrsh
 	$RPM_BUILD_ROOT%{_mandir}/man{1,5,8} \
 	$RPM_BUILD_ROOT/var/log $RPM_BUILD_ROOT/var/spool/mqueue \
 	$RPM_BUILD_ROOT%{_libdir}/sendmail-cf \
-	$RPM_BUILD_ROOT/etc/pam.d \
+	$RPM_BUILD_ROOT/etc/pam.d $RPM_BUILD_ROOT%{_includedir}\
 
 OBJDIR=obj.$(uname -s).$(uname -r).$(arch)
 
@@ -225,7 +235,8 @@ IDNG=`id -ng`
 SMINSTOPT="DESTDIR=$RPM_BUILD_ROOT SBINOWN=$IDNU SBINGRP=$IDNG \
 	UBINOWN=$IDNU UBINGRP=$IDNG MANOWN=$IDNU MANGRP=$IDNG \
 	CFOWN=$IDNU CFGRP=$IDNG MSPQOWN=$IDNU GBINGRP=$IDNG GBINOWN=$IDNU \
-	BINOWN=$IDNU BINGRP=$IDNG"
+	BINOWN=$IDNU BINGRP=$IDNG LIBOWN=$IDNU LIBGRP=$IDNG INCOWN=$IDNU INCGRP=$IDNG"
+
 %{__make} -C $OBJDIR/sendmail install \
 	$SMINSTOPT
 %{__make} -C $OBJDIR/mailstats install \
@@ -237,6 +248,8 @@ SMINSTOPT="DESTDIR=$RPM_BUILD_ROOT SBINOWN=$IDNU SBINGRP=$IDNG \
 %{__make} -C $OBJDIR/makemap install \
 	$SMINSTOPT
 %{__make} -C $OBJDIR/smrsh install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/libmilter install \
 	$SMINSTOPT
 
 ln -sf %{_sbindir}/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
@@ -293,10 +306,11 @@ mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
 mv -f doc/op/op.me .
 
+
 bzip2 -dc %{SOURCE4} | tar xf -
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+#rm -rf $RPM_BUILD_ROOT
 
 %pre
 if [ -n "`/usr/bin/getgid smmsp`" ]; then
@@ -449,3 +463,8 @@ fi
 %dir %{_libdir}/sendmail-cf/sh
 %{_libdir}/sendmail-cf/sh/makeinfo.sh
 %{_libdir}/sendmail-cf/siteconfig
+
+%files devel
+%{_libdir}/libmilter.a
+%dir %{_includedir}/libmilter
+%{_includedir}/libmilter/*
