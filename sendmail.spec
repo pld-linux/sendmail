@@ -36,7 +36,7 @@ forwarding, automatic routing to network gateways, and flexible
 configuration.
 
 If you need the ability to send and receive mail via the internet
-you'll need sendmail.
+you'll need sendmail or another MTA.
 
 %description -l pl
 Sendmail jest programem umo¿liwiaj±cym wymianê poczty elektronicznej
