@@ -94,7 +94,7 @@ make makemap mail.local mailstats praliases rmail
 make smrsh LDOPTS="-s -static" 
 (
 cd cf/cf
-/usr/bin/m4 pld.mc >> ./sendmail.cf
+%{_bindir}/m4 pld.mc >> ./sendmail.cf
 )
 
 %install
@@ -119,7 +119,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 make DESTDIR=$RPM_BUILD_ROOT OPTIONS=force-install rmail mail.local
 
 for i in hoststat mailq newaliases purgestat
-	do ln -sf ../sbin/sendmail  $RPM_BUILD_ROOT/usr/bin/$i
+	do ln -sf ../sbin/sendmail  $RPM_BUILD_ROOT%{_bindir}/$i
 done
 ln -sf /usr/sbin/sendmail $RPM_BUILD_ROOT%{_libdir}/sendmail
 
@@ -151,11 +151,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc README.gz KNOWNBUGS.gz RELEASE_NOTES.gz smrsh/SMRSH.txt.gz
 
-%attr(711,root,root) /usr/bin/hoststat
-%attr(711,root,root) /usr/bin/mailq
-%attr(711,root,root) /usr/bin/newaliases
-%attr(711,root,root) /usr/bin/purgestat
-%attr(755,root,root) /usr/bin/rmail
+%attr(711,root,root) %{_bindir}/hoststat
+%attr(711,root,root) %{_bindir}/mailq
+%attr(711,root,root) %{_bindir}/newaliases
+%attr(711,root,root) %{_bindir}/purgestat
+%attr(755,root,root) %{_bindir}/rmail
 
 %attr(755,root,root) /usr/sbin/mailstats
 %attr(755,root,root) /usr/sbin/makemap
