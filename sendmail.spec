@@ -17,7 +17,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.12.11
-Release:	0.1
+Release:	0.2
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -167,10 +167,16 @@ sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
 install %{SOURCE7} config.m4
 
+# Ac-specific hack - ac-i386 builder has not fully operational shm
+%ifarch i386
+%{__perl} -pi -e 's/^(smtest.*t-shm)/dnl $1/' libsm/Makefile.m4
+%endif
+
 %build
 echo "define(\`confCC', \`%{__cc}')" >> config.m4
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
 echo "APPENDDEF(\`confINCDIRS', \`-I/usr/include/sasl')" >> config.m4
+echo "define(\`confLIBSEARCHPATH', \`/%{_lib} /usr/%{_lib}')" >> config.m4
 echo "define(\`confLIBSEARCH', \`db resolv')" >> config.m4
 %if 0%{!?debug:1}
 echo "define(\`confLDOPTS', \`-s')" >> config.m4
