@@ -2,7 +2,7 @@ Summary:	A widely used Mail Transport Agent (MTA)
 Summary(pl):	Sendmail -- aplikacja do obs³ugi poczty elektronicznej
 Name:		sendmail
 Version:	8.10.1
-Release:	1
+Release:	4
 License:	BSD
 Group:		Networking/Daemons
 Group(pl):	Sieciowe/Serwery
@@ -13,11 +13,13 @@ Source2:	http://www.informatik.uni-kiel.de/%7Eca/email/rules/check.tar
 Source3:	aliases
 Source4:	sendmail.sysconfig
 Source5:	sendmail-8.9.3-etc-mail-Makefile
-Source6:	sendmail-redhat.mc
+Source6:	sendmail.mc
+Source7:	sendmail-config.m4
 Patch0:		sendmail-8.10.0-redhat.patch
 Patch1:		sendmail-8.10.0-makemapman.patch
 Patch2:		sendmail-8.10.0-smrsh-paths.patch
 Patch3:		sendmail-8.8.7-rmail.patch
+Buildrequires:	cyrus-sasl-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Prereq:		/sbin/chkconfig
 Provides:	smtpdaemon
@@ -76,43 +78,44 @@ w formacie PostScript(TM) oraz troff. Je¿eli potrzebujesz dokumntacji
 
 %prep
 %setup -q
-%patch0 -p1 -b .redhat
-%patch1 -p1 -b .makemapman
-%patch2 -p1 -b .smrsh
-%patch3 -p1 -b .rmail
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 # XXX REVERTING
 #tar xf $RPM_SOURCE_DIR/check.tar -C cf
 #chown root.root cf/hack/* cf/README.check
 
-
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/redhat.mc
+
+install %{SOURCE7} config.m4
 
 %build
 export RPM_OPT_FLAGS="$RPM_OPT_FLAGS -DUSE_VENDOR_CF_PATH=1"
 
 cd sendmail
-sh Build -f ../redhat.config.m4
+sh Build -f ../config.m4
 cd ..
 
 cd mailstats
-sh Build -f ../redhat.config.m4
+sh Build -f ../config.m4
 cd ..
 
 cd rmail
-sh Build -f ../redhat.config.m4
+sh Build -f ../config.m4
 cd ..
 
 cd makemap
-sh Build -f ../redhat.config.m4
+sh Build -f ../config.m4
 cd ..
 
 cd praliases
-sh Build -f ../redhat.config.m4
+sh Build -f ../config.m4
 cd ..
 
 cd smrsh
-sh Build -f ../redhat.config.m4
+sh Build -f ../config.m4
 cd ..
 
 cd cf/cf
@@ -192,7 +195,7 @@ install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/aliases
 makemap hash $RPM_BUILD_ROOT%{_sysconfdir}/aliases.db < %{SOURCE3}
 
 install %SOURCE4 $RPM_BUILD_ROOT/etc/sysconfig/sendmail
-install -m755 %SOURCE1 $RPM_BUILD_ROOT/etc/rc.d/init.d/sendmail
+install %SOURCE1 $RPM_BUILD_ROOT/etc/rc.d/init.d/sendmail
 
 install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/mail/Makefile
 
