@@ -156,7 +156,6 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 %patch7 -p1
 %endif
 %patch8 -p1
-%patch9 -p1
 
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
