@@ -167,7 +167,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) /usr/libexec/mail.local
 %attr(755,root,root) /usr/libexec/smrsh
 
-%attr(644,root, man) %{_mandir}/man[158]/*
+%{_mandir}/man[158]/*
 
 %attr(640,root,root) %config %verify(not size mtime md5) /var/run/sendmail.st
 
