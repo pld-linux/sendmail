@@ -2,21 +2,21 @@
 # Conditional build:
 # _without_ldap		without LDAP support
 # _without_tls		without TLS (SSL) support
-# _with_db3		use db3 instead of db package
-# _with_pgsql		without pgsql support (bluelabs)
+# _with_pgsql		with PostgreSQL support (bluelabs)
 #
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-Übertragungsagent
 Summary(es):	Sendmail - agente de transporte de mail
 Summary(fr):	Agent de transport de courrier sendmail
+Summary(ko):	SMTP_AUTH¿Í TLS¸¦ Áö¿øÇÏ´Â Mail Àü¼Û ÇÁ·Î±×·¥(MTA)
 Summary(pl):	Sendmail - serwer poczty elektronicznej
 Summary(pt_BR):	Sendmail - agente de transporte de mail
 Summary(ru):	ðÏÞÔÏ×ÙÊ ÔÒÁÎÓÐÏÒÔÎÙÊ ÁÇÅÎÔ sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	ðÏÛÔÏ×ÉÊ ÔÒÁÎÓÐÏÒÔÎÉÊ ÁÇÅÎÔ sendmail
 Name:		sendmail
-Version:	8.12.7
-Release:	1
+Version:	8.12.9
+Release:	2
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -43,11 +43,10 @@ Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
 Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
 BuildRequires:	cyrus-sasl-devel
-%{?_with_db3:BuildRequires:	db3-devel}
-%{!?_with_db3:BuildRequires:	db-devel >= 4.1.25}
+BuildRequires:	db3-devel
 %{!?_without_ldap:BuildRequires:	openldap-devel}
-%{!?_without_tls:BuildRequires:	openssl-devel}
-%{?_with_pgsql:BuildRequires: postgresql-devel}
+%{!?_without_tls:BuildRequires:		openssl-devel >= 0.9.6i}
+%{?_with_pgsql:BuildRequires:		postgresql-devel}
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
@@ -57,7 +56,6 @@ Requires(post):	textutils
 Requires(post,preun):/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
-%{!?_with_db3:Requires:	db >= 4.1.25}
 Requires:	m4
 Requires:	procmail
 Provides:	smtpdaemon
@@ -103,6 +101,13 @@ transférent le courrier d'une machine à l'autre. Sendmail implémente
 une facilité générale de routage de courrier entre les réseaux, permet
 l'\"aliasing\" et le \"forwarding\", un routage automatique sur les
 passerelles du réseau, et une configuration flexible.
+
+%description -l ko
+SendamilÀº ¸Å¿ì ³Î¸® »ç¿ëµÇ´Â Mail Àü¼Û ÇÁ·Î±×·¥ÀÌ´Ù(MTA). Mail Àü¼Û
+ÇÁ·Î±×·¥µé(MTA)Àº ¾î¶°ÇÑ machine¿¡¼­ ´Ù¸¥ machineÀ¸·Î ¸ÞÀÏÀ» º¸³»¸ç
+SendmailÀº e-mailÀ» ÀÐ±âÀ§ÇØ »ç¿ëÇÏ´Â client programÀº ¾Æ´Ï´Ù.
+SendamilÀº ¿øÇÏ´Â °÷À¸·Î InternetÀÌ³ª Network¸¦ ÅëÇØ e-mailÀ» º¸³»´Â
+¿ªÇÒÀ» ÇÏ´Â backgrond¿¡¼­ ÀÛ¾÷À» ÇÏ´Â ÇÁ·Î±×·¥ÀÌ´Ù.
 
 %description -l pl
 Sendmail jest programem umo¿liwiaj±cym wymianê poczty elektronicznej
@@ -157,7 +162,7 @@ install %{SOURCE7} config.m4
 %build
 echo "define(\`confCC', \`%{__cc}')" >> config.m4
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
-echo "define(\`confLIBSEARCH', \`db')" >> config.m4
+echo "define(\`confLIBSEARCH', \`db resolv')" >> config.m4
 %if %{?debug:0}%{!?debug:1}
 echo "define(\`confLDOPTS', \`-s')" >> config.m4
 %endif
@@ -286,6 +291,7 @@ else
 fi
 
 %post
+umask 022
 #
 # Convert old format to new
 #
