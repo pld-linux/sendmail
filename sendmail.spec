@@ -34,6 +34,7 @@ BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	pam-devel
+Requires:	m4
 Prereq:		/sbin/chkconfig
 Provides:	smtpdaemon
 Obsoletes:	smtpdaemon
@@ -42,6 +43,8 @@ Obsoletes:	qmail
 Obsoletes:	smail
 Obsoletes:	exim
 Obsoletes:	postfix
+Obsoletes:	sendmail-cf
+Obsoletes:	sendmail-doc
 
 %description
 The Sendmail program is a very widely used Mail Transport Agent (MTA).
@@ -77,95 +80,6 @@ po¶rednictwem protoko³ów: SMTP, ESMTP, UUCP, X.400 i innych.
 Sendmail, bir mektubu bir makineden diðerine taþýr. Pek çok davranýþý
 ayarlanabilir. Internet üzerinden mektup almak veya göndermek
 istiyorsanýz bu pakete gereksiniminiz olacaktýr.
-
-%package cf
-Summary:	The files needed to reconfigure Sendmail
-Summary(de):	sendmail-Konfigurationsdateien und m4-Makros 
-Summary(fr):	fichiers de configuration sendmail et macros m4
-Summary(pl):	Pliki potrzebne do rekonfiguracji Sendmaila
-Summary(tr):	sendmail ayar dosyalarý ve makrolarý
-Group:		Networking/Daemons
-Group(de):	Netzwerkwesen/Server
-Group(pl):	Sieciowe/Serwery
-Requires:	%{name} = %{version}
-Requires:	m4
-
-%description cf
-This package includes the configuration files which you'd need to
-generate the sendmail.cf file distributed with the sendmail package.
-You'll need the sendmail-cf package if you ever need to reconfigure
-and rebuild your sendmail.cf file. For example, the default
-sendmail.cf file is not configured for UUCP. If someday you needed to
-send and receive mail over UUCP, you'd need to install the sendmail-cf
-package to help you reconfigure Sendmail.
-
-%description -l de cf
-Dieses Paket enthält alle Konfigurationsdateien, die zum Erzeugen der
-Sendmail.cf-Datei erforderlich sind, die mit dem Basis- Sendmail-Paket
-geliefert wird. Sie werden darauf nicht verzichten wollen, wenn Sie
-Ihre Sendmail-cf-Datei neu konfigurieren und bauen wollen. Die
-Standard-Sendmail.cf.-Datei ist z.B. nicht für UUCP konfiguriert. Wenn
-Sie also Post über UUCP versenden und empfangen wollen, brauchen Sie
-es für eine Neukonfiguration.
-
-%description -l fr cf
-Ce package contient tous les fichiers de configuration utilisés pour
-générer le fichier sendmail.cf distribué avec le package de base
-sendmail. Vous n'aurez besoin de ce package que pour reconfigurer et
-reconstruire votre fichier sendmail.cf. Par exemple Le sendmail.cf par
-défaut n'est pas configuré pour UUCP. Si vous devez recevoir des mails
-avec UUCP, vous aurez besoin de ce package pour reconfigurer sendmail.
-
-%description -l pl cf
-Ten pakiet zawiera pliki konfiguracyjne, których bêdziesz potrzebowa³,
-by wygenerowaæ plik sendmail.cf, zawarty w pakiecie sendmail. Bêdziesz
-potrzebowa³ pakietu sendmail-cf je¿eli potrzebujesz zrekonfigurowaæ i
-przebudowaæ plik sendmail.cf. Na przyk³ad, domy¶lny sendmail.cf nie
-jest skonfigurowany dla UUCP. Je¿eli kiedy¶ bêdziesz potrzebowa³
-wysy³aæ i odbieraæ porztê po UUCP, bêdziesz musia³ zainstalowaæ pakiet
-sendmail-cf, który pomo¿e ci zrekonfigurowaæ Sendmaila.
-
-%description -l tr cf
-Bu paket, sendmail paketi ile daðýtýlan sendmail.cf dosyasýný
-oluþturmak için kullanýlan tüm ayar dosyalarýný içerir. sendmail.cf
-dosyasýný baþtan ayarlayýp kurmak için kullanýlýr.
-
-%package doc
-Summary:	Documentation about the Sendmail Mail Transport Agent program
-Summary(de):	Sendmail-Dokumentation 
-Summary(fr):	Documentation de sendmail
-Summary(pl):	Dokumentacja do Sendmaila
-Summary(tr):	sendmail belgeleri
-Group:		Documentation
-Group(de):	Dokumentation
-Group(pl):	Dokumentacja
-Requires:	%{name} = %{version}
-
-%description doc
-The sendmail-doc package contains documentation about the Sendmail
-Mail Transport Agent (MTA) program, including release notes, the
-Sendmail FAQ and a few papers written about Sendmail. The papers are
-provided in PostScript(TM) and troff formats.
-
-%description -l de doc
-Dieses Paket beinhaltet Release-Notes, die häufigsten Fragen und
-Antworten (FAQ) zu Sendmail sowie ein paar Artikel über Sendmail. Die
-letzteren sind sowohl in PostScript als auch in troff verfügbar.
-
-%description -l fr doc
-Paquetage contenant les remarques sur la version, la FAQ sendmail et
-quelques articles sur sendmail. Ces articles sont au format PostScript
-et troff.
-
-%description -l pl doc
-Ten pakiet zawiera dokumentacjê do programu Sendmail Mail Transport
-Agent (MTA). Dokumentacja zwawiera informacje o zmianach w bie¿±cej
-wersji i FAQ - najczêsciej zadawane pytania. Dokumentacja dostêpna
-jest w formacie PostScript(TM) oraz troff.
-
-%description -l tr doc
-Bu paket, sendmail ile ilgili çokça sorulan sorularý ve sendmail
-hakkýnda yazýlmýþ makalelerin bir kýsmýný içermektedir.
 
 %prep
 %setup -q
@@ -263,9 +177,9 @@ localhost			RELAY
 EOF
 
 for map in virtusertable access domaintable mailertable ; do
-  touch $RPM_BUILD_ROOT%{_sysconfdir}/mail/${map}
-  $RPM_BUILD_ROOT%{_bindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/mail/sendmail.cf hash \
-	$RPM_BUILD_ROOT%{_sysconfdir}/mail/${map}.db < $RPM_BUILD_ROOT%{_sysconfdir}/mail/${map}
+	touch $RPM_BUILD_ROOT%{_sysconfdir}/mail/${map}
+		$RPM_BUILD_ROOT%{_bindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/mail/sendmail.cf hash \
+		$RPM_BUILD_ROOT%{_sysconfdir}/mail/${map}.db < $RPM_BUILD_ROOT%{_sysconfdir}/mail/${map}
 done
 
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/mail/aliases
@@ -275,6 +189,10 @@ $RPM_BUILD_ROOT%{_bindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/mail/sendmail
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/sendmail
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sendmail
 install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/mail/Makefile
+
+mv $RPM_BUILD_ROOT/usr/share/doc/sendmail/{FAQ,KNOWNBUGS,LICENSE,README,README.cf,doc/op/op.me} .
+
+gzip -9nf FAQ KNOWNBUGS LICENSE README README.cf op.me
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -340,6 +258,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
+%doc *.gz
 %attr(755,root,root) %{_sbindir}/mailstats
 %attr(755,root,root) %{_sbindir}/praliases
 %attr(755,root,root) %{_bindir}/hoststat
@@ -387,10 +306,13 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/sendmail
 %config(noreplace) /etc/sysconfig/sendmail
 
-%files cf
-%defattr(644,root,root,755)
-%{_libdir}/sendmail-cf
-
-%files doc
-%defattr(644,root,root,755)
-%{_docdir}/sendmail
+%dir %{_libdir}/sendmail-cf
+%dir %{_libdir}/sendmail-cf/cf
+%{_libdir}/sendmail-cf/cf/pld.mc
+%{_libdir}/sendmail-cf/feature
+%{_libdir}/sendmail-cf/m4
+%dir %{_libdir}/sendmail-cf/ostype
+%{_libdir}/sendmail-cf/ostype/linux.m4
+%dir %{_libdir}/sendmail-cf/sh
+%{_libdir}/sendmail-cf/sh/makeinfo.sh
+%{_libdir}/sendmail-cf/siteconfig
