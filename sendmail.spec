@@ -1,9 +1,9 @@
 #
 # Conditional build:
-# _without_ldap		without LDAP support
-# _without_tls		without TLS (SSL) support
-# _with_db3		use db3 instead of db package
-# _with_pgsql		with PostgreSQL support (bluelabs)
+%bcond_without	db3	# use db instead of db3 package
+%bcond_without	ldap	# without LDAP support
+%bcond_without	tls	# without TLS (SSL) support
+%bcond_with	pgsql	# with PostgreSQL support (bluelabs)
 #
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-эbertragungsagent
@@ -16,12 +16,12 @@ Summary(ru):	Почтовый транспортный агент sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.12.9
-Release:	1
+Version:	8.12.11
+Release:	7.1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	3dba3b6d769b3681640d0a38b0eba48c
+# Source0-md5:	fafda7f8043f0c34b9aa295618aa598c
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
@@ -46,11 +46,12 @@ Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
 Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
 BuildRequires:	cyrus-sasl-devel
-%{?_with_db3:BuildRequires:	db3-devel}
-%{!?_with_db3:BuildRequires:	db-devel >= 4.1.25}
-%{!?_without_ldap:BuildRequires:	openldap-devel}
-%{!?_without_tls:BuildRequires:	openssl-devel >= 0.9.7}
-%{?_with_pgsql:BuildRequires: postgresql-devel}
+%{?with_db3:BuildRequires:	db3-devel}
+%{!?with_db3:BuildRequires:	db-devel >= 4.1.25}
+BuildRequires:	man
+%{?with_ldap:BuildRequires:	openldap-devel}
+%{?with_tls:BuildRequires:	openssl-devel >= 0.9.6m}
+%{?with_pgsql:BuildRequires:	postgresql-devel}
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
@@ -60,20 +61,24 @@ Requires(post):	textutils
 Requires(post,preun):/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
-%{!?_with_db3:Requires:	db >= 4.1.25}
+%{!?with_db3:Requires:	db >= 4.1.25}
 Requires:	m4
 Requires:	procmail
+Requires:	pam >= 0.77.3
 Provides:	smtpdaemon
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-Obsoletes:	smtpdaemon
+Obsoletes:	courier
 Obsoletes:	exim
 Obsoletes:	masqmail
+Obsoletes:	nullmailer
 Obsoletes:	omta
 Obsoletes:	postfix
 Obsoletes:	qmail
 Obsoletes:	sendmail-cf
 Obsoletes:	sendmail-doc
 Obsoletes:	smail
+Obsoletes:	smtpdaemon
+Obsoletes:	ssmtp
 Obsoletes:	zmailer
 
 %define		_sysconfdir	/etc/mail
@@ -147,6 +152,17 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 маршрутизац╕╖ пошти, aliasing, forwarding, автоматичну маршрутизац╕ю
 для мережевих шлюз╕в та гнучкий механ╕зм маршрутизац╕╖.
 
+%package devel
+Summary:	Header files and static libmilter library
+Summary(pl):	Pliki nagЁСwkowe i statyczna biblioteka libmilter
+Group:		Development/Libraries
+
+%description devel
+Header files and static libmilter library.
+
+%description devel -l pl
+Pliki nagЁСwkowe i statyczna biblioteka libmilter.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -156,9 +172,7 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%if %{?_with_pgsql:1}%{!?_with_pgsql:0}
-%patch7 -p1
-%endif
+%{?with_pgsql:%patch7 -p1}
 
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
@@ -168,24 +182,29 @@ install %{SOURCE7} config.m4
 echo "define(\`confCC', \`%{__cc}')" >> config.m4
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
 echo "APPENDDEF(\`confINCDIRS', \`-I/usr/include/sasl')" >> config.m4
+echo "define(\`confLIBSEARCHPATH', \`/%{_lib} /usr/%{_lib}')" >> config.m4
 echo "define(\`confLIBSEARCH', \`db resolv')" >> config.m4
-%if %{?debug:0}%{!?debug:1}
+%if 0%{!?debug:1}
 echo "define(\`confLDOPTS', \`-s')" >> config.m4
 %endif
-%if %{?_without_ldap:0}%{!?_without_ldap:1}
+%if %{with ldap}
 echo "APPENDDEF(\`confMAPDEF', \`-DLDAPMAP')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lldap -llber')" >> config.m4
 %endif
-%if %{?_with_pgsql:1}%{!?_with_pgsql:0}
+%if %{with pgsql}
 echo "APPENDDEF(\`confENVDEF', \`-DSASL')" >> config.m4
 echo "APPENDDEF(\`confMAPDEF', \`-DPGSQLMAP')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lpq -lresolv')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lsasl -lcrypto')" >> config.m4
 %endif
-%if %{?_without_tls:0}%{!?_without_tls:1}
+%if %{with tls}
 echo "APPENDDEF(\`confENVDEF', \`-DSTARTTLS')" >> config.m4
+echo "APPENDDEF(\`confENVDEF', \`-D_FFR_DEAL_WITH_ERROR_SSL')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lssl -lcrypto')" >> config.m4
+echo "APPENDDEF(\`confENVDEF', \`-D_FFR_SMTP_SSL')" >> config.m4
 %endif
+
+echo "APPENDDEF(\`confENVDEF', \`-DMILTER')" >> config.m4
 
 cd sendmail	&& sh Build -f ../config.m4
 cd ../mailstats	&& sh Build -f ../config.m4
@@ -193,6 +212,7 @@ cd ../rmail	&& sh Build -f ../config.m4
 cd ../makemap	&& sh Build -f ../config.m4
 cd ../praliases	&& sh Build -f ../config.m4
 cd ../smrsh	&& sh Build -f ../config.m4
+cd ../libmilter	&& sh Build -f ../config.m4
 cd ../cf/cf
 m4 pld.mc > pld.cf
 
@@ -203,7 +223,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,sysconfig,sasl,smrsh
 	$RPM_BUILD_ROOT%{_mandir}/man{1,5,8} \
 	$RPM_BUILD_ROOT/var/log $RPM_BUILD_ROOT/var/spool/mqueue \
 	$RPM_BUILD_ROOT%{_libdir}/sendmail-cf \
-	$RPM_BUILD_ROOT/etc/pam.d \
+	$RPM_BUILD_ROOT/etc/pam.d $RPM_BUILD_ROOT%{_includedir}\
 
 OBJDIR=obj.$(uname -s).$(uname -r).$(arch)
 
@@ -212,15 +232,25 @@ IDNG=`id -ng`
 SMINSTOPT="DESTDIR=$RPM_BUILD_ROOT SBINOWN=$IDNU SBINGRP=$IDNG \
 	UBINOWN=$IDNU UBINGRP=$IDNG MANOWN=$IDNU MANGRP=$IDNG \
 	CFOWN=$IDNU CFGRP=$IDNG MSPQOWN=$IDNU GBINGRP=$IDNG GBINOWN=$IDNU \
-	BINOWN=$IDNU BINGRP=$IDNG"
-%{__make} $SMINSTOPT install -C $OBJDIR/sendmail
-%{__make} $SMINSTOPT install -C $OBJDIR/mailstats
-%{__make} $SMINSTOPT install -C $OBJDIR/praliases
-%{__make} $SMINSTOPT force-install -C $OBJDIR/rmail
-%{__make} $SMINSTOPT install -C $OBJDIR/makemap
-ln -sf %{_sbindir}/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
-%{__make} $SMINSTOPT install -C $OBJDIR/smrsh
+	BINOWN=$IDNU BINGRP=$IDNG LIBOWN=$IDNU LIBGRP=$IDNG INCOWN=$IDNU INCGRP=$IDNG"
 
+%{__make} -C $OBJDIR/sendmail install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/mailstats install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/praliases install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/rmail force-install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/makemap install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/smrsh install \
+	$SMINSTOPT
+%{__make} -C $OBJDIR/libmilter install \
+	$SMINSTOPT \
+	LIBDIR=%{_libdir}
+
+ln -sf %{_sbindir}/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
 # install the cf files
 cd cf
 rm -f cf/{Build,Makefile} feature/*~
@@ -232,7 +262,7 @@ install cf/cf/pld.cf $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf
 sed -e 's|@@PATH@@|%{_libdir}/sendmail-cf|' < %{SOURCE6} \
 	> $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.mc
 
-%if %{?_with_pgsql:1}%{!?_with_pgsql:0}
+%if %{with pgsql}
 install bluelabs.mc $RPM_BUILD_ROOT%{_sysconfdir}/bluelabs.mc
 %endif
 
@@ -397,7 +427,7 @@ fi
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/submit.mc
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/local-host-names
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/aliases
-%{?_with_pgsql:%{_sysconfdir}/bluelabs.mc}
+%{?with_pgsql:%{_sysconfdir}/bluelabs.mc}
 %attr(644,root,mail) %ghost %{_sysconfdir}/aliases.db
 %attr(770,root,smmsp) %dir /var/spool/clientmqueue
 %attr(750,root,mail) %dir /var/spool/mqueue
@@ -429,3 +459,8 @@ fi
 %dir %{_libdir}/sendmail-cf/sh
 %{_libdir}/sendmail-cf/sh/makeinfo.sh
 %{_libdir}/sendmail-cf/siteconfig
+
+%files devel
+%defattr(644,root,root,755)
+%{_libdir}/libmilter.a
+%{_includedir}/libmilter
