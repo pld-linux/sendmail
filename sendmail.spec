@@ -9,7 +9,7 @@ Summary(pl):	Sendmail -- aplikacja do obs³ugi poczty elektronicznej
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
 Version:	8.11.4
-Release:	3
+Release:	4
 License:	BSD
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
@@ -286,7 +286,7 @@ fi
 %attr(755,root,root) %{_bindir}/rmail
 %attr(755,root,root) %{_bindir}/makemap
 %attr(755,root,root) %{_sbindir}/makemap
-%attr(4755,root,root) %{_sbindir}/sendmail
+%attr(6755,root,mail) %{_sbindir}/sendmail
 %attr(755,root,root) %{_bindir}/newaliases
 %attr(755,root,root) %{_bindir}/mailq
 %attr(755,root,root) %{_sbindir}/smrsh
@@ -308,7 +308,7 @@ fi
 %config(noreplace) %{_sysconfdir}/local-host-names
 %config(noreplace) %{_sysconfdir}/aliases
 %attr(0644,root,mail) %ghost %{_sysconfdir}/aliases.db
-%attr(0755,root,mail) %dir /var/spool/mqueue
+%attr(0770,root,mail) %dir /var/spool/mqueue
 %dir /etc/smrsh
 %dir %{_sysconfdir}
 
