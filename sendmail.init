@@ -19,18 +19,17 @@
 [ -f /etc/sysconfig/sendmail ] && . /etc/sysconfig/sendmail
 
 # Check that networking is up.
-if [ "${NETWORKING}" = "no" ]; then
-	echo "WARNING: Networking is down. Sendmail service can't be runed."
+if is_no "${NETWORKING}"; then
+	msg_Network_Down Sendmail
 	exit 1
 fi
-
 
 # See how we were called.
 case "$1" in
   start)
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/sendmail ]; then
-		show Prepare sendmail db
+		show "Prepare sendmail db"
 		busy
 		newaliases &>/dev/null
 		for i in virtusertable access domaintable mailertable; do
@@ -39,16 +38,17 @@ case "$1" in
 			fi
 		done 
 		deltext;ok
-		show Starting sendmail
+		msg_starting sendmail
 		daemon sendmail $SENDMAIL_CF
 	else
-		echo "sendmail already is running"
+		msg_Already_Running sendmail
+		exit 1
 	fi
 	touch /var/lock/subsys/sendmail
 	;;
   stop)
 	# Stop daemons.
-	show Shutting down sendmail
+	msg_stopping sendmail
 	killproc sendmail
 	rm -f /var/lock/subsys/sendmail
 	;;
@@ -60,7 +60,7 @@ case "$1" in
 	status sendmail
 	;;
   *)
-	echo "Usage: $0 {start|stop|staus|restart|reload}"
+	msg_Usage "$0 {start|stop|staus|restart|reload}"
 	exit 1
 esac
 
