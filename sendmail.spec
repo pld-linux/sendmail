@@ -103,7 +103,7 @@ install %{SOURCE7} config.m4
 
 %build
 
-RPM_OPT_FLAGS="%{?debug:-O -g}%{!?debug:$RPM_OPT_FLAGS} \
+RPM_OPT_FLAGS="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS} \
 	-DUSE_VENDOR_CF_PATH=1 -DNETINET6 -D_FFR_TESTMODE_DROP_PRIVS"
 export RPM_OPT_FLAGS
 
