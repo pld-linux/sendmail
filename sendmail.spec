@@ -15,11 +15,12 @@ Summary(ru):	Почтовый транспортный агент sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.12.9
-Release:	3
+Version:	8.12.10
+Release:	1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
+# Source0-md5: 393f5d09d462f522c8288363870b2b42
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
@@ -146,7 +147,7 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
+#%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
@@ -155,7 +156,7 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 %if %{?_with_pgsql:1}%{!?_with_pgsql:0}
 %patch7 -p1
 %endif
-%patch8 -p1
+#%patch8 -p1
 
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
