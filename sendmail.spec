@@ -15,7 +15,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.12.6
-Release:	2
+Release:	3
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -206,7 +206,7 @@ SMINSTOPT="DESTDIR=$RPM_BUILD_ROOT SBINOWN=$IDNU SBINGRP=$IDNG \
 %{__make} $SMINSTOPT install -C $OBJDIR/praliases
 %{__make} $SMINSTOPT force-install -C $OBJDIR/rmail
 %{__make} $SMINSTOPT install -C $OBJDIR/makemap
-ln -sf ../sbin/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
+ln -sf /usr/sbin/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
 %{__make} $SMINSTOPT install -C $OBJDIR/smrsh
 
 # install the cf files
@@ -230,13 +230,12 @@ install cf/cf/submit.mc $RPM_BUILD_ROOT%{_sysconfdir}
 echo "# local-host-names - include all aliases for your machine here." \
 	> $RPM_BUILD_ROOT%{_sysconfdir}/local-host-names
 
-ln -sf ../sbin/sendmail $RPM_BUILD_ROOT%{_libdir}/sendmail
+ln -sf /usr/sbin/sendmail $RPM_BUILD_ROOT%{_libdir}/sendmail
 
 # dangling symlinks
 for f in hoststat mailq newaliases purgestat ; do
-	ln -sf ../sbin/sendmail $RPM_BUILD_ROOT%{_bindir}/${f}
+	ln -sf /usr/sbin/sendmail $RPM_BUILD_ROOT%{_bindir}/${f}
 done
-
 
 for map in virtusertable access domaintable mailertable ; do
 	touch $RPM_BUILD_ROOT%{_sysconfdir}/${map}
