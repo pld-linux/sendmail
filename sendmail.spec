@@ -35,7 +35,6 @@ Patch6:		%{name}-dtelnet.patch
 Patch7:		%{name}-pld.mc.patch
 Patch8:		%{name}-redirect.patch
 Patch9:		%{name}-hprescan-dos.patch
-Patch10:	%{name}-aliasesDoS.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
@@ -104,7 +103,6 @@ istiyorsanýz bu pakete gereksiniminiz olacaktýr.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
-%patch10 -p1
 
 # seems to be obsoleted...
 #tar xf %{SOURCE2} -C cf
