@@ -1,9 +1,9 @@
 #
 # Conditional build:
+%bcond_without	db3	# use db instead of db3 package
 %bcond_without	ldap	# without LDAP support
 %bcond_without	tls	# without TLS (SSL) support
 %bcond_with	pgsql	# with PostgreSQL support (bluelabs)
-%bcond_without	db3	# use db instead of db3 package
 #
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-‹bertragungsagent
@@ -17,7 +17,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	œ€‘œ◊…  ‘“¡Œ”–œ“‘Œ…  ¡«≈Œ‘ sendmail
 Name:		sendmail
 Version:	8.12.11
-Release:	7
+Release:	7.1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -27,7 +27,7 @@ Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
 # From http://doc.phpauction.org/sendmail/examples/
 Source4:	%{name}-examples.tar.bz2
-# Source4-md5:  d00d817cd456a947a7fc6c04072a7d68
+# Source4-md5:	d00d817cd456a947a7fc6c04072a7d68
 Source5:	%{name}-etc-mail-Makefile
 Source6:	%{name}.mc
 Source7:	%{name}-config.m4
