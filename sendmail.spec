@@ -166,7 +166,7 @@ install %{SOURCE7} config.m4
 echo "define(\`confCC', \`%{__cc}')" >> config.m4
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
 echo "APPENDDEF(\`confINCDIRS', \`-I/usr/include/sasl')" >> config.m4
-echo "define(\`confLIBSEARCH', \`db')" >> config.m4
+echo "define(\`confLIBSEARCH', \`db resolv')" >> config.m4
 %if %{?debug:0}%{!?debug:1}
 echo "define(\`confLDOPTS', \`-s')" >> config.m4
 %endif
