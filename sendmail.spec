@@ -9,7 +9,7 @@ Summary(pl):	Sendmail -- aplikacja do obs³ugi poczty elektronicznej
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
 Version:	8.11.4
-Release:	4
+Release:	5
 License:	BSD
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
@@ -39,7 +39,6 @@ Patch11:	%{name}-fix.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
-BuildRequires:	gdbm-devel
 %{!?_without_ldap:BuildRequires:	openldap-devel}
 BuildRequires:	pam-devel
 Requires:	m4
@@ -303,8 +302,8 @@ fi
 
 /var/log/statistics
 # XXX can't do noreplace here or new sendmail will not deliver.
-%config %{_sysconfdir}/sendmail.cf
-%config %{_sysconfdir}/sendmail.mc
+%config(noreplace) %{_sysconfdir}/sendmail.cf
+%config(noreplace) %{_sysconfdir}/sendmail.mc
 %config(noreplace) %{_sysconfdir}/local-host-names
 %config(noreplace) %{_sysconfdir}/aliases
 %attr(0644,root,mail) %ghost %{_sysconfdir}/aliases.db
