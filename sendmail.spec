@@ -9,7 +9,7 @@ Summary(pl):	Sendmail - serwer poczty elektronicznej
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
 Version:	8.11.6
-Release:	1
+Release:	3
 License:	BSD
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
@@ -44,13 +44,14 @@ Requires:	m4
 Prereq:		/sbin/chkconfig
 Provides:	smtpdaemon
 Obsoletes:	smtpdaemon
-Obsoletes:	zmailer
-Obsoletes:	qmail
-Obsoletes:	smail
 Obsoletes:	exim
+Obsoletes:	masqmail
 Obsoletes:	postfix
+Obsoletes:	qmail
 Obsoletes:	sendmail-cf
 Obsoletes:	sendmail-doc
+Obsoletes:	smail
+Obsoletes:	zmailer
 
 %define		_sysconfdir	/etc/mail
 
