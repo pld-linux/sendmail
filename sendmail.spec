@@ -29,19 +29,8 @@ Source10:	%{name}.mailertable
 Source11:	%{name}.virtusertable
 Source12:	%{name}.domaintable
 Source13:	%{name}-smtp.pamd
-Source14:	http://doc.phpauction.org/sendmail/examples/address.resolve
-Source15:	http://doc.phpauction.org/sendmail/examples/examples-db/access
-Source16:	http://doc.phpauction.org/sendmail/examples/examples-db/aliases
-Source17:	http://doc.phpauction.org/sendmail/examples/examples-db/domaintable
-Source18:	http://doc.phpauction.org/sendmail/examples/examples-db/genericstable
-Source19:	http://doc.phpauction.org/sendmail/examples/examples-db/mailertable
-Source20:	http://doc.phpauction.org/sendmail/examples/examples-db/relay-domains
-Source21:	http://doc.phpauction.org/sendmail/examples/examples-db/%{name}.cM
-Source22:	http://doc.phpauction.org/sendmail/examples/examples-db/virtusertable
-Source23:	http://doc.phpauction.org/sendmail/examples/examples-pam/smtp
-Source24:	http://doc.phpauction.org/sendmail/examples/examples-sasl/Sendmail.conf
-Source25:	http://doc.phpauction.org/sendmail/examples/examples-sasl/saslpasswd.conf
-Source26:	http://doc.phpauction.org/sendmail/examples/passwd-to-alias
+# From http://doc.phpauction.org/sendmail/examples/
+Source14:	%{name}-examples.tar.bz2
 Patch0:		%{name}-makemapman.patch
 Patch1:		%{name}-smrsh-paths.patch
 Patch2:		%{name}-rmail.patch
@@ -245,22 +234,8 @@ install %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable
 mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
 mv -f doc/op/op.me .
-install -d examples/examples-db
-install -d examples/examples-pam
-install -d examples/examples-sasl
-cp -f %{SOURCE14} examples/
-cp -f %{SOURCE15} examples/examples-db/
-cp -f %{SOURCE16} examples/examples-db/
-cp -f %{SOURCE17} examples/examples-db/
-cp -f %{SOURCE18} examples/examples-db/
-cp -f %{SOURCE19} examples/examples-db/
-cp -f %{SOURCE20} examples/examples-db/
-cp -f %{SOURCE21} examples/examples-db/
-cp -f %{SOURCE22} examples/examples-db/
-cp -f %{SOURCE23} examples/examples-pam/
-cp -f %{SOURCE24} examples/examples-sasl/
-cp -f %{SOURCE25} examples/examples-sasl/
-cp -f %{SOURCE26} examples/
+
+bzip2 -d %{SOURCE14} | tar xf -
 
 gzip -9nf FAQ KNOWNBUGS README* op.me RELEASE_NOTES
 
