@@ -6,14 +6,16 @@
 
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-Übertragungsagent
+Summary(es):	Sendmail - agente de transporte de mail
 Summary(fr):	Agent de transport de courrier sendmail
 Summary(pl):	Sendmail - serwer poczty elektronicznej
+Summary(pt_BR):	Sendmail - agente de transporte de mail
 Summary(ru):	ğÏŞÔÏ×ÙÊ ÔÒÁÎÓĞÏÒÔÎÙÊ ÁÇÅÎÔ sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	ğÏÛÔÏ×ÉÊ ÔÒÁÎÓĞÏÒÔÎÉÊ ÁÇÅÎÔ sendmail
 Name:		sendmail
 Version:	8.12.5
-Release:	1
+Release:	6
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -52,7 +54,7 @@ Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires(post):	awk
 Requires(post):	textutils
-Requires(post,preun):	/sbin/chkconfig
+Requires(post,preun):/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
 Provides:	smtpdaemon
@@ -84,6 +86,14 @@ Weiterleiten von Nachrichten, automatischem Routing an
 Netzwerk-Gateways und flexible Konfiguration. Wenn Sie E-Mails über
 das Internet senden und empfangen möchten, brauchen Sie sendmail.
 
+%description -l es
+sendmail es un agente de transporte de correo electrónico, que mueve
+mensajes entre máquinas. Implementa facilidades de internetwork y
+rutado, caracterizando cambio de nombres (aliases) y envío a nuevas
+direcciones ( forwarding ), rutado automático para gateways de la red
+y configuración flexible. Necesitarás del sendmail si deseas enviar y
+recibir mensajes a través de la Internet.
+
 %description -l fr
 Sendmail est un agent de transport de courrier, qui est le programme
 transférent le courrier d'une machine à l'autre. Sendmail implémente
@@ -99,6 +109,13 @@ konta docelowe. Bardzo dobrze obs³uguje aliasy pocztowe a jego
 dodatkowym atutem jest prosta konfiguracja. Dziêki rozbudowanym
 mo¿liwo¶ciom konfiguracyjnym jest w stanie dostarczaæ przesy³ki za
 po¶rednictwem protoko³ów: SMTP, ESMTP, UUCP, X.400 i innych.
+
+%description -l pt_BR
+O sendmail é um agente de transporte de correio eletrônico, que move
+mensagens entre máquinas. Ele implementa facilidades de internetwork e
+roteamento, caracterizando troca de nomes (aliases) e remessa a novos
+endereços ( forwarding ), roteamento automático para gateways da rede
+e configuração flexível.
 
 %description -l ru
 Sendmail - ÜÔÏ Mail Transport Agent, ĞÒÏÇÒÁÍÍÁ ĞÅÒÅÓÙÌÁÀİÁÑ ĞÏŞÔÕ Ó
@@ -364,7 +381,7 @@ fi
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/submit.mc
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/local-host-names
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/aliases
-%{?_with_pgsql:%attr(644,root,root) /etc/mail/bluelabs.mc}
+%{?_with_pgsql:%{_sysconfdir}/bluelabs.mc}
 %attr(644,root,mail) %ghost %{_sysconfdir}/aliases.db
 %attr(770,root,smmsp) %dir /var/spool/clientmqueue
 %attr(750,root,mail) %dir /var/spool/mqueue
