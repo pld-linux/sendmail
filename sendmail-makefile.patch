@@ -1,0 +1,35 @@
+--- ./sendmail/Makefile.m4.org	Thu Sep 20 01:30:44 2001
++++ ./sendmail/Makefile.m4	Thu Sep 20 01:42:20 2001
+@@ -61,7 +61,7 @@
+ divert(bldTARGETS_SECTION)
+ 
+ install-set-user-id: bldCURRENT_PRODUCT ifdef(`confNO_HELPFILE_INSTALL',, `install-hf') ifdef(`confNO_STATISTICS_INSTALL',, `install-st') ifdef(`confNO_MAN_BUILD',, `install-docs')
+-	${INSTALL} -c -o ${S`'BINOWN} -g ${S`'BINGRP} -m ${S`'BINMODE} bldCURRENT_PRODUCT ${DESTDIR}${M`'BINDIR}
++	${INSTALL} -c -m ${S`'BINMODE} bldCURRENT_PRODUCT ${DESTDIR}${M`'BINDIR}
+ 	for i in ${sendmailTARGET_LINKS}; do \
+ 		rm -f $$i; \
+ 		ln -s ${M`'BINDIR}/sendmail $$i; \
+@@ -69,7 +69,7 @@
+ 
+ define(`confMTA_LINKS', `${DESTDIR}${UBINDIR}/newaliases ${DESTDIR}${UBINDIR}/mailq ${DESTDIR}${UBINDIR}/hoststat ${DESTDIR}${UBINDIR}/purgestat')
+ install-sm-mta: bldCURRENT_PRODUCT
+-	${INSTALL} -c -o ${M`'BINOWN} -g ${M`'BINGRP} -m ${M`'BINMODE} bldCURRENT_PRODUCT ${DESTDIR}${M`'BINDIR}/sm-mta
++	${INSTALL} -c -m ${M`'BINMODE} bldCURRENT_PRODUCT ${DESTDIR}${M`'BINDIR}/sm-mta
+ 	for i in confMTA_LINKS; do \
+ 		rm -f $$i; \
+ 		ln -s ${M`'BINDIR}/sm-mta $$i; \
+--- ./cf/cf/Makefile.org	Thu Sep 20 01:04:53 2001
++++ ./cf/cf/Makefile	Thu Sep 20 01:05:25 2001
+@@ -76,10 +76,10 @@
+ install-cf:  install-sendmail-cf install-submit-cf
+ 
+ install-sendmail-cf: $(CF).cf
+-	$(INSTALL) -c -o $(CFOWN) -g $(CFGRP) -m $(CFMODE) $(CF).cf ${DESTDIR}$(MAILDIR)/sendmail.cf
++	$(INSTALL) -c -m $(CFMODE) $(CF).cf ${DESTDIR}$(MAILDIR)/sendmail.cf
+ 
+ install-submit-cf: $(SUBMIT).cf
+-	$(INSTALL) -c -o $(CFOWN) -g $(CFGRP) -m $(CFMODE) $(SUBMIT).cf ${DESTDIR}$(MAILDIR)/submit.cf
++	$(INSTALL) -c -m $(CFMODE) $(SUBMIT).cf ${DESTDIR}$(MAILDIR)/submit.cf
+ 
+ depend:
+ 
