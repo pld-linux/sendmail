@@ -126,13 +126,13 @@ RPM_OPT_FLAGS="%{rpmcflags} \
 export RPM_OPT_FLAGS
 
 cd sendmail	&& sh Build -f ../config.m4
-#cd ../mailstats	&& sh Build -f ../config.m4
-#cd ../rmail	&& sh Build -f ../config.m4
-#cd ../makemap	&& sh Build -f ../config.m4
-#cd ../praliases	&& sh Build -f ../config.m4
-#cd ../smrsh	&& sh Build -f ../config.m4
-#cd ../cf/cf
-#m4 redhat.mc > redhat.cf
+cd ../mailstats	&& sh Build -f ../config.m4
+cd ../rmail	&& sh Build -f ../config.m4
+cd ../makemap	&& sh Build -f ../config.m4
+cd ../praliases	&& sh Build -f ../config.m4
+cd ../smrsh	&& sh Build -f ../config.m4
+cd ../cf/cf
+m4 redhat.mc > redhat.cf
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -148,7 +148,7 @@ IDNU=`id -nu`
 IDNG=`id -ng`
 SMINSTOPT="DESTDIR=$RPM_BUILD_ROOT SBINOWN=$IDNU SBINGRP=$IDNG \
 	UBINOWN=$IDNU UBINGRP=$IDNG MANOWN=$IDNU MANGRP=$IDNG \
-	CFOWN=$IDNU CFGRP=$IDNG MSPQOWN=$IDNU GBINGRP=$IDNG \
+	CFOWN=$IDNU CFGRP=$IDNG MSPQOWN=$IDNU GBINGRP=$IDNG GBINOWN=$IDNU \
 	BINOWN=$IDNU BINGRP=$IDNG"
 %{__make} $SMINSTOPT install -C $OBJDIR/sendmail
 %{__make} $SMINSTOPT install -C $OBJDIR/mailstats
