@@ -2,7 +2,7 @@ Summary:	Sendmail -- mail transport agent
 Summary(pl):	Sendmail -- aplikacja do obs³ugi poczty elektronicznej
 Name:		sendmail
 Version:	8.9.3
-Release:	3
+Release:	4
 Copyright:	distributable (similar to, but not quite BSD)
 Group:		Daemons
 Group(pl):	Serwery
@@ -168,8 +168,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc {README,KNOWNBUGS,RELEASE_NOTES}.gz 
 %doc smrsh/SMRSH.txt.gz
 
-%attr(644,root,root) %config(noreplace) %verify(not size mtime md5) /etc/mail/*
-%attr(644,root,root) %config %verify(not size mtime md5) /etc/sysconfig/*
+%attr(750,root,root) %dir /etc/mail
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/mail/*
+%attr(640,root,root) %config %verify(not size mtime md5) /etc/sysconfig/*
 %attr(755,root,root) /etc/rc.d/init.d/*
 
 %attr(755,root,root) /usr/bin/*
@@ -178,7 +179,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) /usr/sbin/makemap
 %attr(755,root,root) /usr/sbin/praliases
 
-%attr(755,root,root) /usr/sbin/sendmail
+%attr(4711,root,root) /usr/sbin/sendmail
 
 %attr(755,root,root) /usr/lib/sendmail
 %attr(755,root,root) /usr/sbin/smrsh
@@ -192,7 +193,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 
 %dir /usr/share/sendmail-cf
-%attr(-,root,root) /usr/share//sendmail-cf/*
+%attr(-,root,root) /usr/share/sendmail-cf/*
 
 %changelog
 * Fri Jan 22 1999 Wojtek ¦lusarczyk <wojtek@shadow.eu.org>
