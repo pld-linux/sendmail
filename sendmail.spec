@@ -5,6 +5,9 @@
 # _with_db3		use db3 instead of db package
 # _with_pgsql		with PostgreSQL support (bluelabs)
 #
+
+%define		_with_db3	yes
+
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-Übertragungsagent
 Summary(es):	Sendmail - agente de transporte de mail
@@ -47,7 +50,7 @@ BuildRequires:	cyrus-sasl-devel
 %{?_with_db3:BuildRequires:	db3-devel}
 %{!?_with_db3:BuildRequires:	db-devel >= 4.1.25}
 %{!?_without_ldap:BuildRequires:	openldap-devel}
-%{!?_without_tls:BuildRequires:	openssl-devel >= 0.9.7}
+%{!?_without_tls:BuildRequires:	openssl-devel >= 0.9.6g}
 %{?_with_pgsql:BuildRequires: postgresql-devel}
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
