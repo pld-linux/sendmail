@@ -40,7 +40,7 @@ BuildRequires:	db3-devel
 %{!?_without_tls:BuildRequires:	openssl-devel}
 Requires:	m4
 Requires:	procmail
-%{?_with_auth:Requires: cyrus-sasl-plain}
+%{?_with_auth:Requires: cyrus-sasl-{plain,login}
 PreReq:		/sbin/chkconfig
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
