@@ -67,7 +67,7 @@ Requires:	procmail
 Requires:	pam >= 0.77.3
 Provides:	smtpdaemon
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-Obsoletes:	smtpdaemon
+Obsoletes:	courier
 Obsoletes:	exim
 Obsoletes:	masqmail
 Obsoletes:	omta
@@ -76,6 +76,7 @@ Obsoletes:	qmail
 Obsoletes:	sendmail-cf
 Obsoletes:	sendmail-doc
 Obsoletes:	smail
+Obsoletes:	smtpdaemon
 Obsoletes:	zmailer
 
 %define		_sysconfdir	/etc/mail
