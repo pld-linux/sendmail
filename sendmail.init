@@ -92,12 +92,12 @@ case "$1" in
 		msg_not_running sm-client
 	fi
 	;;
-  restart|force-reload)
+  restart)
 	$0 stop
 	$0 start
 	exit $?
 	;;
-  reload)
+  reload|force-reload)
   	# TODO: make it better for sm-client
 	if [ -f /var/lock/subsys/sendmail ]; then
 		msg_reloading sendmail
