@@ -1,0 +1,120 @@
+#! /bin/sh
+#
+# sendmail	This shell script takes care of starting and stopping
+#		sendmail.
+#
+# chkconfig:	2345 80 30
+# description:	Sendmail is a Mail Transport Agent, which is the program \
+#		that moves mail from one machine to another.
+# pidfile:	/var/run/sendmail.pid
+
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+# Get network config
+. /etc/sysconfig/network
+
+# Get service config
+if [ -f /etc/sysconfig/sendmail ]; then
+	. /etc/sysconfig/sendmail
+else
+	DAEMON=yes
+	QUEUE=1h
+	ENABLE_IPV6=yes
+fi
+[ -z "$SMQUEUE" ] && SMQUEUE="$QUEUE"
+[ -z "$SMQUEUE" ] && SMQUEUE=1h
+
+# Check that networking is up.
+if is_yes "${NETWORKING}"; then
+	if [ ! -f /var/lock/subsys/network -a "$1" != stop -a "$1" != status ]; then
+		msg_network_down Sendmail
+		exit 1
+	fi
+else
+	exit 0
+fi
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/sendmail ]; then
+		show "Prepare sendmail db"
+		busy
+		/usr/bin/newaliases >/dev/null 2>&1
+		for i in virtusertable access domaintable mailertable; do
+			if [ -f /etc/mail/$i ]; then
+				makemap -v hash /etc/mail/$i < /etc/mail/$i >/dev/null 2>&1
+				[ $RETVAL -eq 0 ] && RETVAL=$?
+			fi
+		done 
+		[ $RETVAL -eq 0 ] && ok || fail
+		msg_starting sendmail
+		daemon /usr/sbin/sendmail $([ "$DAEMON" = "yes" ] && echo -bd) \
+					$([ -n "$QUEUE" ] && echo -q$QUEUE) \
+					$([ "$ENABLE_IPV6" = "yes" ] && 
+						echo -ODaemonPortOptions=Family=inet6 )
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/sendmail
+	else
+		msg_already_running sendmail
+	fi
+	if [ ! -f /var/lock/subsys/sm-client ]; then
+		msg_starting sm-client
+		touch /var/run/sm-client.pid
+		chown smmsp:smmsp /var/run/sm-client.pid
+		daemon /usr/sbin/sendmail -L sm-msp-queue -Ac -q$SMQUEUE
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/sm-client
+	else
+		msg_already_running sm-client
+	fi
+	;;
+  stop)
+	if [ -f /var/lock/subsys/sendmail ]; then
+		# Stop daemons.
+		msg_stopping sendmail
+		killproc sendmail
+		rm -f /var/lock/subsys/sendmail
+	else
+		msg_not_running sendmail
+	fi
+	if [ -f /var/lock/subsys/sm-client ]; then
+		msg_stopping sm-client
+		killproc sendmail
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && rm -f /var/run/sm-client.pid
+		[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/sm-client
+	else
+		msg_not_running sm-client
+	fi
+	;;
+  restart)
+	$0 stop
+	$0 start
+	exit $?
+	;;
+  reload|force-reload)
+  	# TODO: make it better for sm-client
+	if [ -f /var/lock/subsys/sendmail ]; then
+		msg_reloading sendmail
+		busy
+		killproc sendmail -HUP
+		RETVAL=$?
+	else
+		msg_not_running sendmail
+	fi
+  	;;
+  status)
+	status sendmail
+	exit $?
+	;;
+  *)
+	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
+	exit 3
+esac
+
+exit $RETVAL

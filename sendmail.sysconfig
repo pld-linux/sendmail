@@ -1,0 +1,16 @@
+# Customized setings for sendmail
+
+# Define nice level for sendmail
+SERVICE_RUN_NICE_LEVEL="+5"
+
+# Run as daemon?
+DAEMON=yes
+
+# Queue
+QUEUE=1h
+
+# Sendmail Client Queue (if commented - the same as Sendmail)
+#SMQUEUE=6h
+
+# Enable IPV6?
+ENABLE_IPV6=yes
