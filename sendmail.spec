@@ -239,12 +239,12 @@ done
 
 for map in virtusertable access domaintable mailertable ; do
 	touch $RPM_BUILD_ROOT%{_sysconfdir}/${map}
-	$RPM_BUILD_ROOT%{_bindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf hash \
+	$RPM_BUILD_ROOT%{_sbindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf hash \
 		$RPM_BUILD_ROOT%{_sysconfdir}/${map}.db < $RPM_BUILD_ROOT%{_sysconfdir}/${map}
 done
 
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/aliases
-$RPM_BUILD_ROOT%{_bindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf hash \
+$RPM_BUILD_ROOT%{_sbindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf hash \
 	$RPM_BUILD_ROOT%{_sysconfdir}/aliases.db < %{SOURCE3}
 
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sendmail
