@@ -5,7 +5,6 @@ Version:	8.10.1
 Release:	1
 License:	BSD
 Group:		System Environment/Daemons
-######		Unknown group!
 Group(pl):	Sieciowe/Serwery
 Provides:	smtpdaemon
 Source0:	ftp://ftp.cs.berkeley.edu/ucb/sendmail/%{name}.%{version}.tar.gz
@@ -19,9 +18,6 @@ Patch0:		sendmail-8.10.0-redhat.patch
 Patch1:		sendmail-8.10.0-makemapman.patch
 Patch2:		sendmail-8.10.0-smrsh-paths.patch
 Patch3:		sendmail-8.8.7-rmail.patch
-#Patch4:	sendmail-8.10.0-aliasesDoS.patch
-#Patch5:	sendmail-8.10.0-movefiles.patch
-#Buildroot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Prereq:		/sbin/chkconfig
 Provides:	smtpdaemon
@@ -111,8 +107,6 @@ sy³aæ i odbieraæ pocztê po UUCP bêdziesz potrzebowa³ tego pakietu.
 %patch1 -p1 -b .makemapman
 %patch2 -p1 -b .smrsh
 %patch3 -p1 -b .rmail
-#%patch4 -p1 -b .aliases
-#%patch5 -p1 -b .movestuff
 
 # XXX REVERTING
 #tar xf $RPM_SOURCE_DIR/check.tar -C cf
