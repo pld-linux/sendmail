@@ -31,15 +31,15 @@ case "$1" in
 	if [ ! -f /var/lock/subsys/sendmail ]; then
 		show "Prepare sendmail db"
 		busy
-		newaliases &>/dev/null
+		newaliases >/dev/null 2>&1
 		for i in virtusertable access domaintable mailertable; do
 			if [ -f /etc/mail/$i ] ; then
-				makemap -v hash /etc/mail/$i < /etc/mail/$i
+				makemap -v hash /etc/mail/$i < /etc/mail/$i >/dev/null 2>&1
 			fi
 		done 
 		deltext;ok
 		msg_starting sendmail
-		daemon sendmail $SENDMAIL_CF
+		daemon /usr/sbin/sendmail $SENDMAIL_CF
 	else
 		msg_Already_Running sendmail
 		exit 1
