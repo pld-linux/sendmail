@@ -121,11 +121,11 @@ make DESTDIR=$RPM_BUILD_ROOT OPTIONS=force-install rmail mail.local
 for i in hoststat mailq newaliases purgestat
 	do ln -sf ../sbin/sendmail  $RPM_BUILD_ROOT/usr/bin/$i
 done
-ln -sf /usr/sbin/sendmail $RPM_BUILD_ROOT/usr/lib/sendmail
+ln -sf /usr/sbin/sendmail $RPM_BUILD_ROOT%{_libdir}/sendmail
 
 install cf/cf/sendmail.cf $RPM_BUILD_ROOT/etc/mail
 
-cp cf/* $RPM_BUILD_ROOT/usr/lib/sendmail-cf/ -a
+cp cf/* $RPM_BUILD_ROOT%{_libdir}/sendmail-cf/ -a
 
 cp smrsh/README smrsh/SMRSH.txt
 
@@ -163,7 +163,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %attr(4711,root,root) /usr/sbin/sendmail
 
-%attr(711,root,root) /usr/lib/sendmail
+%attr(711,root,root) %{_libdir}/sendmail
 %attr(755,root,root) /usr/libexec/mail.local
 %attr(755,root,root) /usr/libexec/smrsh
 
@@ -178,7 +178,7 @@ rm -rf $RPM_BUILD_ROOT
 %files cf
 %defattr(644,root,root,755)
 
-/usr/lib/sendmail-cf
+%{_libdir}/sendmail-cf
 
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/mail/*
 
