@@ -26,6 +26,7 @@ Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
 # From http://doc.phpauction.org/sendmail/examples/
 Source4:	%{name}-examples.tar.bz2
+# Source4-md5:  d00d817cd456a947a7fc6c04072a7d68
 Source5:	%{name}-etc-mail-Makefile
 Source6:	%{name}.mc
 Source7:	%{name}-config.m4
