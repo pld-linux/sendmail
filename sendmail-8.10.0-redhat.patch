@@ -25,16 +25,3 @@
  	while ((i = read(s, p, nleft)) > 0)
  	{
  		p += i;
---- sendmail-8.10.0/redhat.config.m4.redhat	Thu Mar  9 15:08:16 2000
-+++ sendmail-8.10.0/redhat.config.m4	Thu Mar  9 15:08:16 2000
-@@ -0,0 +1,10 @@
-+define(`confMAPDEF', `-DNEWDB -DNIS')
-+define(`confENVDEF', `$(RPM_OPT_FLAGS) -DXDEBUG=0')
-+define(`confLIBS', `-lnsl')
-+define(`confLDOPTS', `-s')
-+define(`confMANOWN', `root')
-+define(`confMANGRP', `root')
-+define(`confMANMODE', `644')
-+define(`confMAN1SRC', `1')
-+define(`confMAN5SRC', `5')
-+define(`confMAN8SRC', `8')
