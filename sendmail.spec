@@ -132,18 +132,18 @@ cd -
 
 OBJDIR=obj.$(uname -s).$(uname -r).$(arch)
 
-make DESTDIR=$RPM_BUILD_ROOT SBINOWN=`id -nu` UBINOWN=`id -nu` SBINGRP=`id -ng` UBINGRP=`id -ng` MANOWN=`id -nu` MANGRP=`id -ng` \
+%{__make} DESTDIR=$RPM_BUILD_ROOT SBINOWN=`id -nu` UBINOWN=`id -nu` SBINGRP=`id -ng` UBINGRP=`id -ng` MANOWN=`id -nu` MANGRP=`id -ng` \
  install -C $OBJDIR/sendmail
-make DESTDIR=$RPM_BUILD_ROOT SBINOWN=`id -nu` UBINOWN=`id -nu` SBINGRP=`id -ng` UBINGRP=`id -ng` MANOWN=`id -nu` MANGRP=`id -ng` \
+%{__make} DESTDIR=$RPM_BUILD_ROOT SBINOWN=`id -nu` UBINOWN=`id -nu` SBINGRP=`id -ng` UBINGRP=`id -ng` MANOWN=`id -nu` MANGRP=`id -ng` \
  install -C $OBJDIR/mailstats
-make DESTDIR=$RPM_BUILD_ROOT SBINOWN=`id -nu` UBINOWN=`id -nu` SBINGRP=`id -ng` UBINGRP=`id -ng` MANOWN=`id -nu` MANGRP=`id -ng` \
+%{__make} DESTDIR=$RPM_BUILD_ROOT SBINOWN=`id -nu` UBINOWN=`id -nu` SBINGRP=`id -ng` UBINGRP=`id -ng` MANOWN=`id -nu` MANGRP=`id -ng` \
  install -C $OBJDIR/praliases
-make DESTDIR=$RPM_BUILD_ROOT SBINOWN=`id -nu` UBINOWN=`id -nu` SBINGRP=`id -ng` UBINGRP=`id -ng` MANOWN=`id -nu` MANGRP=`id -ng` \
+%{__make} DESTDIR=$RPM_BUILD_ROOT SBINOWN=`id -nu` UBINOWN=`id -nu` SBINGRP=`id -ng` UBINGRP=`id -ng` MANOWN=`id -nu` MANGRP=`id -ng` \
  force-install -C $OBJDIR/rmail
-make DESTDIR=$RPM_BUILD_ROOT SBINOWN=`id -nu` UBINOWN=`id -nu` SBINGRP=`id -ng` UBINGRP=`id -ng` MANOWN=`id -nu` MANGRP=`id -ng` \
+%{__make} DESTDIR=$RPM_BUILD_ROOT SBINOWN=`id -nu` UBINOWN=`id -nu` SBINGRP=`id -ng` UBINGRP=`id -ng` MANOWN=`id -nu` MANGRP=`id -ng` \
  install -C $OBJDIR/makemap
 ln -sf ../sbin/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
-make DESTDIR=$RPM_BUILD_ROOT SBINOWN=`id -nu` UBINOWN=`id -nu` SBINGRP=`id -ng` UBINGRP=`id -ng` MANOWN=`id -nu` MANGRP=`id -ng` \
+%{__make} DESTDIR=$RPM_BUILD_ROOT SBINOWN=`id -nu` UBINOWN=`id -nu` SBINGRP=`id -ng` UBINGRP=`id -ng` MANOWN=`id -nu` MANGRP=`id -ng` \
  install -C $OBJDIR/smrsh
 
 # install docs by hand
