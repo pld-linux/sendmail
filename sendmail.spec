@@ -25,7 +25,6 @@ Source6:	%{name}.mc
 Source7:	%{name}-config.m4
 Source8:	%{name}.sasl
 Patch0:		%{name}-makefile.patch
-#Patch0:		%{name}-redhat.patch
 Patch1:		%{name}-makemapman.patch
 Patch2:		%{name}-smrsh-paths.patch
 Patch3:		%{name}-rmail.patch
