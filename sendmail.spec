@@ -174,7 +174,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(750,root,root) %dir /etc/mail
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/mail/*
 %attr(640,root,root) %config %verify(not size mtime md5) /etc/sysconfig/*
-%attr(755,root,root) /etc/rc.d/init.d/*
+%attr(754,root,root) /etc/rc.d/init.d/*
 
 %attr(755,root,root) /usr/bin/*
 
