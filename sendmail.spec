@@ -5,7 +5,7 @@ Summary(pl):	Sendmail -- aplikacja do obs³ugi poczty elektronicznej
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
 Version:	8.11.2
-Release:	2
+Release:	3
 License:	BSD
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
@@ -311,6 +311,7 @@ fi
 %{_libdir}/sendmail-cf/cf/pld.mc
 %{_libdir}/sendmail-cf/feature
 %{_libdir}/sendmail-cf/m4
+%{_libdir}/sendmail-cf/mailer
 %dir %{_libdir}/sendmail-cf/ostype
 %{_libdir}/sendmail-cf/ostype/linux.m4
 %dir %{_libdir}/sendmail-cf/sh
