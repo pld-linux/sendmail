@@ -178,10 +178,10 @@
 -to change the default program directory
 -(defaults to ``/usr/adm/sm.bin'').
  .SH FILES
--/usr/adm/sm.bin \- directory for restricted programs
+-/usr/adm/sm.bin \- default directory for restricted programs on most OSs
 +/etc/smrsh \- directory for restricted programs
- .SH SEE ALSO
- sendmail(8)
+ .PP
+ /var/adm/sm.bin \- directory for restricted programs on HP UX and Solaris
 --- ./smrsh/smrsh.c.org	Tue Sep 30 10:12:59 2003
 +++ ./smrsh/smrsh.c	Tue Sep 30 10:14:02 2003
 @@ -77,7 +77,7 @@
