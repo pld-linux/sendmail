@@ -363,14 +363,15 @@ fi
 %attr(755,root,root) %{_sbindir}/smrsh
 %{_libdir}/sendmail
 
-%{_mandir}/man8/rmail.8*
-%{_mandir}/man8/praliases.8*
+%{_mandir}/man1/mailq.1*
+%{_mandir}/man1/newaliases.1*
+%{_mandir}/man5/aliases.5*
 %{_mandir}/man8/mailstats.8*
 %{_mandir}/man8/makemap.8*
+%{_mandir}/man8/praliases.8*
+%{_mandir}/man8/rmail.8*
 %{_mandir}/man8/sendmail.8*
-%{_mandir}/man5/aliases.5*
-%{_mandir}/man1/newaliases.1*
-%{_mandir}/man1/mailq.1*
+%{_mandir}/man8/smrsh.8*
 
 %dir /etc/smrsh
 %dir %{_sysconfdir}
