@@ -1,7 +1,7 @@
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(pl):	Sendmail -- aplikacja do obs³ugi poczty elektronicznej
 Name:		sendmail
-Version:	8.11.1
+Version:	8.11.2
 Release:	1
 License:	BSD
 Group:		Networking/Daemons
@@ -118,11 +118,11 @@ B
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
+#%patch2 -p1
 %patch3 -p1
 %patch4 -p0
 %patch5 -p1
-%patch6 -p1
+#%patch6 -p1
 %patch7 -p1
 %patch8 -p1
 
