@@ -50,7 +50,7 @@ BuildRequires:	man
 %{?_with_db3:BuildRequires:	db3-devel}
 %{!?_with_db3:BuildRequires:	db-devel >= 4.1.25}
 %{!?_without_ldap:BuildRequires:	openldap-devel}
-%{!?_without_tls:BuildRequires:	openssl-devel >= 0.9.7}
+%{!?_without_tls:BuildRequires:	openssl-devel >= 0.9.7c}
 %{?_with_pgsql:BuildRequires:	postgresql-devel}
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
