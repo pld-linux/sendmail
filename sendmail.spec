@@ -37,7 +37,6 @@ Patch9:		%{name}-hprescan-dos.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
-BuildRequires:	pam-devel
 %{!?_without_ldap:BuildRequires:	openldap-devel}
 %{!?_without_tls:BuildRequires:	openssl-devel}
 Requires:	m4
