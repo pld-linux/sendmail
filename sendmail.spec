@@ -1,3 +1,7 @@
+#
+# Conditional build:
+# bcond_off_ldap - without LDAP
+#
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-Übertragungsagent
 Summary(fr):	Agent de transport de courrier sendmail
@@ -37,7 +41,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
 BuildRequires:	gdbm-devel
-BuildRequires:	openldap-devel
+%{!?bcond_off_ldap:BuildRequires:	openldap-devel}
 BuildRequires:	pam-devel
 Requires:	m4
 Prereq:		/sbin/chkconfig
@@ -112,6 +116,14 @@ sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/redhat.mc
 install %{SOURCE7} config.m4
 
 %build
+
+%if %{?debug:0}%{!?debug:1}
+echo "define(\`confLDOPTS\', \`-s\')" >> config.m4
+%endif
+%if %{?bcond_off_ldap:0}%{!?bcond_off_ldap:1}
+echo "APPENDDEF(\`confMAPDEF\', \`-DLDAPMAP\')" >> config.m4
+echo "APPENDDEF(\`confLIBS\', \`-lldap -llber\')" >> config.m4
+%endif
 
 RPM_OPT_FLAGS="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS} \
 	-DUSE_VENDOR_CF_PATH=1 -DNETINET6 -D_FFR_TESTMODE_DROP_PRIVS"
