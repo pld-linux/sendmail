@@ -153,13 +153,15 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 для мережевих шлюз╕в та гнучкий механ╕зм маршрутизац╕╖.
 
 %package devel
-Summary:	Header files for sendmail
-Summary(pl):	Pliki nagЁСwkowe 
+Summary:	Header files and static libmilter library
+Summary(pl):	Pliki nagЁСwkowe i statyczna biblioteka libmilter
 Group:		Development/Libraries
 
 %description devel
-This package contains the files necessary to develop applications
-using sendmail libraries.
+Header files and static libmilter library.
+
+%description devel -l pl
+Pliki nagЁСwkowe i statyczna biblioteka libmilter.
 
 %prep
 %setup -q
@@ -465,6 +467,6 @@ fi
 %{_libdir}/sendmail-cf/siteconfig
 
 %files devel
+%defattr(644,root,root,755)
 %{_libdir}/libmilter.a
-%dir %{_includedir}/libmilter
-%{_includedir}/libmilter/*
+%{_includedir}/libmilter
