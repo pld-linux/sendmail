@@ -16,7 +16,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.12.7
-Release:	1
+Release:	2
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -157,6 +157,7 @@ install %{SOURCE7} config.m4
 %build
 echo "define(\`confCC', \`%{__cc}')" >> config.m4
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
+echo "APPENDDEF(\`confINCDIRS', \`-I/usr/include/sasl')" >> config.m4
 echo "define(\`confLIBSEARCH', \`db')" >> config.m4
 %if %{?debug:0}%{!?debug:1}
 echo "define(\`confLDOPTS', \`-s')" >> config.m4

@@ -2,11 +2,16 @@
 #
 # PAM configuration file required by SASL to authenticate a PLAIN password.
 #
-# This file is required if we put "pwcheck_method:pam" in 
+# When using SASLv1, this file is used if we put "pwcheck_method:pam" in
 # /etc/sasl/Sendmail.conf
 #
-# Idea by Patryk Szajer <bayer@szpitalna.ngo.pl>.
+# When using SASLv2, this file is used if we put "pwcheck_method:saslauthd"
+# in /etc/sasl/Sendmail.conf and SASL_AUTHMECH=pam in /etc/sysconfig/saslauthd
 #
-# 2002.04.15 by Lucas 'Baseciq' Mozer <baseciq@baseciq.org>
-#
-auth	required	pam_unix.so nullok try_first_pass
+auth		required	/lib/security/pam_listfile.so item=user sense=deny file=/etc/security/blacklist onerr=succeed
+auth            required        /lib/security/pam_unix.so
+auth		required	/lib/security/pam_tally.so file=/var/log/faillog onerr=succeed no_magic_root
+auth		required	/lib/security/pam_nologin.so
+account		required	/lib/security/pam_tally.so deny=0 file=/var/log/faillog onerr=succeed no_magic_root
+account         required        /lib/security/pam_unix.so
+session         required        /lib/security/pam_unix.so
