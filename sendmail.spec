@@ -3,6 +3,7 @@
 %bcond_without	ldap	# without LDAP support
 %bcond_without	tls	# without TLS (SSL) support
 %bcond_with	pgsql	# with PostgreSQL support (bluelabs)
+%bcond_without	db3	# use db instead of db3 package
 #
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-Übertragungsagent
@@ -44,9 +45,10 @@ Patch4:		%{name}-m4path.patch
 Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
 Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
-Patch8:         %{name}-parseaddr.patch
 BuildRequires:	cyrus-sasl-devel
-BuildRequires:	db3-devel
+%{?with_db3:BuildRequires:	db3-devel}
+%{!?with_db3:BuildRequires:	db-devel >= 4.1.25}
+BuildRequires:	man
 %{?with_ldap:BuildRequires:	openldap-devel}
 %{?with_tls:BuildRequires:	openssl-devel >= 0.9.6m}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
@@ -59,19 +61,24 @@ Requires(post):	textutils
 Requires(post,preun):/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
+%{!?with_db3:Requires:	db >= 4.1.25}
 Requires:	m4
 Requires:	procmail
+Requires:	pam >= 0.77.3
 Provides:	smtpdaemon
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-Obsoletes:	smtpdaemon
+Obsoletes:	courier
 Obsoletes:	exim
 Obsoletes:	masqmail
+Obsoletes:	nullmailer
 Obsoletes:	omta
 Obsoletes:	postfix
 Obsoletes:	qmail
 Obsoletes:	sendmail-cf
 Obsoletes:	sendmail-doc
 Obsoletes:	smail
+Obsoletes:	smtpdaemon
+Obsoletes:	ssmtp
 Obsoletes:	zmailer
 
 %define		_sysconfdir	/etc/mail
@@ -166,7 +173,6 @@ Pliki nag³ówkowe i statyczna biblioteka libmilter.
 %patch5 -p1
 %patch6 -p1
 %{?with_pgsql:%patch7 -p1}
-#%patch8 -p1
 
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
@@ -175,6 +181,8 @@ install %{SOURCE7} config.m4
 %build
 echo "define(\`confCC', \`%{__cc}')" >> config.m4
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
+echo "APPENDDEF(\`confINCDIRS', \`-I/usr/include/sasl')" >> config.m4
+echo "define(\`confLIBSEARCHPATH', \`/%{_lib} /usr/%{_lib}')" >> config.m4
 echo "define(\`confLIBSEARCH', \`db resolv')" >> config.m4
 %if 0%{!?debug:1}
 echo "define(\`confLDOPTS', \`-s')" >> config.m4
@@ -239,9 +247,10 @@ SMINSTOPT="DESTDIR=$RPM_BUILD_ROOT SBINOWN=$IDNU SBINGRP=$IDNG \
 %{__make} -C $OBJDIR/smrsh install \
 	$SMINSTOPT
 %{__make} -C $OBJDIR/libmilter install \
-	$SMINSTOPT
+	$SMINSTOPT \
+	LIBDIR=%{_libdir}
 
-ln -sf /usr/sbin/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
+ln -sf %{_sbindir}/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
 # install the cf files
 cd cf
 rm -f cf/{Build,Makefile} feature/*~
