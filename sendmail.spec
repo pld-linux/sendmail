@@ -2,6 +2,7 @@
 # Conditional build:
 # _without_ldap		without LDAP support
 # _without_tls		without TLS (SSL) support
+# _with_pgsql		without pgsql support (bluelabs)
 
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-‹bertragungsagent
@@ -37,10 +38,12 @@ Patch3:		%{name}-os-paths.patch
 Patch4:		%{name}-m4path.patch
 Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
+Patch7:		http://blue-labs.org/clue/bluelabs.patch-%{version}
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
 %{!?_without_ldap:BuildRequires:	openldap-devel}
 %{!?_without_tls:BuildRequires:	openssl-devel}
+%{?_with_pgsql:BuildRequires: postgresql-devel}
 Requires:	m4
 Requires:	procmail
 PreReq:		/sbin/chkconfig
@@ -123,6 +126,9 @@ Sendmail - √≈ Mail Transport Agent, –“œ«“¡Õ¡ ›œ –≈“≈”…Ã¡§ –œ€‘’ ⁄
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%if %{?_with_pgsql:1}%{!?_with_pgsql:0}
+%patch7 -p1
+%endif
 
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
@@ -137,6 +143,12 @@ echo "define(\`confLDOPTS', \`-s')" >> config.m4
 %if %{?_without_ldap:0}%{!?_without_ldap:1}
 echo "APPENDDEF(\`confMAPDEF', \`-DLDAPMAP')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lldap -llber')" >> config.m4
+%endif
+%if %{?_with_pgsql:1}%{!?_with_pgsql:0}
+echo "APPENDDEF(\`confENVDEF', \`-DSASL')" >> config.m4
+echo "APPENDDEF(\`confMAPDEF', \`-DPGSQLMAP')" >> config.m4
+echo "APPENDDEF(\`confLIBS', \`-lpq -lresolv')" >> config.m4
+echo "APPENDDEF(\`confLIBS', \`-lsasl -lcrypto')" >> config.m4
 %endif
 %if %{?_without_tls:0}%{!?_without_tls:1}
 echo "APPENDDEF(\`confENVDEF', \`-DSTARTTLS')" >> config.m4
@@ -187,6 +199,10 @@ cd -
 install cf/cf/pld.cf $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf
 sed -e 's|@@PATH@@|%{_libdir}/sendmail-cf|' < %{SOURCE6} \
 	> $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.mc
+
+%if %{?_with_pgsql:1}%{!?_with_pgsql:0}
+install bluelabs.mc $RPM_BUILD_ROOT%{_sysconfdir}/bluelabs.mc
+%endif
 
 # submit.mc (submit.cf is installed automatically)
 install cf/cf/submit.mc $RPM_BUILD_ROOT%{_sysconfdir}
@@ -350,6 +366,7 @@ fi
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/submit.mc
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/local-host-names
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/aliases
+%{?_with_pgsql:%attr(644,root,root) /etc/mail/bluelabs.mc}
 %attr(644,root,mail) %ghost %{_sysconfdir}/aliases.db
 %attr(770,root,smmsp) %dir /var/spool/clientmqueue
 %attr(750,root,mail) %dir /var/spool/mqueue
