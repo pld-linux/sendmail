@@ -5,8 +5,8 @@ diff -Nur sendmail-8.12.0.orig/sendmail/conf.c sendmail-8.12.0/sendmail/conf.c
  	DontLockReadFiles = true;
  	DontProbeInterfaces = DPI_PROBEALL;
  	DoubleBounceAddr = "postmaster";
-+	DetectTelnet = FALSE;
-+	ExitOnTelnet = TRUE;
++	DetectTelnet = 0;
++	ExitOnTelnet = 1;
  	MaxHeadersLength = MAXHDRSLEN;
  	MaxForwardEntries = 0;
  	FastSplit = 1;
