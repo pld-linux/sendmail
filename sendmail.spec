@@ -16,18 +16,18 @@ Summary(ru):	Почтовый транспортный агент sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.12.10
-Release:	5
+Version:	8.12.11
+Release:	0.1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5: 393f5d09d462f522c8288363870b2b42
+# Source0-md5:	fafda7f8043f0c34b9aa295618aa598c
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
 # From http://doc.phpauction.org/sendmail/examples/
 Source4:	%{name}-examples.tar.bz2
-# Source4-md5:  d00d817cd456a947a7fc6c04072a7d68
+# Source4-md5:	d00d817cd456a947a7fc6c04072a7d68
 Source5:	%{name}-etc-mail-Makefile
 Source6:	%{name}.mc
 Source7:	%{name}-config.m4
@@ -155,7 +155,7 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
+#%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
@@ -189,7 +189,10 @@ echo "APPENDDEF(\`confLIBS', \`-lsasl -lcrypto')" >> config.m4
 echo "APPENDDEF(\`confENVDEF', \`-DSTARTTLS')" >> config.m4
 echo "APPENDDEF(\`confENVDEF', \`-D_FFR_DEAL_WITH_ERROR_SSL')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lssl -lcrypto')" >> config.m4
+echo "APPENDDEF(\`confENVDEF', \`-D_FFR_SMTP_SSL')" >> config.m4
 %endif
+
+echo "APPENDDEF(\`confENVDEF', \`-DMILTER')" >> config.m4
 
 cd sendmail	&& sh Build -f ../config.m4
 cd ../mailstats	&& sh Build -f ../config.m4
