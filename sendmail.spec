@@ -18,7 +18,7 @@ Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	http://www.informatik.uni-kiel.de/~ca/email/rules/check.tar
-Source3:	aliases
+Source3:	%{name}.aliases
 Source4:	%{name}.sysconfig
 Source5:	%{name}-etc-mail-Makefile
 Source6:	%{name}.mc
@@ -28,7 +28,7 @@ Source9:	%{name}-access-sample
 Source10:	%{name}-mailertable-sample
 Source11:	%{name}-virtusertable-sample
 Source12:	%{name}-domaintable-sample
-Source13:	%{name}-pam-d-smtp
+Source13:	%{name}-smtp.pamd
 Patch0:		%{name}-makemapman.patch
 Patch1:		%{name}-smrsh-paths.patch
 Patch2:		%{name}-rmail.patch
