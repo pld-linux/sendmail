@@ -2,4 +2,6 @@
 
 # Define nice level for sendmail & config 
 SERVICE_RUN_NICE_LEVEL="+5"
-SENDMAIL_CF="-bd -q5m -ODaemonPortOptions=Family=inet6"
+SENDMAIL_CF="-bd -q1h"
+# for IPv6:
+#SENDMAIL_CF="-bd -q5m -ODaemonPortOptions=Family=inet6"
