@@ -2,7 +2,6 @@
 # Conditional build:
 # _without_ldap		without LDAP support
 # _without_tls		without TLS (SSL) support
-# _with_auth		with AUTH support
 
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-Übertragungsagent
@@ -38,7 +37,6 @@ BuildRequires:	db3-devel
 %{!?_without_tls:BuildRequires:	openssl-devel}
 Requires:	m4
 Requires:	procmail
-%{?_with_auth:Requires: cyrus-sasl-{plain,login}}
 PreReq:		/sbin/chkconfig
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
