@@ -63,6 +63,7 @@ Requires(postun):	/usr/sbin/userdel
 %{!?_with_db3:Requires:	db >= 4.1.25}
 Requires:	m4
 Requires:	procmail
+Requires:	pam >= 0.77.3
 Provides:	smtpdaemon
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	smtpdaemon
