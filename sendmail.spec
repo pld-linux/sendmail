@@ -5,6 +5,7 @@ Version:	8.10.1
 Release:	1
 License:	BSD
 Group:		System Environment/Daemons
+######		Unknown group!
 Group(pl):	Sieciowe/Serwery
 Provides:	smtpdaemon
 Source0:	ftp://ftp.cs.berkeley.edu/ucb/sendmail/%{name}.%{version}.tar.gz
@@ -59,7 +60,6 @@ Summary:	Documentation about the Sendmail Mail Transport Agent program.
 Summary(pl):	Dokumentacja do Sendmaila.
 Group(pl):	Serwery
 Group:		Documentation
-######		/home/lukasz/rpm/groups: no such file
 
 %description doc
 The sendmail-doc package contains documentation about the Sendmail
@@ -81,7 +81,6 @@ w formacie PostScript(TM) oraz troff. Je¿eli potrzebujesz dokumntacji
 Summary:	The files needed to reconfigure Sendmail.
 Summary(pl):	Pliki konfiguracyjne oraz makra m4 dla sendmaila
 Group:		System Environment/Daemons
-######		/home/lukasz/rpm/groups: no such file
 Group(pl):	Serwery
 Requires:	%{name} = %{version}
 
@@ -188,12 +187,12 @@ cd cf
 cp -ar * $RPM_BUILD_ROOT%{_libdir}/sendmail-cf
 cd -
 
-install -d $RPM_BUILD_ROOT/etc/mail
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/mail
 
 
-install cf/cf/redhat.cf $RPM_BUILD_ROOT/etc/sendmail.cf
-sed -e 's|@@PATH@@|%{_libdir}/sendmail-cf|' < %{SOURCE6} > $RPM_BUILD_ROOT/etc/mail/sendmail.mc
-echo "# local-host-names - include all aliases for your machine here." > $RPM_BUILD_ROOT/etc/mail/local-host-names
+install cf/cf/redhat.cf $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf
+sed -e 's|@@PATH@@|%{_libdir}/sendmail-cf|' < %{SOURCE6} > $RPM_BUILD_ROOT%{_sysconfdir}/mail/sendmail.mc
+echo "# local-host-names - include all aliases for your machine here." > $RPM_BUILD_ROOT%{_sysconfdir}/mail/local-host-names
 
 ln -sf ../sbin/sendmail $RPM_BUILD_ROOT%{_libdir}/sendmail
 install -d -m755 $RPM_BUILD_ROOT/var/spool/mqueue
@@ -203,9 +202,9 @@ for f in hoststat mailq newaliases purgestat
   do
     ln -sf ../sbin/sendmail $RPM_BUILD_ROOT%{_bindir}/${f}
   done
-install -d $RPM_BUILD_ROOT/etc/smrsh
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/smrsh
 
-cat <<EOF > $RPM_BUILD_ROOT/etc/mail/access
+cat <<EOF > $RPM_BUILD_ROOT%{_sysconfdir}/mail/access
 # Check the %{_prefix}/doc/sendmail-%{version}/README.cf file for a description
 # of the format of this file. (search for access_db in that file)
 # The %{_prefix}/doc/sendmail-%{version}/README.cf is part of the sendmail-doc
@@ -219,16 +218,16 @@ localhost			RELAY
 EOF
 for map in virtusertable access domaintable mailertable
   do
-    touch $RPM_BUILD_ROOT/etc/mail/${map}
-    makemap hash $RPM_BUILD_ROOT/etc/mail/${map}.db < $RPM_BUILD_ROOT/etc/mail/${map}
+touch $RPM_BUILD_ROOT%{_sysconfdir}/mail/${map}
+makemap hash $RPM_BUILD_ROOT%{_sysconfdir}/mail/${map}.db < $RPM_BUILD_ROOT%{_sysconfdir}/mail/${map}
   done
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/aliases
-makemap hash $RPM_BUILD_ROOT/etc/aliases.db < %{SOURCE3}
+install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/aliases
+makemap hash $RPM_BUILD_ROOT%{_sysconfdir}/aliases.db < %{SOURCE3}
 
 install %SOURCE4 $RPM_BUILD_ROOT/etc/sysconfig/sendmail
 install -m755 %SOURCE1 $RPM_BUILD_ROOT/etc/rc.d/init.d/sendmail
 
-install %{SOURCE5} $RPM_BUILD_ROOT/etc/mail/Makefile
+install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/mail/Makefile
 
 chmod u+w $RPM_BUILD_ROOT%{_sbindir}/{mailstats,praliases}
 chmod u+w $RPM_BUILD_ROOT%{_bindir}/rmail
@@ -317,29 +316,29 @@ fi
 
 /var/log/statistics
 # XXX can't do noreplace here or new sendmail will not deliver.
-%config				/etc/sendmail.cf
-%attr(0644,root,root) %config	/etc/mail/sendmail.mc
-%config(noreplace)		/etc/mail/local-host-names
-%config(noreplace)		/etc/aliases
-%attr(0644,root,mail) %ghost	/etc/aliases.db
+%config %{_sysconfdir}/sendmail.cf
+%attr(0644,root,root) %config %{_sysconfdir}/mail/sendmail.mc
+%config(noreplace) %{_sysconfdir}/mail/local-host-names
+%config(noreplace) %{_sysconfdir}/aliases
+%attr(0644,root,mail) %ghost %{_sysconfdir}/aliases.db
 %attr(0755,root,mail) %dir	/var/spool/mqueue
-%dir /etc/smrsh
-%dir /etc/mail
+%dir %{_sysconfdir}/smrsh
+%dir %{_sysconfdir}/mail
 
-%config /etc/mail/Makefile
-%attr(0644,root,root) %ghost			/etc/mail/virtusertable.db
-%attr(0644,root,root) %config(noreplace)	/etc/mail/virtusertable
+%config %{_sysconfdir}/mail/Makefile
+%attr(0644,root,root) %ghost %{_sysconfdir}/mail/virtusertable.db
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/mail/virtusertable
 
-%attr(0644,root,root) %ghost			/etc/mail/access.db
-%attr(0644,root,root) %config(noreplace)	/etc/mail/access
+%attr(0644,root,root) %ghost %{_sysconfdir}/mail/access.db
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/mail/access
 
-%attr(0644,root,root) %ghost			/etc/mail/domaintable.db
-%attr(0644,root,root) %config(noreplace)	/etc/mail/domaintable
+%attr(0644,root,root) %ghost %{_sysconfdir}/mail/domaintable.db
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/mail/domaintable
 
-%attr(0644,root,root) %ghost			/etc/mail/mailertable.db
-%attr(0644,root,root) %config(noreplace)	/etc/mail/mailertable
+%attr(0644,root,root) %ghost %{_sysconfdir}/mail/mailertable.db
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/mail/mailertable
 
-%attr(0644,root,root) %config(noreplace)	/etc/mail/helpfile
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/mail/helpfile
 
 %config /etc/sysconfig/sendmail
 
@@ -352,100 +351,3 @@ fi
 %files doc
 %defattr(644,root,root,755)
 %{_prefix}/doc/sendmail
-
-* Mon Apr 05 1999 Cristian Gafton <gafton@redhat.com>
-- fixed virtusertable patch
-- make smrsh look into /etc/smrsh
-
-* Mon Mar 29 1999 Jeff Johnson <jbj@redhat.com>
-- remove noreplace attr from sednmail.cf.
-
-* Thu Mar 25 1999 Cristian Gafton <gafton@redhat.com>
-- provide a more sane /etc/mail/access default config file
-- use makemap to initializa the empty databases, not touch
-- added a small, but helpful /etc/mail/Makefile
-
-* Mon Mar 22 1999 Jeff Johnson <jbj@redhat.com>
-- correxct dangling symlinks.
-- check for map file existence in %post.
-
-* Sun Mar 21 1999 Cristian Gafton <gafton@redhat.com>
-- auto rebuild in the new build environment (release 3)
-* Fri Mar 19 1999 Jeff Johnson <jbj@redhat.com>
-- improved 8.9.3 config from Mike McHenry <mmchen@minn.net>
-
-* Tue Mar 16 1999 Cristian Gafton <gafton@redhat.com>
-- version 8.9.3
-
-* Tue Dec 29 1998 Cristian Gafton <gafton@redhat.com>
-- build for 6.0
-- use the libdb1 stuff correctly
-
-* Mon Sep 21 1998 Michael K. Johnson <johnsonm@redhat.com>
-- Allow empty QUEUE in /etc/sysconfig/sendmail for those who
-  want to run sendmail in daemon mode without processing the
-  queue regularly.
-
-* Thu Sep 17 1998 Michael K. Johnson <johnsonm@redhat.com>
-- /etc/sysconfig/sendmail
-
-* Fri Aug 28 1998 Jeff Johnson <jbj@redhat.com>
-- recompile statically linked binary for 5.2/sparc
-
-* Tue May 05 1998 Prospector System <bugs@redhat.com>
-- translations modified for de, fr, tr
-* Sat May 02 1998 Cristian Gafton <gafton@redhat.com>
-- enhanced initscripts
-
-* Fri May 01 1998 Cristian Gafton <gafton@redhat.com>
-- added a rmail patch
-
-* Wed Oct 29 1997 Donnie Barnes <djb@redhat.com>
-- argh!  Fixed some of the db1 handling that had to be added for glibc 2.1
-
-* Fri Oct 24 1997 Donnie Barnes <djb@redhat.com>
-- added support for db1 on SPARC
-
-* Thu Oct 16 1997 Donnie Barnes <djb@redhat.com>
-- added chkconfig support
-- various spec file cleanups
-- changed group to Networking/Daemons (from Daemons).  Sure, it runs on
-  non networked systems, but who really *needs* it then?
-
-* Wed Oct 08 1997 Donnie Barnes <djb@redhat.com>
-- made /etc/mail/deny.db a ghost
-- removed preun that used to remove deny.db (ghost handles that now)
-- NOTE: upgrading from the sendmail packages in 4.8, 4.8.1, and possibly
-  4.9 (all Red Hat betas between 4.2 and 5.0) could cause problems.  You
-  may need to do a makemap in /etc/mail and a newaliases after upgrading
-  from those packages.  Upgrading from 4.2 or prior should be fine.
-
-* Mon Oct 06 1997 Erik Troan <ewt@redhat.com>
-- made aliases.db a ghost
-
-* Tue Sep 23 1997 Donnie Barnes <djb@redhat.com>
-- fixed preuninstall script to handle aliases.db on upgrades properly
-
-* Mon Sep 15 1997 Donnie Barnes <djb@redhat.com>
-- fixed post-install output and changed /var/spool/mqueue to 755
-
-* Thu Sep 11 1997 Donnie Barnes <djb@redhat.com>
-- fixed /usr/lib/sendmail-cf paths
-
-* Tue Sep 09 1997 Donnie Barnes <djb@redhat.com>
-- updated to 8.8.7
-- added some spam filtration
-- combined some makefile patches
-- added BuildRoot support
-
-* Wed Sep 03 1997 Erik Troan <ewt@redhat.com>
-- marked initscript symlinks as missingok
-- run newalises after creating /var/spool/mqueue
-* Thu Jun 12 1997 Erik Troan <ewt@redhat.com>
-- built against glibc, udated release to -6 (skipped -5!)
-
-* Tue Apr 01 1997 Erik Troan <ewt@redhat.com>
-- Added -nsl on the Alpha (for glibc to provide NIS functions).
-
-* Mon Mar 03 1997 Erik Troan <ewt@redhat.com>
-- Added nis support.
