@@ -70,6 +70,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	courier
 Obsoletes:	exim
 Obsoletes:	masqmail
+Obsoletes:	nullmailer
 Obsoletes:	omta
 Obsoletes:	postfix
 Obsoletes:	qmail
@@ -77,6 +78,7 @@ Obsoletes:	sendmail-cf
 Obsoletes:	sendmail-doc
 Obsoletes:	smail
 Obsoletes:	smtpdaemon
+Obsoletes:	ssmtp
 Obsoletes:	zmailer
 
 %define		_sysconfdir	/etc/mail
