@@ -23,6 +23,7 @@ Patch7:		%{name}-release.patch
 BuildRoot:	/tmp/%{name}-%{version}-root
 URL:		http://www.sendmail.org
 Prereq:		/sbin/chkconfig
+Requires:	rc-scripts
 Obsoletes:	zmail
 Obsoletes:	qmail
 Obsoletes:	smail
