@@ -5,25 +5,27 @@ Version:	8.11.2
 Release:	1
 License:	BSD
 Group:		Networking/Daemons
+Group(de):	Netzwerkwesen/Server
 Group(pl):	Sieciowe/Serwery
 Provides:	smtpdaemon
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-Source1:	sendmail.init
+Source1:	%{name}.init
 Source2:	http://www.informatik.uni-kiel.de/~ca/email/rules/check.tar
 Source3:	aliases
-Source4:	sendmail.sysconfig
-Source5:	sendmail-etc-mail-Makefile
-Source6:	sendmail.mc
-Source7:	sendmail-config.m4
-Patch0:		sendmail-redhat.patch
-Patch1:		sendmail-makemapman.patch
-Patch2:		sendmail-smrsh-paths.patch
-Patch3:		sendmail-rmail.patch
-Patch4:		sendmail-manpath.patch
-Patch5:		sendmail-m4path.patch
-Patch6:		sendmail-dtelnet.patch
-Patch7:		sendmail-pld.mc.patch
-Patch8:		sendmail-redirect.patch
+Source4:	%{name}.sysconfig
+Source5:	%{name}-etc-mail-Makefile
+Source6:	%{name}.mc
+Source7:	%{name}-config.m4
+Patch0:		%{name}-redhat.patch
+Patch1:		%{name}-makemapman.patch
+Patch2:		%{name}-smrsh-paths.patch
+Patch3:		%{name}-rmail.patch
+Patch4:		%{name}-manpath.patch
+Patch5:		%{name}-m4path.patch
+Patch6:		%{name}-dtelnet.patch
+Patch7:		%{name}-pld.mc.patch
+Patch8:		%{name}-redirect.patch
+Patch9:		%{name}-ipv6-glibc-2.2.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
@@ -37,7 +39,6 @@ Obsoletes:	qmail
 Obsoletes:	smail
 Obsoletes:	exim
 Obsoletes:	postfix
-#Obsoletes:	sendmail-cf
 
 %description
 The Sendmail program is a very widely used Mail Transport Agent (MTA).
@@ -46,8 +47,8 @@ program, which you use to read your e-mail. Sendmail is a
 behind-the-scenes program which actually moves your e-mail over
 networks or the Internet to where you want it to go.
 
-If you need documentation on Sendmail, you can install the sendmail-doc
-package.
+If you need documentation on Sendmail, you can install the
+sendmail-doc package.
 
 %description -l pl
 Sendmail jest programem umo¿liwiaj±cym wymianê poczty elektronicznej
@@ -58,12 +59,14 @@ dodatkowym atutem jest prosta konfiguracja. Dziêki rozbudowanym
 mo¿liwo¶ciom konfiguracyjnym jest w stanie dostarczaæ przesy³ki za
 po¶rednictwem protoko³ów: SMTP, ESMTP, UUCP, X.400 i innych.
 
-dokumentacja do programu sendmail znajduje siê w pakiecie sendmail-doc.
+dokumentacja do programu sendmail znajduje siê w pakiecie
+sendmail-doc.
 
 %package cf
 Summary:	The files needed to reconfigure Sendmail
 Summary(pl):	Pliki potrzebne do rekonfiguracji Sendmaila
 Group:		Networking/Daemons
+Group(de):	Netzwerkwesen/Server
 Group(pl):	Sieciowe/Serwery
 Requires:	%{name} = %{version}
 Requires:	m4
@@ -72,8 +75,8 @@ Requires:	m4
 This package includes the configuration files which you'd need to
 generate the sendmail.cf file distributed with the sendmail package.
 You'll need the sendmail-cf package if you ever need to reconfigure
-and rebuild your sendmail.cf file.  For example, the default
-sendmail.cf file is not configured for UUCP.  If someday you needed to
+and rebuild your sendmail.cf file. For example, the default
+sendmail.cf file is not configured for UUCP. If someday you needed to
 send and receive mail over UUCP, you'd need to install the sendmail-cf
 package to help you reconfigure Sendmail.
 
@@ -81,19 +84,19 @@ Install the sendmail-cf package if you need to reconfigure your
 sendmail.cf file.
 
 %description -l pl cf
-B
 Ten pakiet zawiera pliki konfiguracyjne, których bêdziesz potrzebowa³,
-by wygenerowaæ plik sendmail.cf, zawarty w pakiecie sendmail.
-Bêdziesz potrzebowa³ pakietu sendmail-cf je¿eli potrzebujesz
-zrekonfigurowaæ i przebudowaæ plik sendmail.cf. Na przyk³ad, domy¶lny
-sendmail.cf nie jest skonfigurowany dla UUCP. Je¿eli kiedy¶ bêdziesz
-potrzebowa³ wysy³aæ i odbieraæ porztê po UUCP, bêdziesz musia³
-zainstalowaæ pakiet sendmail-cf, który pomo¿e ci zrekonfigurowaæ Sendmaila.
+by wygenerowaæ plik sendmail.cf, zawarty w pakiecie sendmail. Bêdziesz
+potrzebowa³ pakietu sendmail-cf je¿eli potrzebujesz zrekonfigurowaæ i
+przebudowaæ plik sendmail.cf. Na przyk³ad, domy¶lny sendmail.cf nie
+jest skonfigurowany dla UUCP. Je¿eli kiedy¶ bêdziesz potrzebowa³
+wysy³aæ i odbieraæ porztê po UUCP, bêdziesz musia³ zainstalowaæ pakiet
+sendmail-cf, który pomo¿e ci zrekonfigurowaæ Sendmaila.
 
 %package doc
 Summary:	Documentation about the Sendmail Mail Transport Agent program
 Summary(pl):	Dokumentacja do Sendmaila
 Group:		Documentation
+Group(de):	Dokumentation
 Group(pl):	Dokumentacja
 Requires:	%{name} = %{version}
 
@@ -109,22 +112,23 @@ Sendmail.
 %description -l pl doc
 Ten pakiet zawiera dokumentacjê do programu Sendmail Mail Transport
 Agent (MTA). Dokumentacja zwawiera informacje o zmianach w bie¿±cej
-wersji i FAQ - najczêsciej zadawane pytania. Dokumentacja dostêpna jest
-w formacie PostScript(TM) oraz troff. Je¿eli potrzebujesz dokumentacji
-B
+wersji i FAQ - najczêsciej zadawane pytania. Dokumentacja dostêpna
+jest w formacie PostScript(TM) oraz troff. Je¿eli potrzebujesz
+dokumentacji
 - zainstaluj ten pakiet.
 
 %prep
 %setup -q
 %patch0 -p1
 %patch1 -p1
-#%patch2 -p1
+%patch2 -p1
 %patch3 -p1
 %patch4 -p0
 %patch5 -p1
-#%patch6 -p1
+%patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
 
 # seems to be obsoleted...
 #tar xf %{SOURCE2} -C cf
@@ -135,10 +139,7 @@ install %{SOURCE7} config.m4
 
 %build
 
-#RPM_OPT_FLAGS="$RPM_OPT_FLAGS -DUSE_VENDOR_CF_PATH=1 -DNETINET6"
-# won't compile with -DNETINET6 on glibc-2.2 - resolver problems
-
-RPM_OPT_FLAGS="$RPM_OPT_FLAGS -DUSE_VENDOR_CF_PATH=1"
+RPM_OPT_FLAGS="$RPM_OPT_FLAGS -DUSE_VENDOR_CF_PATH=1 -DNETINET6 -D_FFR_TESTMODE_DROP_PRIVS"
 export RPM_OPT_FLAGS
 
 cd sendmail	&& sh Build -f ../config.m4
@@ -313,7 +314,6 @@ fi
 
 /var/log/statistics
 # XXX can't do noreplace here or new sendmail will not deliver.
-#%config %{_sysconfdir}/sendmail.cf
 %config %{_sysconfdir}/mail/sendmail.cf
 %config %{_sysconfdir}/mail/sendmail.mc
 %config(noreplace) %{_sysconfdir}/mail/local-host-names
