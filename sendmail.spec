@@ -14,8 +14,8 @@ Summary(ru):	Почтовый транспортный агент sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.12.5
-Release:	6
+Version:	8.12.6
+Release:	1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
