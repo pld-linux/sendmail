@@ -3,7 +3,7 @@
 # Define nice level for sendmail & config 
 SERVICE_RUN_NICE_LEVEL="+5"
 
-# Run sa daemon ?
+# Run a daemon ?
 DAEMON=yes
 
 # Queue
