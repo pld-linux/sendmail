@@ -7,10 +7,12 @@ Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-эbertragungsagent
 Summary(fr):	Agent de transport de courrier sendmail
 Summary(pl):	Sendmail - serwer poczty elektronicznej
+Summary(ru):	Почтовый транспортный агент sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
+Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.12.2
-Release:	4
+Version:	8.12.3
+Release:	1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -27,10 +29,8 @@ Patch1:		%{name}-smrsh-paths.patch
 Patch2:		%{name}-rmail.patch
 Patch3:		%{name}-os-paths.patch
 Patch4:		%{name}-m4path.patch
-Patch5:		%{name}-dtelnet.patch
-Patch6:		%{name}-redirect.patch
-Patch7:		%{name}-hprescan-dos.patch
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+Patch5:		%{name}-redirect.patch
+Patch6:		%{name}-hprescan-dos.patch
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
 %{!?_without_ldap:BuildRequires:	openldap-devel}
@@ -47,6 +47,7 @@ Requires(post):	textutils
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
 Provides:	smtpdaemon
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	smtpdaemon
 Obsoletes:	exim
 Obsoletes:	masqmail
@@ -90,10 +91,22 @@ dodatkowym atutem jest prosta konfiguracja. DziЙki rozbudowanym
 mo©liwo╤ciom konfiguracyjnym jest w stanie dostarczaФ przesyЁki za
 po╤rednictwem protokoЁСw: SMTP, ESMTP, UUCP, X.400 i innych.
 
+%description -l ru
+Sendmail - это Mail Transport Agent, программа пересылающая почту с
+машины на машину. Sendmail предоставляет стандартные средства
+межсетевой маршрутизации почты, aliasing, forwarding, автоматическую
+маршрутизацию для сетевых шлюзов и гибкий механизм конфигурации.
+
 %description -l tr
 Sendmail, bir mektubu bir makineden diПerine taЧЩr. Pek Гok davranЩЧЩ
 ayarlanabilir. Internet Эzerinden mektup almak veya gЖndermek
 istiyorsanЩz bu pakete gereksiniminiz olacaktЩr.
+
+%description -l uk
+Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
+машини на машину. Sendmail нада╓ стандартн╕ засоби м╕жмережево╖
+маршрутизац╕╖ пошти, aliasing, forwarding, автоматичну маршрутизац╕ю
+для мережевих шлюз╕в та гнучкий механ╕зм маршрутизац╕╖.
 
 %prep
 %setup -q
@@ -104,7 +117,6 @@ istiyorsanЩz bu pakete gereksiniminiz olacaktЩr.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
 
 # seems to be obsoleted...
 #tar xf %{SOURCE2} -C cf
@@ -114,6 +126,8 @@ sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 install %{SOURCE7} config.m4
 
 %build
+echo "define(\`confCC', \`%{__cc}')" >> config.m4
+echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
 %if %{?debug:0}%{!?debug:1}
 echo "define(\`confLDOPTS', \`-s')" >> config.m4
 %endif
@@ -125,9 +139,6 @@ echo "APPENDDEF(\`confLIBS', \`-lldap -llber')" >> config.m4
 echo "APPENDDEF(\`confENVDEF', \`-DSTARTTLS')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lssl -lcrypto')" >> config.m4
 %endif
-
-RPM_OPT_FLAGS="%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6"
-export RPM_OPT_FLAGS
 
 cd sendmail	&& sh Build -f ../config.m4
 cd ../mailstats	&& sh Build -f ../config.m4
