@@ -1,6 +1,6 @@
-diff -Nru sendmail-8.11.3/smrsh/README sendmail-8.11.3.new/smrsh/README
---- sendmail-8.11.3/smrsh/README	Thu Mar  1 07:19:27 2001
-+++ sendmail-8.11.3.new/smrsh/README	Thu Mar  1 07:17:50 2001
+diff -Nur sendmail-8.12.0.orig/smrsh/README sendmail-8.12.0/smrsh/README
+--- sendmail-8.12.0.orig/smrsh/README	Wed Jan 24 01:05:58 2001
++++ sendmail-8.12.0/smrsh/README	Mon Sep 24 09:42:10 2001
 @@ -6,7 +6,7 @@
  intended as a supplement to the CERT advisory CA-93:16.sendmail.vulnerability,
  and to the software, smrsh.c, written by Eric Allman.
@@ -33,7 +33,7 @@ diff -Nru sendmail-8.11.3/smrsh/README sendmail-8.11.3.new/smrsh/README
 @@ -76,7 +76,7 @@
  acceptable commands.
  
- If your platform doesn't have a default CMDDIR setting, you will
+ If your platform doesn't have a default SMRSH_CMDDIR setting, you will
 -next need to create the directory /usr/adm/sm.bin and populate
 +next need to create the directory /etc/smrsh and populate
  it with the programs that your site feels are allowable for sendmail
@@ -104,9 +104,9 @@ diff -Nru sendmail-8.11.3/smrsh/README sendmail-8.11.3.new/smrsh/README
  
  Now re-start the sendmail process.  An example of how to do this on
  a typical system follows:
-diff -Nru sendmail-8.11.3/smrsh/smrsh.8 sendmail-8.11.3.new/smrsh/smrsh.8
---- sendmail-8.11.3/smrsh/smrsh.8	Thu Mar  1 07:19:27 2001
-+++ sendmail-8.11.3.new/smrsh/smrsh.8	Thu Mar  1 07:17:50 2001
+diff -Nur sendmail-8.12.0.orig/smrsh/smrsh.8 sendmail-8.12.0/smrsh/smrsh.8
+--- sendmail-8.12.0.orig/smrsh/smrsh.8	Wed Jan 24 01:40:47 2001
++++ sendmail-8.12.0/smrsh/smrsh.8	Mon Sep 24 09:42:56 2001
 @@ -39,7 +39,7 @@
  .I smrsh
  limits programs to be in a single directory,
@@ -150,10 +150,10 @@ diff -Nru sendmail-8.11.3/smrsh/smrsh.8 sendmail-8.11.3.new/smrsh/smrsh.8
  it simply disallows execution of arbitrary programs.
 -.SH COMPILATION
 -Compilation should be trivial on most systems.
--You may need to use \-DPATH=\e"\fIpath\fP\e"
+-You may need to use \-DSMRSH_PATH=\e"\fIpath\fP\e"
 -to adjust the default search path
 -(defaults to ``/bin:/usr/bin:/usr/ucb'')
--and/or \-DCMDBIN=\e"\fIdir\fP\e"
+-and/or \-DSMRSH_CMDBIN=\e"\fIdir\fP\e"
 -to change the default program directory
 -(defaults to ``/usr/adm/sm.bin'').
  .SH FILES
@@ -161,24 +161,24 @@ diff -Nru sendmail-8.11.3/smrsh/smrsh.8 sendmail-8.11.3.new/smrsh/smrsh.8
 +/etc/smrsh \- directory for restricted programs
  .SH SEE ALSO
  sendmail(8)
-diff -Nru sendmail-8.11.3/smrsh/smrsh.c sendmail-8.11.3.new/smrsh/smrsh.c
---- sendmail-8.11.3/smrsh/smrsh.c	Thu Mar  1 07:19:27 2001
-+++ sendmail-8.11.3.new/smrsh/smrsh.c	Thu Mar  1 07:20:44 2001
-@@ -77,7 +77,7 @@
- # if defined(HPUX10) || defined(HPUX11) || SOLARIS >= 20800
- #  define CMDDIR	"/var/adm/sm.bin"
- # else /* HPUX10 || HPUX11 || SOLARIS >= 20800 */
+diff -Nur sendmail-8.12.0.orig/smrsh/smrsh.c sendmail-8.12.0/smrsh/smrsh.c
+--- sendmail-8.12.0.orig/smrsh/smrsh.c	Fri Aug 31 20:36:04 2001
++++ sendmail-8.12.0/smrsh/smrsh.c	Mon Sep 24 09:43:48 2001
+@@ -74,7 +74,7 @@
+ # ifdef SMRSH_CMDDIR
+ #  define CMDDIR	SMRSH_CMDDIR
+ # else /* SMRSH_CMDDIR */
 -#  define CMDDIR	"/usr/adm/sm.bin"
-+#  define CMDDIR	"/usr/smrsh"
- # endif /* HPUX10 || HPUX11 || SOLARIS >= 20800 */
++#  define CMDDIR	"/etc/smrsh"
+ # endif /* SMRSH_CMDDIR */
  #endif /* ! CMDDIR */
  
 @@ -86,7 +86,7 @@
- 
- /* default search path */
- #ifndef PATH
--# define PATH		"/bin:/usr/bin:/usr/ucb"
-+# define PATH		"/bin:/usr/bin"
+ # ifdef SMRSH_PATH
+ #  define PATH		SMRSH_PATH
+ # else /* SMRSH_PATH */
+-#  define PATH		"/bin:/usr/bin:/usr/ucb"
++#  define PATH		"/bin:/usr/bin"
+ # endif /* SMRSH_PATH */
  #endif /* ! PATH */
  
- #ifndef __P
