@@ -23,6 +23,7 @@ Patch7:		%{name}-release.patch
 URL:		http://www.sendmail.org
 BuildRoot:	/tmp/%{name}-%{version}-root
 Prereq:		/sbin/chkconfig
+BuildRequires:	glibc-static
 Requires:	rc-scripts
 Provides:	smtpdaemon
 Obsoletes:	smtpdaemon
