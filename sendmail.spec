@@ -50,7 +50,7 @@ BuildRequires:	cyrus-sasl-devel
 %{!?_with_db3:BuildRequires:	db-devel >= 4.1.25}
 %{!?_without_ldap:BuildRequires:	openldap-devel}
 %{!?_without_tls:BuildRequires:	openssl-devel >= 0.9.7}
-%{?_with_pgsql:BuildRequires: postgresql-devel}
+%{?_with_pgsql:BuildRequires:	postgresql-devel}
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
