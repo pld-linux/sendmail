@@ -24,11 +24,24 @@ Source5:	%{name}-etc-mail-Makefile
 Source6:	%{name}.mc
 Source7:	%{name}-config.m4
 Source8:	%{name}.sasl
-Source9:	%{name}-access-sample
-Source10:	%{name}-mailertable-sample
-Source11:	%{name}-virtusertable-sample
-Source12:	%{name}-domaintable-sample
+Source9:	%{name}.access
+Source10:	%{name}.mailertable
+Source11:	%{name}.virtusertable
+Source12:	%{name}.domaintable
 Source13:	%{name}-smtp.pamd
+Source14:	http://doc.phpauction.org/sendmail/examples/address.resolve
+Source15:	http://doc.phpauction.org/sendmail/examples/examples-db/access
+Source16:	http://doc.phpauction.org/sendmail/examples/examples-db/aliases
+Source17:	http://doc.phpauction.org/sendmail/examples/examples-db/domaintable
+Source18:	http://doc.phpauction.org/sendmail/examples/examples-db/genericstable
+Source19:	http://doc.phpauction.org/sendmail/examples/examples-db/mailertable
+Source20:	http://doc.phpauction.org/sendmail/examples/examples-db/relay-domains
+Source21:	http://doc.phpauction.org/sendmail/examples/examples-db/%{name}.cM
+Source22:	http://doc.phpauction.org/sendmail/examples/examples-db/virtusertable
+Source23:	http://doc.phpauction.org/sendmail/examples/examples-pam/smtp
+Source24:	http://doc.phpauction.org/sendmail/examples/examples-sasl/Sendmail.conf
+Source25:	http://doc.phpauction.org/sendmail/examples/examples-sasl/saslpasswd.conf
+Source26:	http://doc.phpauction.org/sendmail/examples/passwd-to-alias
 Patch0:		%{name}-makemapman.patch
 Patch1:		%{name}-smrsh-paths.patch
 Patch2:		%{name}-rmail.patch
@@ -203,17 +216,6 @@ for f in hoststat mailq newaliases purgestat ; do
 	ln -sf ../sbin/sendmail $RPM_BUILD_ROOT%{_bindir}/${f}
 done
 
-cat <<EOF > $RPM_BUILD_ROOT%{_sysconfdir}/access
-# Check the %{_prefix}/doc/sendmail-%{version}/README.cf file for a description
-# of the format of this file. (search for access_db in that file)
-# The %{_prefix}/doc/sendmail-%{version}/README.cf is part of the sendmail-doc
-# package.
-#
-# by default we allow relaying from localhost...
-localhost.localdomain		RELAY
-localhost			RELAY
-127.0.0.1			RELAY
-EOF
 
 for map in virtusertable access domaintable mailertable ; do
 	touch $RPM_BUILD_ROOT%{_sysconfdir}/${map}
@@ -230,15 +232,35 @@ install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sendmail
 install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/Makefile
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/sasl/Sendmail.conf
 install %{SOURCE13} $RPM_BUILD_ROOT/etc/pam.d/smtp
+install %{SOURCE9} $RPM_BUILD_ROOT%{_sysconfdir}/access
+install %{SOURCE10} $RPM_BUILD_ROOT%{_sysconfdir}/mailertable
+install %{SOURCE11} $RPM_BUILD_ROOT%{_sysconfdir}/virtusertable
+install %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable
 
-cp -f %{SOURCE9} ./access.sample
-cp -f %{SOURCE10} ./mailertable.sample
-cp -f %{SOURCE11} ./virtusertable.sample
-cp -f %{SOURCE12} ./domaintable.sample
+#cp -f %{SOURCE9} ./access.sample
+#cp -f %{SOURCE10} ./mailertable.sample
+#cp -f %{SOURCE11} ./virtusertable.sample
+#cp -f %{SOURCE12} ./domaintable.sample
 
 mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
 mv -f doc/op/op.me .
+install -d examples/examples-db
+install -d examples/examples-pam
+install -d examples/examples-sasl
+cp -f %{SOURCE14} examples/
+cp -f %{SOURCE15} examples/examples-db/
+cp -f %{SOURCE16} examples/examples-db/
+cp -f %{SOURCE17} examples/examples-db/
+cp -f %{SOURCE18} examples/examples-db/
+cp -f %{SOURCE19} examples/examples-db/
+cp -f %{SOURCE20} examples/examples-db/
+cp -f %{SOURCE21} examples/examples-db/
+cp -f %{SOURCE22} examples/examples-db/
+cp -f %{SOURCE23} examples/examples-pam/
+cp -f %{SOURCE24} examples/examples-sasl/
+cp -f %{SOURCE25} examples/examples-sasl/
+cp -f %{SOURCE26} examples/
 
 gzip -9nf FAQ KNOWNBUGS README* op.me RELEASE_NOTES
 
@@ -330,7 +352,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz *.sample
+%doc *.gz examples/
 %attr(755,root,root) %{_sbindir}/mailstats
 %attr(755,root,root) %{_sbindir}/praliases
 %attr(755,root,root) %{_bindir}/hoststat
