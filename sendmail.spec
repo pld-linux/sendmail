@@ -7,7 +7,7 @@ License:	BSD
 Group:		Networking/Daemons
 Group(pl):	Sieciowe/Serwery
 Provides:	smtpdaemon
-Source0:	ftp://ftp.cs.berkeley.edu/ucb/sendmail/%{name}.%{version}.tar.gz
+Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
 Source1:	sendmail.init
 Source2:	http://www.informatik.uni-kiel.de/~ca/email/rules/check.tar
 Source3:	aliases
@@ -81,6 +81,7 @@ Install the sendmail-cf package if you need to reconfigure your
 sendmail.cf file.
 
 %description -l pl cf
+B
 Ten pakiet zawiera pliki konfiguracyjne, których bêdziesz potrzebowa³,
 by wygenerowaæ plik sendmail.cf, zawarty w pakiecie sendmail.
 Bêdziesz potrzebowa³ pakietu sendmail-cf je¿eli potrzebujesz
@@ -110,6 +111,7 @@ Ten pakiet zawiera dokumentacjê do programu Sendmail Mail Transport
 Agent (MTA). Dokumentacja zwawiera informacje o zmianach w bie¿±cej
 wersji i FAQ - najczêsciej zadawane pytania. Dokumentacja dostêpna jest
 w formacie PostScript(TM) oraz troff. Je¿eli potrzebujesz dokumentacji
+B
 - zainstaluj ten pakiet.
 
 %prep
