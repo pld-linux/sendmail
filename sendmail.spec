@@ -4,8 +4,8 @@ Name:		sendmail
 Version:	8.9.3
 Release:	4
 Copyright:	distributable (similar to, but not quite BSD)
-Group:		Daemons
-Group(pl):	Serwery
+Group:		Networking/Daemons
+Group(pl):	Sieciowe/Serwery
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
 Source1:	site.Linux.m4
 Source2:	aliases
