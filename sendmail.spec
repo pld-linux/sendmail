@@ -125,7 +125,7 @@ echo "APPENDDEF(\`confMAPDEF\', \`-DLDAPMAP\')" >> config.m4
 echo "APPENDDEF(\`confLIBS\', \`-lldap -llber\')" >> config.m4
 %endif
 
-RPM_OPT_FLAGS="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS} \
+RPM_OPT_FLAGS="%{rpmcflags} \
 	-DUSE_VENDOR_CF_PATH=1 -DNETINET6 -D_FFR_TESTMODE_DROP_PRIVS"
 export RPM_OPT_FLAGS
 
