@@ -2,7 +2,7 @@ Summary:	A widely used Mail Transport Agent (MTA)
 Summary(pl):	Sendmail -- aplikacja do obs³ugi poczty elektronicznej
 Name:		sendmail
 Version:	8.10.1
-Release:	4
+Release:	5
 License:	BSD
 Group:		Networking/Daemons
 Group(pl):	Sieciowe/Serwery
@@ -36,10 +36,8 @@ program, which you use to read your e-mail. Sendmail is a
 behind-the-scenes program which actually moves your e-mail over
 networks or the Internet to where you want it to go.
 
-If you ever need to reconfigure Sendmail, you'll also need to have the
-sendmail.cf package installed. If you need documentation on Sendmail,
-you can install the sendmail-doc package.
-
+If you need documentation on Sendmail, you can install the sendmail-doc
+package.
 
 %description -l pl
 Sendmail jest programem umo¿liwiaj±cym wymianê poczty elektronicznej
@@ -50,8 +48,7 @@ dodatkowym atutem jest prosta konfiguracja. Dziêki rozbudowanym
 mo¿liwo¶ciom konfiguracyjnym jest w stanie dostarczaæ przesy³ki za
 po¶rednictwem protoko³ów: SMTP, ESMTP, UUCP, X.400 i innych.
 
-Je¿eli masz zamiar korzystaæ z poczty elektronicznej w sieci internet
-oraz 6bone to zainstaluj ten pakiet
+dokumentacja do programu sendmail znajduje siê w pakiecie sendmail-doc.
 
 %package doc
 Summary:	Documentation about the Sendmail Mail Transport Agent program
@@ -72,8 +69,8 @@ Sendmail.
 %description -l pl
 Ten pakiet zawiera dokumentacjê do programu Sendmail Mail Transport
 Agent (MTA). Dokumentacja zwawiera informacje o zmianach w bie¿±cej
-wersji, FAQ - najczêsciej zadawane pytania. Dokumentacja dostêpna jest
-w formacie PostScript(TM) oraz troff. Je¿eli potrzebujesz dokumntacji
+wersji i FAQ - najczêsciej zadawane pytania. Dokumentacja dostêpna jest
+w formacie PostScript(TM) oraz troff. Je¿eli potrzebujesz dokumentacji
 - zainstaluj ten pakiet.
 
 %prep
@@ -83,7 +80,7 @@ w formacie PostScript(TM) oraz troff. Je¿eli potrzebujesz dokumntacji
 %patch2 -p1
 %patch3 -p1
 
-# XXX REVERTING
+# XXX REVERTING[B
 #tar xf $RPM_SOURCE_DIR/check.tar -C cf
 #chown root.root cf/hack/* cf/README.check
 
