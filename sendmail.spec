@@ -1,6 +1,6 @@
 #
 # Conditional build:
-# bcond_off_ldap - without LDAP
+# _without_ldap - without LDAP
 #
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-Übertragungsagent
@@ -41,7 +41,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
 BuildRequires:	gdbm-devel
-%{!?bcond_off_ldap:BuildRequires:	openldap-devel}
+%{!?_without_ldap:BuildRequires:	openldap-devel}
 BuildRequires:	pam-devel
 Requires:	m4
 Prereq:		/sbin/chkconfig
@@ -120,7 +120,7 @@ install %{SOURCE7} config.m4
 %if %{?debug:0}%{!?debug:1}
 echo "define(\`confLDOPTS\', \`-s\')" >> config.m4
 %endif
-%if %{?bcond_off_ldap:0}%{!?bcond_off_ldap:1}
+%if %{?_without_ldap:0}%{!?_without_ldap:1}
 echo "APPENDDEF(\`confMAPDEF\', \`-DLDAPMAP\')" >> config.m4
 echo "APPENDDEF(\`confLIBS\', \`-lldap -llber\')" >> config.m4
 %endif
