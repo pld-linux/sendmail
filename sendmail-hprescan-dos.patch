@@ -1,23 +1,24 @@
-diff -r -u -N sendmail-8.10.2/sendmail/collect.c sendmail-8.10.2.conectiva/sendmail/collect.c
---- sendmail-8.10.2/sendmail/collect.c	Wed Mar 15 16:47:27 2000
-+++ sendmail-8.10.2.conectiva/sendmail/collect.c	Tue Jul 18 15:14:15 2000
-@@ -11,6 +11,7 @@
-  *
-  */
+diff -Nur sendmail-8.12.0.orig/sendmail/collect.c sendmail-8.12.0/sendmail/collect.c
+--- sendmail-8.12.0.orig/sendmail/collect.c	Wed Sep  5 00:43:02 2001
++++ sendmail-8.12.0/sendmail/collect.c	Mon Sep 24 10:25:42 2001
+@@ -15,6 +15,8 @@
+ 
+ SM_RCSID("@(#)$Id$")
  
 +#define MAXHDRZ 512
- #ifndef lint
- static char id[] = "@(#)$Id$";
- #endif /* ! lint */
-@@ -104,6 +105,7 @@
++
+ static void	collecttimeout __P((time_t));
+ static void	dferror __P((SM_FILE_T *volatile, char *, ENVELOPE *));
+ static void	eatfrom __P((char *volatile, ENVELOPE *));
+@@ -292,6 +294,7 @@
  	HDR **hdrp;
  	register ENVELOPE *e;
  {
 +	int hdrz = 0;
- 	register FILE *volatile df;
- 	volatile bool ignrdot = smtpmode ? FALSE : IgnrDot;
- 	volatile time_t dbto = smtpmode ? TimeOuts.to_datablock : 0;
-@@ -417,6 +419,16 @@
+ 	register SM_FILE_T *volatile df;
+ 	volatile bool ignrdot;
+ 	volatile time_t dbto;
+@@ -582,6 +585,16 @@
  				mstate = MS_BODY;
  				goto nextstate;
  			}
