@@ -1,0 +1,34 @@
+- added using CVS keywords in %changelog (for automating them).
+
+* Fri Jan 22 1999 Wojtek ¦lusarczyk <wojtek@shadow.eu.org>
+  [8.9.2-3d]
+- fixed group && owner ELF binaries,
+- fixed init script,
+- fixed %preun.
+
+* Sun Jan 17 1999 Wojtek ¦lusarczyk <wojtek@SHADOW.EU.ORG>
+  [8.9.2-2d]
+- fixed sendmail.init script,
+- compressed man pages && documentation,
+  by Micha³ Zalewski <lcamtuf@ids.pl>
+- added patch against DoS ;)
+- added %{name}-redirect.patch
+
+* Thu Sep 10 1998 Wojtek ¦lusarczyk <wojtek@shadow.eu.org>
+  [8.9.1-1d]
+- updated to 8.9.1a && build for PLD Tornado,
+- build with IPv6 support
+  (patches was prepared by John Kennedy <jk@csuchico.edu>),
+- build with Detect-Telnet support,
+- removed subpackage doc.
+
+* Thu Jul 30 1998 Wojtek Slusarczyk <wojtek@shadow.eu.org>
+  [8.8.8-1d]
+- build against glibc-2.1,
+- updated to 8.8.8,
+- added IPv6 support,
+- translation modified for pl,
+- moved configfiles to /etc/mail,
+- changed permissions of all binaries to 711,
+- moved %changelog at the end of spec,
+- build from non root's account.
