@@ -46,6 +46,7 @@ Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
 Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
 BuildRequires:	cyrus-sasl-devel
+BuildRequires:	man
 %{?_with_db3:BuildRequires:	db3-devel}
 %{!?_with_db3:BuildRequires:	db-devel >= 4.1.25}
 %{!?_without_ldap:BuildRequires:	openldap-devel}
