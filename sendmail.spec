@@ -2,7 +2,6 @@
 # Conditional build:
 # _without_ldap		without LDAP support
 # _without_tls		without TLS (SSL) support
-# _with_db3		use db3 instead of db package
 # _with_pgsql		with PostgreSQL support (bluelabs)
 #
 Summary:	A widely used Mail Transport Agent (MTA)
@@ -17,7 +16,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.12.10
-Release:	4
+Release:	3
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -45,13 +44,12 @@ Patch4:		%{name}-m4path.patch
 Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
 Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
+Patch8:         %{name}-parseaddr.patch
 BuildRequires:	cyrus-sasl-devel
-BuildRequires:	man
-%{?_with_db3:BuildRequires:	db3-devel}
-%{!?_with_db3:BuildRequires:	db-devel >= 4.1.25}
+BuildRequires:	db3-devel
 %{!?_without_ldap:BuildRequires:	openldap-devel}
-%{!?_without_tls:BuildRequires:	openssl-devel >= 0.9.7}
-%{?_with_pgsql:BuildRequires:	postgresql-devel}
+%{!?_without_tls:BuildRequires:		openssl-devel >= 0.9.6i}
+%{?_with_pgsql:BuildRequires:		postgresql-devel}
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
@@ -61,10 +59,8 @@ Requires(post):	textutils
 Requires(post,preun):/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
-%{!?_with_db3:Requires:	db >= 4.1.25}
 Requires:	m4
 Requires:	procmail
-Requires:	pam >= 0.77.3
 Provides:	smtpdaemon
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	smtpdaemon
@@ -152,7 +148,7 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 %prep
 %setup -q
 %patch0 -p1
-#%patch1 -p1
+%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
@@ -161,6 +157,7 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 %if %{?_with_pgsql:1}%{!?_with_pgsql:0}
 %patch7 -p1
 %endif
+#%patch8 -p1
 
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
@@ -169,7 +166,6 @@ install %{SOURCE7} config.m4
 %build
 echo "define(\`confCC', \`%{__cc}')" >> config.m4
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
-echo "APPENDDEF(\`confINCDIRS', \`-I/usr/include/sasl')" >> config.m4
 echo "define(\`confLIBSEARCH', \`db resolv')" >> config.m4
 %if %{?debug:0}%{!?debug:1}
 echo "define(\`confLDOPTS', \`-s')" >> config.m4
@@ -188,7 +184,6 @@ echo "APPENDDEF(\`confLIBS', \`-lsasl -lcrypto')" >> config.m4
 echo "APPENDDEF(\`confENVDEF', \`-DSTARTTLS')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lssl -lcrypto')" >> config.m4
 %endif
-echo "APPENDDEF(\`confENVDEF' \`-DSMRSH_CMDDIR=\"dir\"  \"/etc/smrsh\"')" >> config.m4
 
 cd sendmail	&& sh Build -f ../config.m4
 cd ../mailstats	&& sh Build -f ../config.m4
@@ -229,8 +224,7 @@ SMINSTOPT="DESTDIR=$RPM_BUILD_ROOT SBINOWN=$IDNU SBINGRP=$IDNG \
 %{__make} -C $OBJDIR/smrsh install \
 	$SMINSTOPT
 
-ln -sf %{_sbindir}/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
-
+ln -sf /usr/sbin/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
 # install the cf files
 cd cf
 rm -f cf/{Build,Makefile} feature/*~
