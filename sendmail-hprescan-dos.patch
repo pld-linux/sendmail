@@ -1,0 +1,36 @@
+diff -r -u -N sendmail-8.10.2/sendmail/collect.c sendmail-8.10.2.conectiva/sendmail/collect.c
+--- sendmail-8.10.2/sendmail/collect.c	Wed Mar 15 16:47:27 2000
++++ sendmail-8.10.2.conectiva/sendmail/collect.c	Tue Jul 18 15:14:15 2000
+@@ -11,6 +11,7 @@
+  *
+  */
+ 
++#define MAXHDRZ 512
+ #ifndef lint
+ static char id[] = "@(#)$Id$";
+ #endif /* ! lint */
+@@ -104,6 +105,7 @@
+ 	HDR **hdrp;
+ 	register ENVELOPE *e;
+ {
++	int hdrz = 0;
+ 	register FILE *volatile df;
+ 	volatile bool ignrdot = smtpmode ? FALSE : IgnrDot;
+ 	volatile time_t dbto = smtpmode ? TimeOuts.to_datablock : 0;
+@@ -417,6 +419,16 @@
+ 				mstate = MS_BODY;
+ 				goto nextstate;
+ 			}
++ 
++            if (hdrz++>MAXHDRZ)
++                        {
++                                sm_syslog(LOG_NOTICE, e->e_id,
++                                "excessive headers from %s during message collect",
++                                CurHostName ? CurHostName : "<local machine>");
++                                errno = 0;
++                                usrerr("451 Stop this. You are lame.");
++                                goto readerr;
++                        }
+ 
+ 			/* check for possible continuation line */
+ 			do
