@@ -79,7 +79,7 @@ case "$1" in
 	RETVAL=$?
 	;;
   *)
-	msg_Usage "$0 {start|stop|restart|reload|condrestart|status}"
+	msg_usage "$0 {start|stop|restart|reload|condrestart|status}"
 	exit 1
 esac
 
