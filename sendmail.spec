@@ -256,14 +256,14 @@ if [ -f /etc/mail/deny ] ; then
 	cat /etc/mail/deny | \
 		awk 'BEGIN{ print "# Entries from obsoleted /etc/mail/deny"} \
 		{print $1" REJECT"}' >> /etc/mail/access
-	cp -f /etc/mail/deny /etc/mail/deny.rpmorig
+	mv -f /etc/mail/deny /etc/mail/deny.rpmorig
 fi
 for oldfile in relay_allow ip_allow name_allow ; do
 	if [ -f /etc/mail/$oldfile ] ; then
 		cat /etc/mail/$oldfile | \
 			awk "BEGIN { print \"# Entries from obsoleted /etc/mail/$oldfile\" ;} \
 			{ print $1\" RELAY\" }" >> /etc/mail/access
-		cp -f /etc/mail/$oldfile /etc/mail/$oldfile.rpmorig
+		mv -f /etc/mail/$oldfile /etc/mail/$oldfile.rpmorig
 	fi
 done
 
@@ -274,7 +274,7 @@ if [ -f /etc/sendmail.cw ] ; then
 	cat /etc/sendmail.cw | \
 		awk 'BEGIN { print "# Entries from obsoleted /etc/sendmail.cw" ;} \
 		{ print $1 }' >> /etc/mail/local-host-names
-	cp -f /etc/sendmail.cw /etc/sendmail.cw.rpmorig
+	mv -f /etc/sendmail.cw /etc/sendmail.cw.rpmorig
 fi
 #
 # Rebuild maps (next reboot will rebuild also)
