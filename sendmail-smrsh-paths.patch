@@ -1,6 +1,6 @@
-diff -Nur sendmail-8.11.2.orig/smrsh/README sendmail-8.11.2/smrsh/README
---- sendmail-8.11.2.orig/smrsh/README	Thu Oct 12 18:32:50 2000
-+++ sendmail-8.11.2/smrsh/README	Thu Jan  4 21:07:51 2001
+diff -Nru sendmail-8.11.3/smrsh/README sendmail-8.11.3.new/smrsh/README
+--- sendmail-8.11.3/smrsh/README	Thu Mar  1 07:19:27 2001
++++ sendmail-8.11.3.new/smrsh/README	Thu Mar  1 07:17:50 2001
 @@ -6,7 +6,7 @@
  intended as a supplement to the CERT advisory CA-93:16.sendmail.vulnerability,
  and to the software, smrsh.c, written by Eric Allman.
@@ -104,9 +104,9 @@ diff -Nur sendmail-8.11.2.orig/smrsh/README sendmail-8.11.2/smrsh/README
  
  Now re-start the sendmail process.  An example of how to do this on
  a typical system follows:
-diff -Nur sendmail-8.11.2.orig/smrsh/smrsh.8 sendmail-8.11.2/smrsh/smrsh.8
---- sendmail-8.11.2.orig/smrsh/smrsh.8	Sat Dec 16 00:18:40 2000
-+++ sendmail-8.11.2/smrsh/smrsh.8	Thu Jan  4 21:11:31 2001
+diff -Nru sendmail-8.11.3/smrsh/smrsh.8 sendmail-8.11.3.new/smrsh/smrsh.8
+--- sendmail-8.11.3/smrsh/smrsh.8	Thu Mar  1 07:19:27 2001
++++ sendmail-8.11.3.new/smrsh/smrsh.8	Thu Mar  1 07:17:50 2001
 @@ -39,7 +39,7 @@
  .I smrsh
  limits programs to be in a single directory,
@@ -161,16 +161,16 @@ diff -Nur sendmail-8.11.2.orig/smrsh/smrsh.8 sendmail-8.11.2/smrsh/smrsh.8
 +/etc/smrsh \- directory for restricted programs
  .SH SEE ALSO
  sendmail(8)
-diff -Nur sendmail-8.11.2.orig/smrsh/smrsh.c sendmail-8.11.2/smrsh/smrsh.c
---- sendmail-8.11.2.orig/smrsh/smrsh.c	Thu Oct 12 18:32:50 2000
-+++ sendmail-8.11.2/smrsh/smrsh.c	Thu Jan  4 21:12:54 2001
+diff -Nru sendmail-8.11.3/smrsh/smrsh.c sendmail-8.11.3.new/smrsh/smrsh.c
+--- sendmail-8.11.3/smrsh/smrsh.c	Thu Mar  1 07:19:27 2001
++++ sendmail-8.11.3.new/smrsh/smrsh.c	Thu Mar  1 07:20:44 2001
 @@ -77,7 +77,7 @@
  # if defined(HPUX10) || defined(HPUX11) || SOLARIS >= 20800
  #  define CMDDIR	"/var/adm/sm.bin"
- # else /* HPUX10 || HPUX11 || SOLARIS > 20800 */
+ # else /* HPUX10 || HPUX11 || SOLARIS >= 20800 */
 -#  define CMDDIR	"/usr/adm/sm.bin"
-+#  define CMDDIR	"/etc/smrsh"
- # endif /* HPUX10 || HPUX11 || SOLARIS > 20800 */
++#  define CMDDIR	"/usr/smrsh"
+ # endif /* HPUX10 || HPUX11 || SOLARIS >= 20800 */
  #endif /* ! CMDDIR */
  
 @@ -86,7 +86,7 @@
