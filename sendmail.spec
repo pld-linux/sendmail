@@ -13,7 +13,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.12.3
-Release:	4
+Release:	5
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -244,8 +244,6 @@ mv -f doc/op/op.me .
 
 bzip2 -dc %{SOURCE4} | tar xf -
 
-gzip -9nf FAQ KNOWNBUGS README* op.me RELEASE_NOTES
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -334,7 +332,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz examples/
+%doc FAQ KNOWNBUGS README* op.me RELEASE_NOTES examples/
 %attr(755,root,root) %{_sbindir}/mailstats
 %attr(755,root,root) %{_sbindir}/praliases
 %attr(755,root,root) %{_bindir}/hoststat
@@ -370,7 +368,6 @@ fi
 %attr(644,root,mail) %ghost %{_sysconfdir}/aliases.db
 %attr(770,root,smmsp) %dir /var/spool/clientmqueue
 %attr(750,root,mail) %dir /var/spool/mqueue
-%attr(755,root,root) %dir /etc/pam.d
 
 %config %{_sysconfdir}/Makefile
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/access
