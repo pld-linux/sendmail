@@ -1,0 +1,10 @@
+--- devtools/OS/Linux
++++ devtools/OS/Linux
+@@ -1,6 +1,6 @@
+ #	$Id$
+ define(`confDEPEND_TYPE', `CC-M')
+-define(`confMANROOT', `/usr/man/man')
++define(`confMANROOT', `/usr/share/man/man')
+ define(`confLIBS', `-ldl')
+ define(`confEBINDIR', `/usr/sbin')
+ APPENDDEF(`confLIBSEARCH', `crypt nsl')
