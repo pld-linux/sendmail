@@ -1,0 +1,40 @@
+--- sendmail-8.10.0/devtools/OS/Linux.redhat	Mon Dec 27 16:54:08 1999
++++ sendmail-8.10.0/devtools/OS/Linux	Thu Mar  9 15:37:12 2000
+@@ -1,9 +1,13 @@
+ #	$Id$
++
+ define(`confDEPEND_TYPE', `CC-M')
+ define(`confMANROOT', `/usr/man/man')
+ define(`confLIBS', `-ldl')
+ define(`confEBINDIR', `/usr/sbin')
++define(`confSTDIR', `/var/log')
+ APPENDDEF(`confLIBSEARCH', `crypt nsl')
+ 
+ define(`confMTLDOPTS', `-lpthread')
+ define(`confLDOPTS_SO', `-shared')
++define('confSBINGRP', 'mail')
++define('confSBINMODE', '6755')
+--- sendmail-8.10.0/sendmail/daemon.c.redhat	Thu Mar  2 01:58:02 2000
++++ sendmail-8.10.0/sendmail/daemon.c	Thu Mar  9 15:08:16 2000
+@@ -2499,7 +2499,7 @@
+ 
+ 	/* get result */
+ 	p = &ibuf[0];
+-	nleft = sizeof ibuf - 1;
++	nleft = sizeof(ibuf) - 1;
+ 	while ((i = read(s, p, nleft)) > 0)
+ 	{
+ 		p += i;
+--- sendmail-8.10.0/redhat.config.m4.redhat	Thu Mar  9 15:08:16 2000
++++ sendmail-8.10.0/redhat.config.m4	Thu Mar  9 15:08:16 2000
+@@ -0,0 +1,10 @@
++define(`confMAPDEF', `-DNEWDB -DNIS')
++define(`confENVDEF', `$(RPM_OPT_FLAGS) -DXDEBUG=0')
++define(`confLIBS', `-lnsl')
++define(`confLDOPTS', `-s')
++define(`confMANOWN', `root')
++define(`confMANGRP', `root')
++define(`confMANMODE', `644')
++define(`confMAN1SRC', `1')
++define(`confMAN5SRC', `5')
++define(`confMAN8SRC', `8')
