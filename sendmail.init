@@ -1,7 +1,7 @@
 #! /bin/sh
 #
-# sendmail      This shell script takes care of starting and stopping
-#               sendmail.
+# sendmail	This shell script takes care of starting and stopping
+#		sendmail.
 #
 # chkconfig:	2345 80 30
 # description:	Sendmail is a Mail Transport Agent, which is the program \
@@ -20,15 +20,20 @@ if [ -f /etc/sysconfig/sendmail ]; then
 	. /etc/sysconfig/sendmail
 else
 	DAEMON=yes
-	QUEUE=1h                                                                                              
+	QUEUE=1h
 	ENABLE_IPV6=yes
 fi
 
 # Check that networking is up.
-if is_no "${NETWORKING}"; then
-	msg_network_down Sendmail
-	exit 1
+if is_yes "${NETWORKING}"; then
+	if [ ! -f /var/lock/subsys/network ]; then
+		msg_network_down Sendmail
+		exit 1
+	fi
+else
+	exit 0
 fi
+
 
 # See how we were called.
 case "$1" in
@@ -43,7 +48,7 @@ case "$1" in
 				makemap -v hash /etc/mail/$i < /etc/mail/$i >/dev/null 2>&1
 			fi
 		done 
-		deltext;ok
+		ok
 		msg_starting sendmail
 		daemon /usr/sbin/sendmail $([ "$DAEMON" = "yes" ] && echo -bd) \
 					$([ -n "$QUEUE" ] && echo -q$QUEUE) \
@@ -57,29 +62,31 @@ case "$1" in
 	fi
 	;;
   stop)
-	# Stop daemons.
-	msg_stopping sendmail
-	killproc sendmail
-	RETVAL=$?
-	[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/sendmail
+	if [ -f /var/lock/subsys/sendmail ]; then
+		# Stop daemons.
+		msg_stopping sendmail
+		killproc sendmail
+		RETVAL=$?
+		rm -f /var/lock/subsys/sendmail
+	else
+		msg_not_running sendmail
+		exit 1
+	fi
 	;;
   restart|reload)
 	$0 stop
 	$0 start
 	;;
-  condrestart)
-	if [ -f /var/lock/subsys/sendmail ]; then
-	    stop
-	    start
-	    RETVAL=$?
-	fi
+  force-reload)
+	$0 stop && $0 start
+	exit $?
 	;;
   status)
 	status sendmail
 	RETVAL=$?
 	;;
   *)
-	msg_usage "$0 {start|stop|restart|reload|condrestart|status}"
+	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
 	exit 1
 esac
 
