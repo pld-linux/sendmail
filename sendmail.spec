@@ -1,3 +1,6 @@
+# 
+# TODO:
+# - upgrade to 8.13.*
 #
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
