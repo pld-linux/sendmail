@@ -2,7 +2,7 @@ Summary:	Sendmail -- mail transport agent
 Summary(pl):	Sendmail -- aplikacja do obs³ugi poczty elektronicznej
 Name:		sendmail
 Version:	8.9.3
-Release:	4
+Release:	5
 Copyright:	distributable (similar to, but not quite BSD)
 Group:		Networking/Daemons
 Group(pl):	Sieciowe/Serwery
