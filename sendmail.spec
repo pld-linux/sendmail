@@ -53,6 +53,7 @@ BuildRequires:	man
 %{?with_ldap:BuildRequires:	openldap-devel}
 %{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
+BuildRequires:	rpmbuild(macros) >= 1.159
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
@@ -66,8 +67,9 @@ Requires(postun):	/usr/sbin/userdel
 Requires:	m4
 Requires:	procmail
 Requires:	pam >= 0.77.3
+Provides:	group(smmsp)
 Provides:	smtpdaemon
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+Provides:	user(smmsp)
 Obsoletes:	courier
 Obsoletes:	exim
 Obsoletes:	masqmail
@@ -81,6 +83,7 @@ Obsoletes:	smail
 Obsoletes:	smtpdaemon
 Obsoletes:	ssmtp
 Obsoletes:	zmailer
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/mail
 
@@ -323,7 +326,7 @@ if [ -n "`/usr/bin/getgid smmsp`" ]; then
 		exit 1
 	fi
 else
-	/usr/sbin/groupadd -g 25 -r -f smmsp
+	/usr/sbin/groupadd -g 25 smmsp 1>&2
 fi
 if [ -n "`/bin/id -u smmsp 2>/dev/null`" ]; then
 	if [ "`/bin/id -u smmsp`" != "25" ]; then
@@ -331,7 +334,8 @@ if [ -n "`/bin/id -u smmsp 2>/dev/null`" ]; then
 		exit 1
 	fi
 else
-	/usr/sbin/useradd -u 25 -r -d /var/spool/clientqueue -s /bin/false -c "Sendmail Message Submission Program" -g smmsp smmsp 1>&2
+	/usr/sbin/useradd -u 25 -d /var/spool/clientqueue -s /bin/false \
+		-c "Sendmail Message Submission Program" -g smmsp smmsp 1>&2
 fi
 
 %post
@@ -392,8 +396,8 @@ fi
 
 %postun
 if [ "$1" = "0" ]; then
-	/usr/sbin/userdel smmsp 2>/dev/null
-	/usr/sbin/groupdel smmsp 2>/dev/null
+	%userremove smmsp
+	%groupremove smmsp
 fi
 
 # removal of compatibility links
