@@ -17,9 +17,10 @@ License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
 Source1:	%{name}.init
-Source2:	http://www.informatik.uni-kiel.de/~ca/email/rules/check.tar
+Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
-Source4:	%{name}.sysconfig
+# From http://doc.phpauction.org/sendmail/examples/
+Source4:	%{name}-examples.tar.bz2
 Source5:	%{name}-etc-mail-Makefile
 Source6:	%{name}.mc
 Source7:	%{name}-config.m4
@@ -29,8 +30,6 @@ Source10:	%{name}.mailertable
 Source11:	%{name}.virtusertable
 Source12:	%{name}.domaintable
 Source13:	%{name}-smtp.pamd
-# From http://doc.phpauction.org/sendmail/examples/
-Source14:	%{name}-examples.tar.bz2
 Patch0:		%{name}-makemapman.patch
 Patch1:		%{name}-smrsh-paths.patch
 Patch2:		%{name}-rmail.patch
@@ -125,9 +124,6 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 %patch5 -p1
 %patch6 -p1
 
-# seems to be obsoleted...
-#tar xf %{SOURCE2} -C cf
-
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
 install %{SOURCE7} config.m4
@@ -216,7 +212,7 @@ install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/aliases
 $RPM_BUILD_ROOT%{_bindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf hash \
 	$RPM_BUILD_ROOT%{_sysconfdir}/aliases.db < %{SOURCE3}
 
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/sendmail
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sendmail
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sendmail
 install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/Makefile
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/sasl/Sendmail.conf
@@ -226,16 +222,11 @@ install %{SOURCE10} $RPM_BUILD_ROOT%{_sysconfdir}/mailertable
 install %{SOURCE11} $RPM_BUILD_ROOT%{_sysconfdir}/virtusertable
 install %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable
 
-#cp -f %{SOURCE9} ./access.sample
-#cp -f %{SOURCE10} ./mailertable.sample
-#cp -f %{SOURCE11} ./virtusertable.sample
-#cp -f %{SOURCE12} ./domaintable.sample
-
 mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
 mv -f doc/op/op.me .
 
-bzip2 -d %{SOURCE14} | tar xf -
+bzip2 -dc %{SOURCE4} | tar xf -
 
 gzip -9nf FAQ KNOWNBUGS README* op.me RELEASE_NOTES
 
@@ -359,10 +350,10 @@ fi
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/submit.mc
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/local-host-names
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/aliases
-%attr(0644,root,mail) %ghost %{_sysconfdir}/aliases.db
-%attr(0770,root,smmsp) %dir /var/spool/clientmqueue
-%attr(0750,root,mail) %dir /var/spool/mqueue
-%attr(0755,root,root) %dir /etc/pam.d
+%attr(644,root,mail) %ghost %{_sysconfdir}/aliases.db
+%attr(770,root,smmsp) %dir /var/spool/clientmqueue
+%attr(750,root,mail) %dir /var/spool/mqueue
+%attr(755,root,root) %dir /etc/pam.d
 
 %config %{_sysconfdir}/Makefile
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/access
