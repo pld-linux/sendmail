@@ -1,2 +1,5 @@
-DAEMON=yes
-QUEUE=1h
+# Customized setings for sendmail
+
+# Define nice level for sendmail & config 
+SERVICE_RUN_NICE_LEVEL="+5"
+SENDMAIL_CF="-bd -q5m -ODaemonPortOptions=Family=inet6"

@@ -5,10 +5,7 @@
 #
 # chkconfig: 2345 80 30
 # description: Sendmail is a Mail Transport Agent, which is the program \
-#              that moves mail from one machine to another.
-# processname: sendmail
-# config: /etc/sendmail.cf
-# pidfile: /var/run/sendmail.pid
+# that moves mail from one machine to another.
 
 # Source function library.
 . /etc/rc.d/init.d/functions
@@ -16,34 +13,38 @@
 # Source networking configuration.
 . /etc/sysconfig/network
 
-# Source sendmail configureation.
-if [ -f /etc/sysconfig/sendmail ] ; then
-	. /etc/sysconfig/sendmail
-else
-	DAEMON=yes
-	QUEUE=1h
-fi
-
 # Check that networking is up.
-[ ${NETWORKING} = "no" ] && exit 0
+[ "${NETWORKING}" = "no" ] && exit 0
 
 [ -f /usr/sbin/sendmail ] || exit 0
+
+# Get config from /etc/sysconfig ... 
+if [ -f /etc/sysconfig/sendmail ]; then
+    . /etc/sysconfig/sendmail
+fi    
 
 # See how we were called.
 case "$1" in
   start)
 	# Start daemons.
-	echo -n "Starting sendmail: "
-	daemon /usr/sbin/sendmail $([ "$DAEMON" = yes ] && echo -bd) \
-                                  $([ -n "$QUEUE" ] && echo -q$QUEUE)
-	echo
+	show Prepare sendmail db
+	busy
+	newaliases &>/dev/null
+	for i in virtusertable access domaintable mailertable 
+	do
+	if [ -f /etc/mail/$i ] ; then
+	   makemap -v hash /etc/mail/$i < /etc/mail/$i
+	fi
+	done 
+	deltext;ok
+	show Starting sendmail
+	daemon sendmail $SENDMAIL_CF
 	touch /var/lock/subsys/sendmail
 	;;
   stop)
 	# Stop daemons.
-	echo -n "Shutting down sendmail: "
+	show Shutting down sendmail
 	killproc sendmail
-	echo
 	rm -f /var/lock/subsys/sendmail
 	;;
   restart)
@@ -54,7 +55,7 @@ case "$1" in
 	status sendmail
 	;;
   *)
-	echo "Usage: sendmail {start|stop|restart|status}"
+	echo "Usage: $0 {start|stop|restart|status}"
 	exit 1
 esac
 

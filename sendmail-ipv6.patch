@@ -1,0 +1,533 @@
+diff -Nur sendmail-8.9.3/cf/m4/proto.m4 sendmail-8.9.3.pld/cf/m4/proto.m4
+--- sendmail-8.9.3/cf/m4/proto.m4	Wed Feb  3 00:21:30 1999
++++ sendmail-8.9.3.pld/cf/m4/proto.m4	Wed Feb 10 18:11:17 1999
+@@ -1111,6 +1111,7 @@
+ ifdef(`_RBL_', `dnl
+ # DNS based IP address spam lists
+ R$*			$: $&{client_addr}
++R::ffff:$-.$-.$-.$-	$: $(host $4.$3.$2.$1._RBL_. $: OK $)
+ R$-.$-.$-.$-		$: $(host $4.$3.$2.$1._RBL_. $: OK $)
+ ROK			$@ OK
+ R$+			$#error $@ 5.7.1 $: "Mail from " $&{client_addr} " refused by blackhole site _RBL_"',
+diff -Nur sendmail-8.9.3/src/conf.c sendmail-8.9.3.pld/src/conf.c
+--- sendmail-8.9.3/src/conf.c	Wed Jan 27 01:15:52 1999
++++ sendmail-8.9.3.pld/src/conf.c	Wed Feb 10 18:11:17 1999
+@@ -4085,6 +4085,33 @@
+ }
+ 
+ #endif
++/*
++**  SM_GETHOSTBYNAME2 -- Wrapper for gethostbyname() with IPv6 support
++**
++**  Most modern resolver libraries (BIND 8.1.x, glibc 2.1.x) will already
++**  return an AF_INET6 hostent if RES_USE_INET6 is set in _res.options.
++**  They usually try something like gethostbyname2(name, AF_INET6) and,
++**  if that fails, return the result of gethostbyname2(name, AF_INET).
++**
++**  IPv6 code elsewhere should have set RES_USE_INET6 if it is defined.
++**  If it isn't defined, we simulate that behavior ourself.
++**
++**  You can *not* assume that the hostent returned will only be AF_INET.
++*/
++struct hostent *
++sm_gethostbyname2(name)
++	char *name;
++{
++#if NETINET6 && !defined(RES_USE_INET6)
++	struct hostent *h;
++
++	h = gethostbyname2(name, AF_INET6);
++	if (h)
++		return h;
++#endif
++	return gethostbyname(name);
++}
++
+ /*
+ **  SM_GETHOSTBY{NAME,ADDR} -- compatibility routines for gethostbyXXX
+ **
+@@ -4123,7 +4150,7 @@
+ 
+ 	if (tTd(61, 10))
+ 		printf("gethostbyname(%s)... ", name);
+-	h = gethostbyname(name);
++	h = sm_gethostbyname2(name);
+ 	if (h == NULL)
+ 	{
+ 		if (tTd(61, 10))
+@@ -4147,7 +4174,7 @@
+ 			{
+ 				if (tTd(61, 10))
+ 					printf("gethostbyname(%s)... ", hbuf);
+-				h = gethostbyname(hbuf);
++				h = sm_gethostbyname2(hbuf);
+ 			}
+ 		}
+ 	}
+@@ -4301,7 +4328,12 @@
+ 			hp = sm_gethostbyaddr((char *) &sa->sin.sin_addr,
+ 				sizeof(sa->sin.sin_addr), sa->sa.sa_family);
+ 			break;
+-
++#if INET6
++		case AF_INET6:
++			hp = sm_gethostbyaddr((char *) &sa->sin6.sin6_addr,
++				sizeof(sa->sin6.sin6_addr), sa->sa.sa_family);
++			break;
++#endif							
+ 		default:
+ #if _FFR_LOG_UNSUPPORTED_FAMILIES
+ 			/* XXX: Give warning about unsupported family */
+@@ -4378,6 +4410,104 @@
+ # include <net/if.h>
+ #endif
+ 
++#if defined(__linux__) && NETINET6
++
++/*
++ *  This is a terrible, linux-specific kludge.  In linux-2.1.105 at least,
++ *  there is no way to get IPv6 addresses via SIOCGIFCONF.  You can
++ *  set them, but not retrieve them.  I haven't seen a standard way
++ *  to retrieve the list yet.  If you use the /proc/net/if_inet6 file,
++ *  you can get a list of them in a format like this:
++ *
++ *	00000000000000000000000000000001 01 80 10 80       lo
++ *	fe800000000000000000006097df4915 02 0a 20 80     eth0
++ *	fe80000000000000026097fffedf4915 02 0a 20 80     eth0
++ */
++void
++load_if_names6()
++{
++	static FILE	*fp = NULL;
++	char		 ip_addr[256];
++	static int	 s = -1;
++
++	if (tTd(0, 40))
++		printf( "linux load_if_names6() kludge...\n" );
++
++	if (s != -1)
++		close(s);
++	s = socket(AF_INET6, SOCK_DGRAM, 0);
++	if (s == -1)
++		return;
++
++	if (fp)
++		(void) fclose( fp );
++	fp = fopen( "/proc/net/if_inet6", "r" );
++	if (fp)
++	    {
++		SOCKADDR		 sa;
++		struct in6_addr		*in6 = &sa.sin6.sin6_addr;
++		char			 devname[10];
++		int			 plen, scope, dad_status, if_idx;
++
++		while( fscanf( fp,
++		    "%4x%4x%4x%4x%4x%4x%4x%4x %02x %02x %02x %02x %s\n",
++		    &in6->s6_addr16[0], &in6->s6_addr16[1],
++		    &in6->s6_addr16[2], &in6->s6_addr16[3],
++		    &in6->s6_addr16[4], &in6->s6_addr16[5],
++		    &in6->s6_addr16[6], &in6->s6_addr16[7],
++		    &if_idx, &plen, &scope, &dad_status, devname) != EOF)
++		    {
++			struct hostent *hp;
++			int i;
++			struct ifreq ifrf;
++
++			for (i = 0; i < 8; i++)
++			    	in6->s6_addr16[i] = ntohs( in6->s6_addr16[i] );
++			sa.sa.sa_family = AF_INET6;
++
++			/* save IP address in text from */
++			(void) snprintf(ip_addr, sizeof ip_addr, "[%.*s]",
++				sizeof ip_addr - 3, anynet_ntoa( &sa ) );
++
++			if (tTd(0, 40))
++				printf("%s\n\ta.k.a.: %s\n", devname, ip_addr );
++
++			if (!wordinclass(ip_addr, 'w'))
++				setclass('w', ip_addr);
++
++			bzero(&ifrf, sizeof( ifrf ));
++			strncpy(ifrf.ifr_name, devname, sizeof(ifrf.ifr_name));
++			ioctl(s, SIOCGIFFLAGS, (char *) &ifrf);
++			if (tTd(0, 41))
++				printf("\tflags: %x\n", ifrf.ifr_flags);
++
++			/* skip "loopback" interface "lo" */
++			if (bitset(IFF_LOOPBACK, ifrf.ifr_flags))
++				continue;
++			
++			/*
++			 * If we skip the loopback interfaces, then
++			 * <draft-ietf-ngtrans-6bone-routing-01.txt>
++			 * would tend to indicate that we should skip
++			 * the link-local prefix (FE80::/10) as well.
++			 */
++			if ((ntohs(*(in6->s6_addr16)) & 0xFFC0) == 0xFE80)
++				continue;
++
++			(void) add_hostnames( &sa );
++		    }
++
++		(void) fclose(fp);
++		fp = NULL;
++	    }
++
++	close(s);
++
++	return;
++}
++
++#endif
++
+ void
+ load_if_names()
+ {
+@@ -4386,7 +4516,9 @@
+ 	int i;
+ 	struct ifconf ifc;
+ 	int numifs;
+-
++#if NETINET6
++	load_if_names6();
++#endif    
+ 	s = socket(AF_INET, SOCK_DGRAM, 0);
+ 	if (s == -1)
+ 		return;
+@@ -4768,6 +4900,9 @@
+ #if NETINET
+ 	"NETINET",
+ #endif
++#if NETINET6
++	"NETINET6",
++#endif	
+ #if NETINFO
+ 	"NETINFO",
+ #endif
+diff -Nur sendmail-8.9.3/src/conf.h sendmail-8.9.3.pld/src/conf.h
+--- sendmail-8.9.3/src/conf.h	Fri Jan 29 00:28:34 1999
++++ sendmail-8.9.3.pld/src/conf.h	Wed Feb 10 18:11:17 1999
+@@ -84,6 +84,10 @@
+ #  define NETINET	1	/* include internet support */
+ # endif
+ 
++# ifndef NETINET6
++#  define NETINET6	0	/* dont include IPv6 support */
++# endif
++
+ # ifndef NETISO
+ #  define NETISO	0	/* do not include ISO socket support */
+ # endif
+@@ -1307,6 +1311,14 @@
+ # endif
+ # include <sys/sysmacros.h>
+ # undef atol			/* wounded in <stdlib.h> */
++# if NETINET6
++#  if !((__GLIBC__ == 2) && (__GLIBC_MINOR__ == 1))	/*  Native in 2.2.x  */
++#    include	<linux/in6.h>	/* IPv6 support */
++#  endif
++#  ifdef __GLIBC__
++#   undef	IPPROTO_ICMPV6	/* linux #defines, glibc enums	*/
++#  endif
++# endif
+ #endif
+ 
+ 
+diff -Nur sendmail-8.9.3/src/daemon.c sendmail-8.9.3.pld/src/daemon.c
+--- sendmail-8.9.3/src/daemon.c	Tue Jan 26 05:00:16 1999
++++ sendmail-8.9.3.pld/src/daemon.c	Wed Feb 10 18:11:17 1999
+@@ -135,7 +135,17 @@
+ 			DaemonAddr.sin.sin_addr.s_addr = INADDR_ANY;
+ 		port = DaemonAddr.sin.sin_port;
+ 		break;
+-
++#if NETINET6
++	  case AF_INET6:
++		/*
++		 *  We should look up and handle the INADDR_ANY situation
++		 *	for IPv6, but since it is usually all-zeros and
++		 *	that is what we're checking for, it doesn't have
++		 *	a high priority.
++		 */
++		port = DaemonAddr.sin6.sin6_port;
++		break;
++#endif
+ 	  default:
+ 		/* unknown protocol */
+ 		port = 0;
+@@ -160,7 +170,11 @@
+ 	  case AF_INET:
+ 		DaemonAddr.sin.sin_port = port;
+ 		break;
+-
++#if NETINET6
++	  case AF_INET6:
++		DaemonAddr.sin6.sin6_port = port;
++		break;
++#endif
+ 	  default:
+ 		/* unknown protocol */
+ 		break;
+@@ -603,6 +617,12 @@
+ 				break;
+ # endif
+ 
++# if NETINET6
++			  case AF_INET6:
++				socksize = sizeof DaemonAddr.sin6;
++				break;
++# endif
++
+ # if NETISO
+ 			  case AF_ISO:
+ 				socksize = sizeof DaemonAddr.siso;
+@@ -703,6 +723,10 @@
+ 			else if (strcasecmp(v, "inet") == 0)
+ 				DaemonAddr.sa.sa_family = AF_INET;
+ #endif
++#if NETINET6
++			else if (strcasecmp(v, "inet6") == 0)
++				DaemonAddr.sa.sa_family = AF_INET6;
++#endif
+ #if NETISO
+ 			else if (strcasecmp(v, "iso") == 0)
+ 				DaemonAddr.sa.sa_family = AF_ISO;
+@@ -739,6 +763,27 @@
+ 				break;
+ #endif
+ 
++#if NETINET6
++			  case AF_INET6:
++				if (isascii(*v) && isdigit(*v))
++				     (void) inet_pton(
++					DaemonAddr.sa.sa_family, v,
++					&DaemonAddr.sin6.sin6_addr);
++				else
++				{
++				    register struct hostent *hp;
++
++				    hp = sm_gethostbyname(v);
++				    if (hp == NULL)
++					syserr("554 host \"%s\" unknown", v);
++				    else
++					bcopy(hp->h_addr,
++						&DaemonAddr.sin6.sin6_addr,
++						IN6ADDRSZ);
++				}
++				break;
++#endif
++
+ 			  default:
+ 				syserr("554 Address= option unsupported for family %d",
+ 					DaemonAddr.sa.sa_family);
+@@ -770,6 +815,22 @@
+ 				break;
+ #endif
+ 
++#if NETINET6
++			  case AF_INET6:
++				if (isascii(*v) && isdigit(*v))
++				    DaemonAddr.sin6.sin6_port = htons(atoi(v));
++				else
++				{
++				    register struct servent *sp;
++
++				    sp = getservbyname(v, "tcp");
++				    if (sp == NULL)
++					syserr("554 service \"%s\" unknown", v);
++				    else
++					DaemonAddr.sin6.sin6_port = sp->s_port;
++				}
++				break;
++#endif
+ #if NETISO
+ 			  case AF_ISO:
+ 				/* assume two byte transport selector */
+@@ -968,6 +1029,35 @@
+ 			break;
+ #endif
+ 
++#if NETINET6
++		  case AF_INET6:
++		  {
++			/*
++			 *  IPv4-mapped IPv6 prefix --  ::ffff:0
++			 */
++			static u_char mapbuf[ IN6ADDRSZ ] =
++			    { 0,0,0,0, 0,0,0,0, 0,0,0xFF,0xFF, 0,0,0,0 };
++			u_char *a = (u_char *) hp->h_addr;
++
++			/*
++			 *  Some platforms may try to connect to IPv4-mapped
++			 *	IPv6 addresses via IPv6 connections, which
++			 *	won't work in many cases.  If we detect that,
++			 *	avoid it by changing the address family.
++			 */
++			if (bcmp( mapbuf, a, IN6ADDRSZ - INADDRSZ ))
++				bcopy(a, &addr.sin6.sin6_addr, IN6ADDRSZ);
++			else
++			{
++				bcopy(a + IN6ADDRSZ - INADDRSZ,
++					&addr.sin.sin_addr,
++					INADDRSZ);
++				addr.sa.sa_family = AF_INET;
++			}
++			break;
++		  }
++#endif
++
+ 		  default:
+ 			if (hp->h_length > sizeof addr.sa.sa_data)
+ 			{
+@@ -1012,6 +1102,13 @@
+ 		break;
+ #endif
+ 
++#if NETINET6
++	  case AF_INET6:
++		addr.sin6.sin6_port = port;
++		addrlen = sizeof (struct sockaddr_in6);
++		break;
++#endif
++
+ #if NETISO
+ 	  case AF_ISO:
+ 		/* assume two byte transport selector */
+@@ -1157,6 +1254,14 @@
+ 				break;
+ #endif
+ 
++#if NETINET6
++			  case AF_INET6:
++				bcopy(hp->h_addr_list[addrno++],
++				      &addr.sin6.sin6_addr,
++				      IN6ADDRSZ);
++				break;
++#endif
++
+ 			  default:
+ 				bcopy(hp->h_addr_list[addrno++],
+ 					addr.sa.sa_data,
+@@ -1295,6 +1400,34 @@
+ 		if (hp->h_addrtype == AF_INET)
+ 			return bcmp(ha, (char *) &sa->sin.sin_addr, hp->h_length);
+ 		break;
++#if NETINET6
++	  case AF_INET6:
++	  {
++		u_char *a = (u_char *) &sa->sin6.sin6_addr;
++		/*
++		 *  Straight binary comparison
++		 */
++		if (hp->h_addrtype == AF_INET6)
++			return bcmp( ha, a, hp->h_length);
++
++		/*
++		 *  If IPv4-mapped IPv6 address, compare the IPv4 section
++		 */
++		if (hp->h_addrtype == AF_INET)
++		{
++			/*
++			 *  IPv4-mapped IPv6 prefix --  ::ffff:0
++			 */
++			static u_char mapbuf[ IN6ADDRSZ ] =
++			    { 0,0,0,0, 0,0,0,0, 0,0,0xFF,0xFF, 0,0,0,0 };
++
++			if (!bcmp( mapbuf, a, IN6ADDRSZ - INADDRSZ ))
++			    return bcmp(a + IN6ADDRSZ - INADDRSZ, ha, INADDRSZ);
++			return -1;
++		}
++		break;
++	  }
++#endif
+ 
+ 	}
+ 	return -1;
+@@ -2049,6 +2182,12 @@
+ 		return inet_ntoa(sap->sin.sin_addr);
+ #endif
+ 
++#if NETINET6
++	  case AF_INET6:
++		return (char *) inet_ntop( sap->sa.sa_family,
++			&sap->sin6.sin6_addr, buf, sizeof( buf ));
++#endif
++
+ #if NETLINK
+ 	  case AF_LINK:
+ 		snprintf(buf, sizeof buf, "[LINK: %s]",
+@@ -2106,6 +2245,14 @@
+ 		hp = sm_gethostbyaddr((char *) &sap->sin.sin_addr,
+ 			INADDRSZ,
+ 			AF_INET);
++		break;
++#endif
++
++#if NETINET6
++	  case AF_INET6:
++		hp = sm_gethostbyaddr((char *) &sap->sin6.sin6_addr,
++			IN6ADDRSZ,
++			AF_INET6);
+ 		break;
+ #endif
+ 
+diff -Nur sendmail-8.9.3/src/main.c sendmail-8.9.3.pld/src/main.c
+--- sendmail-8.9.3/src/main.c	Sun Jan 10 00:31:13 1999
++++ sendmail-8.9.3.pld/src/main.c	Wed Feb 10 18:11:17 1999
+@@ -457,6 +457,9 @@
+ # ifdef RES_NOALIASES
+ 	_res.options |= RES_NOALIASES;
+ # endif
++# if NETINET6 && defined(RES_USE_INET6)
++	_res.options |= RES_USE_INET6;
++# endif
+ #endif
+ 
+ 	errno = 0;
+@@ -1513,10 +1516,20 @@
+ 			define(macid("{client_name}", NULL), RealHostName, &BlankEnvelope);
+ 		define(macid("{client_addr}", NULL),
+ 		       newstr(anynet_ntoa(&RealHostAddr)), &BlankEnvelope);
+-		if (RealHostAddr.sa.sa_family == AF_INET)
++		switch( RealHostAddr.sa.sa_family )
++		{
++		    case AF_INET:
+ 			snprintf(pbuf, sizeof pbuf, "%d", RealHostAddr.sin.sin_port);
+-		else
++		    	break;
++#if	NETINET6
++		    case AF_INET6:
++			snprintf(pbuf, sizeof pbuf, "%d", RealHostAddr.sin6.sin6_port);
++		    	break;
++#endif
++		    default:
+ 			snprintf(pbuf, sizeof pbuf, "0");
++			break;
++		}
+ 		define(macid("{client_port}", NULL), newstr(pbuf), &BlankEnvelope);
+ 
+ 		/* initialize maps now for check_relay ruleset */
+diff -Nur sendmail-8.9.3/src/sendmail.h sendmail-8.9.3.pld/src/sendmail.h
+--- sendmail-8.9.3/src/sendmail.h	Wed Jan 27 01:15:52 1999
++++ sendmail-8.9.3.pld/src/sendmail.h	Wed Feb 10 18:11:17 1999
+@@ -55,6 +55,10 @@
+ # if NETINET
+ # include <netinet/in.h>
+ # endif
++# if NETINET6
++/* There is no host-independet location (yet). See conf.h */ 
++# endif
++
+ # if NETISO
+ # include <netiso/iso.h>
+ # endif
+@@ -1035,6 +1039,9 @@
+ #endif
+ #if NETINET
+ 	struct sockaddr_in	sin;	/* INET family */
++#endif
++#if NETINET6
++	struct sockaddr_in6	sin6;	/* INET/IPv6 */
+ #endif
+ #if NETISO
+ 	struct sockaddr_iso	siso;	/* ISO family */

@@ -1,0 +1,14 @@
+diff -Nur sendmail-8.9.3/smrsh/Makefile.m4 sendmail-8.9.3.pld/smrsh/Makefile.m4
+--- sendmail-8.9.3/smrsh/Makefile.m4	Tue Dec 29 18:42:52 1998
++++ sendmail-8.9.3.pld/smrsh/Makefile.m4	Thu May 27 19:42:08 1999
+@@ -31,8 +31,8 @@
+ # libraries required on your system
+ LIBS=	ifdef(`confLIBS', `confLIBS')
+ 
+-# location of smrsh binary (usually /usr/libexec or /usr/etc)
+-EBINDIR=${DESTDIR}ifdef(`confEBINDIR', `confEBINDIR', `/usr/libexec')
++# location of smrsh binary (usually /usr/sbin or /usr/etc)
++EBINDIR=${DESTDIR}ifdef(`confEBINDIR', `confEBINDIR', `/usr/sbin')
+ 
+ # additional .o files needed
+ OBJADD=	ifdef(`confOBJADD', `confOBJADD')

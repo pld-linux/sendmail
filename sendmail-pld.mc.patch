@@ -12,7 +12,7 @@
 +define(`confTO_QUEUERETURN', `4d')dnl
 +define(`confTO_QUEUEWARN', `4h')dnl
 +define(`ALIAS_FILE',`/etc/mail/aliases,/etc/mail/majordomo')dnl
-+define(`HELP_FILE',`/etc/mail/sendmail.hf')dnl
++define(`HELP_FILE',`/usr/share/misc/sendmail.hf')dnl
 +define(`PROCMAIL_MAILER_PATH',`/usr/bin/procmail')dnl
 +define(`STATUS_FILE',`/var/run/sendmail.st')dnl
 +define(`UUCP_MAILER_MAX', `100000')dnl

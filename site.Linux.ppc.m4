@@ -10,7 +10,7 @@ APPENDDEF(`confLIBS', `-lnsl')
 define(`confSTDIR', `/var/run')
 define(`confHFDIR',`/etc/mail')
 define(`confDEPEND_TYPE', `CC-M')
-define(`confMANROOT', `/usr/man/man')
+define(`confMANROOT', `/usr/share/man/man')
 define(`confOPTIMIZE', `$(RPM_OPT_FLAGS)')
 define(`confLDOPTS', `-s')
 
