@@ -44,7 +44,7 @@ dnl DAEMON_OPTIONS(`Port=smtp, Name=MTA')dnl
 dnl DAEMON_OPTIONS(`Family=inet, Port=smtps, Name=MTA-SSL, M=s')dnl
 
 dnl define(`MILTER', 1)
-dnl INPUT_MAIL_FILTER(`milter-amavis', `S=local:/var/amavis/amavis-milter.sock, F=T, T=S:10m; R:10m;E:10m')
+dnl INPUT_MAIL_FILTER(`milter-amavis', `S=local:/var/spool/amavis/runtime/amavis-milter.sock, F=T, T=S:10m; R:10m;E:10m')
 
 dnl We strongly recommend to comment this one out if you want to protect
 dnl yourself from spam. However, the laptop and users on computers that do
