@@ -1,10 +1,10 @@
 divert(-1)
-dnl This is the macro config file used to generate the /etc/sendmail.cf
+dnl This is the macro config file used to generate the /etc/mail/sendmail.cf
 dnl file. If you modify thei file you will have to regenerate the
-dnl /etc/sendmail.cf by running this macro config through the m4
+dnl /etc/mail/sendmail.cf by running this macro config through the m4
 dnl preprocessor:
 dnl
-dnl        m4 /etc/sendmail.mc > /etc/sendmail.cf
+dnl        m4 /etc/mail/sendmail.mc > /etc/mail/sendmail.cf
 dnl
 dnl You will need to have the sendmail-cf package installed for this to
 dnl work.
@@ -21,6 +21,8 @@ define('ALIAS_FILE','/etc/mail/aliases')
 define(`confPRIVACY_FLAGS',`authwarnings,novrfy,noexpn,noetrn')
 TRUST_AUTH_MECH(`LOGIN PLAIN GSSAPI KERBEROS_V4 DIGEST-MD5 CRAM-MD5')
 define(`confAUTH_MECHANISMS',`LOGIN PLAIN GSSAPI KERBEROS_V4 DIGEST-MD5 CRAM-MD5')
+dnl	Define maximum message size here if you want:
+dnl	define(`confMAX_MESSAGE_SIZE', `10000000')
 FEATURE(`smrsh',`/usr/sbin/smrsh')
 FEATURE(`mailertable',`hash -o /etc/mail/mailertable')
 FEATURE(`virtusertable',`hash -o /etc/mail/virtusertable')
