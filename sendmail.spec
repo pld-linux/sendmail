@@ -1,9 +1,9 @@
 #
 # Conditional build:
-# _without_ldap		without LDAP support
-# _without_tls		without TLS (SSL) support
-# _with_db3		use db3 instead of db package
-# _with_pgsql		with PostgreSQL support (bluelabs)
+%bcond_without	ldap	# without LDAP support
+%bcond_without	tls	# without TLS (SSL) support
+%bcond_with	db3	# use db3 instead of db package
+%bcond_with	pgsql	# with PostgreSQL support (bluelabs)
 #
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-‹bertragungsagent
@@ -47,11 +47,11 @@ Patch6:		%{name}-hprescan-dos.patch
 Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	man
-%{?_with_db3:BuildRequires:	db3-devel}
-%{!?_with_db3:BuildRequires:	db-devel >= 4.1.25}
-%{!?_without_ldap:BuildRequires:	openldap-devel}
-%{!?_without_tls:BuildRequires:	openssl-devel >= 0.9.7c}
-%{?_with_pgsql:BuildRequires:	postgresql-devel}
+%{?with_db3:BuildRequires:	db3-devel}
+%{!?with_db3:BuildRequires:	db-devel >= 4.1.25}
+%{?with_ldap:BuildRequires:	openldap-devel}
+%{?with_tls:BuildRequires:	openssl-devel >= 0.9.7c}
+%{?with_pgsql:BuildRequires:	postgresql-devel}
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
@@ -61,7 +61,7 @@ Requires(post):	textutils
 Requires(post,preun):/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
-%{!?_with_db3:Requires:	db >= 4.1.25}
+%{!?with_db3:Requires:	db >= 4.1.25}
 Requires:	m4
 Requires:	procmail
 Requires:	pam >= 0.77.3
@@ -158,9 +158,7 @@ Sendmail - √≈ Mail Transport Agent, –“œ«“¡Õ¡ ›œ –≈“≈”…Ã¡§ –œ€‘’ ⁄
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%if %{?_with_pgsql:1}%{!?_with_pgsql:0}
-%patch7 -p1
-%endif
+%{?with_pgsql:%patch7 -p1}
 
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
@@ -171,20 +169,20 @@ echo "define(\`confCC', \`%{__cc}')" >> config.m4
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
 echo "APPENDDEF(\`confINCDIRS', \`-I/usr/include/sasl')" >> config.m4
 echo "define(\`confLIBSEARCH', \`db resolv')" >> config.m4
-%if %{?debug:0}%{!?debug:1}
+%if 0%{!?debug:1}
 echo "define(\`confLDOPTS', \`-s')" >> config.m4
 %endif
-%if %{?_without_ldap:0}%{!?_without_ldap:1}
+%if %{with ldap}
 echo "APPENDDEF(\`confMAPDEF', \`-DLDAPMAP')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lldap -llber')" >> config.m4
 %endif
-%if %{?_with_pgsql:1}%{!?_with_pgsql:0}
+%if %{with pgsql}
 echo "APPENDDEF(\`confENVDEF', \`-DSASL')" >> config.m4
 echo "APPENDDEF(\`confMAPDEF', \`-DPGSQLMAP')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lpq -lresolv')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lsasl -lcrypto')" >> config.m4
 %endif
-%if %{?_without_tls:0}%{!?_without_tls:1}
+%if %{with tls}
 echo "APPENDDEF(\`confENVDEF', \`-DSTARTTLS')" >> config.m4
 echo "APPENDDEF(\`confENVDEF', \`-D_FFR_DEAL_WITH_ERROR_SSL')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lssl -lcrypto')" >> config.m4
@@ -242,7 +240,7 @@ install cf/cf/pld.cf $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf
 sed -e 's|@@PATH@@|%{_libdir}/sendmail-cf|' < %{SOURCE6} \
 	> $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.mc
 
-%if %{?_with_pgsql:1}%{!?_with_pgsql:0}
+%if %{with pgsql}
 install bluelabs.mc $RPM_BUILD_ROOT%{_sysconfdir}/bluelabs.mc
 %endif
 
@@ -407,7 +405,7 @@ fi
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/submit.mc
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/local-host-names
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/aliases
-%{?_with_pgsql:%{_sysconfdir}/bluelabs.mc}
+%{?with_pgsql:%{_sysconfdir}/bluelabs.mc}
 %attr(644,root,mail) %ghost %{_sysconfdir}/aliases.db
 %attr(770,root,smmsp) %dir /var/spool/clientmqueue
 %attr(750,root,mail) %dir /var/spool/mqueue
