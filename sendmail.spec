@@ -12,7 +12,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.12.3
-Release:	2
+Release:	3
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -24,6 +24,11 @@ Source5:	%{name}-etc-mail-Makefile
 Source6:	%{name}.mc
 Source7:	%{name}-config.m4
 Source8:	%{name}.sasl
+Source9:	%{name}-access-sample
+Source10:	%{name}-mailertable-sample
+Source11:	%{name}-virtusertable-sample
+Source12:	%{name}-domaintable-sample
+Source13:	%{name}-pam-d-smtp
 Patch0:		%{name}-makemapman.patch
 Patch1:		%{name}-smrsh-paths.patch
 Patch2:		%{name}-rmail.patch
@@ -156,6 +161,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,sysconfig,sasl,smrsh
 	$RPM_BUILD_ROOT%{_mandir}/man{1,5,8} \
 	$RPM_BUILD_ROOT/var/log $RPM_BUILD_ROOT/var/spool/mqueue \
 	$RPM_BUILD_ROOT%{_libdir}/sendmail-cf \
+	$RPM_BUILD_ROOT/etc/pam.d \
 
 OBJDIR=obj.$(uname -s).$(uname -r).$(arch)
 
@@ -223,6 +229,11 @@ install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/sendmail
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sendmail
 install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/Makefile
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/sasl/Sendmail.conf
+install %{SOURCE9} $RPM_BUILD_ROOT%{_sysconfdir}/access.sample
+install %{SOURCE10} $RPM_BUILD_ROOT%{_sysconfdir}/mailertable.sample
+install %{SOURCE11} $RPM_BUILD_ROOT%{_sysconfdir}/virtusertable.sample
+install %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable.sample
+install %{SOURCE13} $RPM_BUILD_ROOT/etc/pam.d/smtp
 
 mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
@@ -353,21 +364,27 @@ fi
 %attr(0644,root,mail) %ghost %{_sysconfdir}/aliases.db
 %attr(0770,root,smmsp) %dir /var/spool/clientmqueue
 %attr(0750,root,mail) %dir /var/spool/mqueue
+%attr(0755,root,root) %dir /etc/pam.d
 
 %config %{_sysconfdir}/Makefile
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/access
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/access.sample
 %ghost %{_sysconfdir}/access.db
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/domaintable
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/domaintable.sample
 %ghost %{_sysconfdir}/domaintable.db
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/mailertable
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/mailertable.sample
 %ghost %{_sysconfdir}/mailertable.db
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/virtusertable
+%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/virtusertable.sample
 %ghost %{_sysconfdir}/virtusertable.db
 %config(noreplace) %{_sysconfdir}/helpfile
 
 %attr(754,root,root) /etc/rc.d/init.d/sendmail
 %config(noreplace) %verify(not md5 size mtime) /etc/sysconfig/sendmail
 %config(noreplace) %verify(not md5 size mtime) /etc/sasl/Sendmail.conf
+%config(noreplace) %verify(not md5 size mtime) /etc/pam.d/smtp
 
 %dir %{_libdir}/sendmail-cf
 %dir %{_libdir}/sendmail-cf/cf
