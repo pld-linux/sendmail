@@ -192,7 +192,7 @@ install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/mail/Makefile
 
 mv $RPM_BUILD_ROOT/usr/share/doc/sendmail/{FAQ,KNOWNBUGS,LICENSE,README,README.cf,doc/op/op.me} .
 
-gzip -9nf FAQ KNOWNBUGS LICENSE README README.cf op.me
+gzip -9nf FAQ KNOWNBUGS README README.cf op.me
 
 %clean
 rm -rf $RPM_BUILD_ROOT
