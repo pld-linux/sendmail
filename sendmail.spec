@@ -1,5 +1,8 @@
 Summary:	A widely used Mail Transport Agent (MTA)
+Summary(de):	sendmail-Mail-Übertragungsagent
+Summary(fr):	Agent de transport de courrier sendmail
 Summary(pl):	Sendmail -- aplikacja do obs³ugi poczty elektronicznej
+Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
 Version:	8.11.2
 Release:	1
@@ -47,8 +50,19 @@ program, which you use to read your e-mail. Sendmail is a
 behind-the-scenes program which actually moves your e-mail over
 networks or the Internet to where you want it to go.
 
-If you need documentation on Sendmail, you can install the
-sendmail-doc package.
+%description -l de
+Sendmail überträgt Mails zwischen Rechnern. Es implementiert eine
+allgemeine Mail-Routing-Funktion über das Netzwerk mit Aliasing und
+Weiterleiten von Nachrichten, automatischem Routing an
+Netzwerk-Gateways und flexible Konfiguration. Wenn Sie E-Mails über
+das Internet senden und empfangen möchten, brauchen Sie sendmail.
+
+%description -l fr
+Sendmail est un agent de transport de courrier, qui est le programme
+transférent le courrier d'une machine à l'autre. Sendmail implémente
+une facilité générale de routage de courrier entre les réseaux, permet
+l'\"aliasing\" et le \"forwarding\", un routage automatique sur les
+passerelles du réseau, et une configuration flexible.
 
 %description -l pl
 Sendmail jest programem umo¿liwiaj±cym wymianê poczty elektronicznej
@@ -59,12 +73,17 @@ dodatkowym atutem jest prosta konfiguracja. Dziêki rozbudowanym
 mo¿liwo¶ciom konfiguracyjnym jest w stanie dostarczaæ przesy³ki za
 po¶rednictwem protoko³ów: SMTP, ESMTP, UUCP, X.400 i innych.
 
-dokumentacja do programu sendmail znajduje siê w pakiecie
-sendmail-doc.
+%description -l tr
+Sendmail, bir mektubu bir makineden diðerine taþýr. Pek çok davranýþý
+ayarlanabilir. Internet üzerinden mektup almak veya göndermek
+istiyorsanýz bu pakete gereksiniminiz olacaktýr.
 
 %package cf
 Summary:	The files needed to reconfigure Sendmail
+Summary(de):	sendmail-Konfigurationsdateien und m4-Makros 
+Summary(fr):	fichiers de configuration sendmail et macros m4
 Summary(pl):	Pliki potrzebne do rekonfiguracji Sendmaila
+Summary(tr):	sendmail ayar dosyalarý ve makrolarý
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
 Group(pl):	Sieciowe/Serwery
@@ -80,8 +99,22 @@ sendmail.cf file is not configured for UUCP. If someday you needed to
 send and receive mail over UUCP, you'd need to install the sendmail-cf
 package to help you reconfigure Sendmail.
 
-Install the sendmail-cf package if you need to reconfigure your
-sendmail.cf file.
+%description -l de cf
+Dieses Paket enthält alle Konfigurationsdateien, die zum Erzeugen der
+Sendmail.cf-Datei erforderlich sind, die mit dem Basis- Sendmail-Paket
+geliefert wird. Sie werden darauf nicht verzichten wollen, wenn Sie
+Ihre Sendmail-cf-Datei neu konfigurieren und bauen wollen. Die
+Standard-Sendmail.cf.-Datei ist z.B. nicht für UUCP konfiguriert. Wenn
+Sie also Post über UUCP versenden und empfangen wollen, brauchen Sie
+es für eine Neukonfiguration.
+
+%description -l fr cf
+Ce package contient tous les fichiers de configuration utilisés pour
+générer le fichier sendmail.cf distribué avec le package de base
+sendmail. Vous n'aurez besoin de ce package que pour reconfigurer et
+reconstruire votre fichier sendmail.cf. Par exemple Le sendmail.cf par
+défaut n'est pas configuré pour UUCP. Si vous devez recevoir des mails
+avec UUCP, vous aurez besoin de ce package pour reconfigurer sendmail.
 
 %description -l pl cf
 Ten pakiet zawiera pliki konfiguracyjne, których bêdziesz potrzebowa³,
@@ -92,9 +125,17 @@ jest skonfigurowany dla UUCP. Je¿eli kiedy¶ bêdziesz potrzebowa³
 wysy³aæ i odbieraæ porztê po UUCP, bêdziesz musia³ zainstalowaæ pakiet
 sendmail-cf, który pomo¿e ci zrekonfigurowaæ Sendmaila.
 
+%description -l tr cf
+Bu paket, sendmail paketi ile daðýtýlan sendmail.cf dosyasýný
+oluþturmak için kullanýlan tüm ayar dosyalarýný içerir. sendmail.cf
+dosyasýný baþtan ayarlayýp kurmak için kullanýlýr.
+
 %package doc
 Summary:	Documentation about the Sendmail Mail Transport Agent program
+Summary(de):	Sendmail-Dokumentation 
+Summary(fr):	Documentation de sendmail
 Summary(pl):	Dokumentacja do Sendmaila
+Summary(tr):	sendmail belgeleri
 Group:		Documentation
 Group(de):	Dokumentation
 Group(pl):	Dokumentacja
@@ -106,16 +147,25 @@ Mail Transport Agent (MTA) program, including release notes, the
 Sendmail FAQ and a few papers written about Sendmail. The papers are
 provided in PostScript(TM) and troff formats.
 
-Install the sendmail-doc package if you need documentation about
-Sendmail.
+%description -l de doc
+Dieses Paket beinhaltet Release-Notes, die häufigsten Fragen und
+Antworten (FAQ) zu Sendmail sowie ein paar Artikel über Sendmail. Die
+letzteren sind sowohl in PostScript als auch in troff verfügbar.
+
+%description -l fr doc
+Paquetage contenant les remarques sur la version, la FAQ sendmail et
+quelques articles sur sendmail. Ces articles sont au format PostScript
+et troff.
 
 %description -l pl doc
 Ten pakiet zawiera dokumentacjê do programu Sendmail Mail Transport
 Agent (MTA). Dokumentacja zwawiera informacje o zmianach w bie¿±cej
 wersji i FAQ - najczêsciej zadawane pytania. Dokumentacja dostêpna
-jest w formacie PostScript(TM) oraz troff. Je¿eli potrzebujesz
-dokumentacji
-- zainstaluj ten pakiet.
+jest w formacie PostScript(TM) oraz troff.
+
+%description -l tr doc
+Bu paket, sendmail ile ilgili çokça sorulan sorularý ve sendmail
+hakkýnda yazýlmýþ makalelerin bir kýsmýný içermektedir.
 
 %prep
 %setup -q
@@ -139,7 +189,8 @@ install %{SOURCE7} config.m4
 
 %build
 
-RPM_OPT_FLAGS="$RPM_OPT_FLAGS -DUSE_VENDOR_CF_PATH=1 -DNETINET6 -D_FFR_TESTMODE_DROP_PRIVS"
+RPM_OPT_FLAGS="%{?debug:-O -g}%{!?debug:$RPM_OPT_FLAGS} \
+	-DUSE_VENDOR_CF_PATH=1 -DNETINET6 -D_FFR_TESTMODE_DROP_PRIVS"
 export RPM_OPT_FLAGS
 
 cd sendmail	&& sh Build -f ../config.m4
@@ -233,40 +284,39 @@ rm -rf $RPM_BUILD_ROOT
 # Convert old format to new
 #
 if [ -f /etc/mail/deny ] ; then
-    cat /etc/mail/deny | \
-	awk 'BEGIN{ print "# Entries from obsoleted /etc/mail/deny"} \
-		  {print $1" REJECT"}' >> /etc/mail/access
-    cp /etc/mail/deny /etc/mail/deny.rpmorig
+	cat /etc/mail/deny | \
+		awk 'BEGIN{ print "# Entries from obsoleted /etc/mail/deny"} \
+		{print $1" REJECT"}' >> /etc/mail/access
+	cp /etc/mail/deny /etc/mail/deny.rpmorig
 fi
 for oldfile in relay_allow ip_allow name_allow ; do
-    if [ -f /etc/mail/$oldfile ] ; then
-	cat /etc/mail/$oldfile | \
-		awk "BEGIN { print \"# Entries from obsoleted /etc/mail/$oldfile\" ;} \
-	     { print $1\" RELAY\" }" >> /etc/mail/access
-	cp /etc/mail/$oldfile /etc/mail/$oldfile.rpmorig
-     fi
+	if [ -f /etc/mail/$oldfile ] ; then
+		cat /etc/mail/$oldfile | \
+			awk "BEGIN { print \"# Entries from obsoleted /etc/mail/$oldfile\" ;} \
+			{ print $1\" RELAY\" }" >> /etc/mail/access
+		cp /etc/mail/$oldfile /etc/mail/$oldfile.rpmorig
+	fi
 done
 
 #
 # Oops, these files moved
 #
 if [ -f /etc/sendmail.cw ] ; then
-    cat /etc/sendmail.cw  | \
-      awk 'BEGIN { print "# Entries from obsoleted /etc/sendmail.cw" ;} \
-           { print $1 }' >> /etc/mail/local-host-names
-    cp /etc/sendmail.cw /etc/sendmail.cw.rpmorig
+	cat /etc/sendmail.cw  | \
+		awk 'BEGIN { print "# Entries from obsoleted /etc/sendmail.cw" ;} \
+		{ print $1 }' >> /etc/mail/local-host-names
+	cp /etc/sendmail.cw /etc/sendmail.cw.rpmorig
 fi
 #
 # Rebuild maps (next reboot will rebuild also)
 #
 { /usr/bin/newaliases
-  for map in virtusertable access domaintable mailertable
-  do
-    if [ -f /etc/mail/${map} ] ; then
-      /usr/bin/makemap hash /etc/mail/${map} < /etc/mail/${map}
-      sleep 1
-    fi
-  done
+ for map in virtusertable access domaintable mailertable; do
+	if [ -f /etc/mail/${map} ] ; then
+		/usr/bin/makemap hash /etc/mail/${map} < /etc/mail/${map}
+		sleep 1
+	fi
+ done
 } > /dev/null 2>&1
 
 /sbin/chkconfig --add sendmail
