@@ -8,8 +8,8 @@ Summary(fr):	Agent de transport de courrier sendmail
 Summary(pl):	Sendmail -- aplikacja do obs³ugi poczty elektronicznej
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
-Version:	8.11.4
-Release:	5
+Version:	8.11.5
+Release:	1
 License:	BSD
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
@@ -35,7 +35,6 @@ Patch7:		%{name}-pld.mc.patch
 Patch8:		%{name}-redirect.patch
 Patch9:		%{name}-hprescan-dos.patch
 Patch10:	%{name}-aliasesDoS.patch
-Patch11:	%{name}-fix.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
@@ -103,7 +102,6 @@ istiyorsanýz bu pakete gereksiniminiz olacaktýr.
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
-%patch11 -p1
 
 # seems to be obsoleted...
 #tar xf %{SOURCE2} -C cf
