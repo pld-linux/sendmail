@@ -44,7 +44,7 @@ Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
 %{!?_without_ldap:BuildRequires:	openldap-devel}
-%{!?_without_tls:BuildRequires:		openssl-devel}
+%{!?_without_tls:BuildRequires:		openssl-devel >= 0.9.6i}
 %{?_with_pgsql:BuildRequires:		postgresql-devel}
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
