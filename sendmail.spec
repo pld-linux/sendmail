@@ -20,10 +20,12 @@ Patch4:		%{name}-pld.mc.patch
 Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-smrsh.patch
 Patch7:		%{name}-release.patch
-BuildRoot:	/tmp/%{name}-%{version}-root
 URL:		http://www.sendmail.org
+BuildRoot:	/tmp/%{name}-%{version}-root
 Prereq:		/sbin/chkconfig
 Requires:	rc-scripts
+Provides:	smtpdaemon
+Obsoletes:	smtpdaemon
 Obsoletes:	zmail
 Obsoletes:	qmail
 Obsoletes:	smail
