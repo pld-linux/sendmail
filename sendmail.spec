@@ -11,7 +11,7 @@ Summary(pl):	Sendmail - serwer poczty elektronicznej
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Name:		sendmail
 Version:	8.12.2
-Release:	2
+Release:	3
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -29,10 +29,8 @@ Patch2:		%{name}-rmail.patch
 Patch3:		%{name}-os-paths.patch
 Patch4:		%{name}-m4path.patch
 Patch5:		%{name}-dtelnet.patch
-Patch6:		%{name}-pld.mc.patch
-Patch7:		%{name}-redirect.patch
-Patch8:		%{name}-hprescan-dos.patch
-Patch9:		%{name}-auth.patch
+Patch6:		%{name}-redirect.patch
+Patch7:		%{name}-hprescan-dos.patch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
@@ -109,15 +107,11 @@ istiyorsanýz bu pakete gereksiniminiz olacaktýr.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
-%if %{?_with_auth:1}%{!?_with_auth:0}
-patch -p0 %{SOURCE6} %{PATCH9}
-%endif
 
 # seems to be obsoleted...
 #tar xf %{SOURCE2} -C cf
 
-sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/redhat.mc
+sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
 install %{SOURCE7} config.m4
 
@@ -144,7 +138,7 @@ cd ../makemap	&& sh Build -f ../config.m4
 cd ../praliases	&& sh Build -f ../config.m4
 cd ../smrsh	&& sh Build -f ../config.m4
 cd ../cf/cf
-m4 redhat.mc > redhat.cf
+m4 pld.mc > pld.cf
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -177,7 +171,7 @@ cp -ar * $RPM_BUILD_ROOT%{_libdir}/sendmail-cf
 cd -
 
 # sendmail.{cf,mc}
-install cf/cf/redhat.cf $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf
+install cf/cf/pld.cf $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf
 sed -e 's|@@PATH@@|%{_libdir}/sendmail-cf|' < %{SOURCE6} \
 	> $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.mc
 
