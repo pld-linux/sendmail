@@ -1,0 +1,24 @@
+diff -Nur sendmail-8.11.2.orig/sendmail/conf.c sendmail-8.11.2/sendmail/conf.c
+--- sendmail-8.11.2.orig/sendmail/conf.c	Thu Jan  4 21:46:38 2001
++++ sendmail-8.11.2/sendmail/conf.c	Thu Jan  4 21:45:27 2001
+@@ -4329,7 +4329,7 @@
+ **	Support IPv6 as well as IPv4.
+ */
+ 
+-#if NETINET6 && NEEDSGETIPNODE && __RES < 19990909
++#if NETINET6 && NEEDSGETIPNODE && (__RES < 19990909 || (__GLIBC__ == 2 && __GLIBC_MINOR__ == 2))
+ 
+ # ifndef AI_DEFAULT
+ #  define AI_DEFAULT	0	/* dummy */
+diff -Nur sendmail-8.11.2.orig/sendmail/conf.h sendmail-8.11.2/sendmail/conf.h
+--- sendmail-8.11.2.orig/sendmail/conf.h	Sat Dec 16 00:18:40 2000
++++ sendmail-8.11.2/sendmail/conf.h	Thu Jan  4 21:42:42 2001
+@@ -1459,7 +1459,7 @@
+ #   else /* (GLIBC_VERSION >= 0x201) */
+ #    include <linux/in6.h>	/* IPv6 support */
+ #   endif /* (GLIBC_VERSION >= 0x201) */
+-#   if (GLIBC_VERSION == 0x201 && !defined(NEEDSGETIPNODE))
++#   if ((GLIBC_VERSION == 0x201 || GLIBC_VERSION == 0x202) && !defined(NEEDSGETIPNODE))
+      /* Have APIs in <netdb.h>, but no support in glibc */
+ #    define NEEDSGETIPNODE	1
+ #   endif /* (GLIBC_VERSION == 0x201 && ! NEEDSGETIPNODE) */

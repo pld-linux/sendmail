@@ -1,0 +1,39 @@
+--- /dev/null	Tue May  5 22:32:27 1998
++++ sendmail-8.9.2/cf/cf/pld.mc	Thu Jan 14 17:20:28 1999
+@@ -0,0 +1,36 @@
++divert(-1)dnl
++include(`../m4/cf.m4')dnl
++OSTYPE(`linux')dnl
++define(`confCT_FILE', ` -o /etc/mail/sendmail.ct')dnl
++define(`confCW_FILE', ` /etc/mail/sendmail.cw')dnl
++define(`confDEF_USER_ID',``8:12'')dnl
++define(`confPRIVACY_FLAGS', `authwarnings,noexpn,novrfy')dnl
++define(`confSTATUS_FILE',`/var/run/sendmail.st')dnl
++define(`confTO_QUEUERETURN', `4d')dnl
++define(`confTO_QUEUEWARN', `4h')dnl
++define(`ALIAS_FILE',`/etc/mail/aliases,/etc/mail/majordomo')dnl
++define(`HELP_FILE',`/usr/share/misc/sendmail.hf')dnl
++define(`PROCMAIL_MAILER_PATH',`/usr/bin/procmail')dnl
++define(`STATUS_FILE',`/var/run/sendmail.st')dnl
++define(`UUCP_MAILER_MAX', `100000')dnl
++define(`UUCP_RELAY', `uunet.uu.net')dnl
++FEATURE(access_db, hash -o /etc/mail/access)dnl
++FEATURE(always_add_domain)dnl
++FEATURE(blacklist_recipients)dnl
++FEATURE(limited_masquerade)dnl
++FEATURE(local_procmail)dnl
++FEATURE(masquerade_entire_domain)dnl
++FEATURE(redirect)dnl
++FEATURE(use_ct_file)dnl
++FEATURE(use_cw_file)dnl
++FEATURE(`domaintable',`hash -o /etc/mail/domaintable')dnl
++FEATURE(`genericstable',`hash -o /etc/mail/genericstable')dnl
++FEATURE(`mailertable',`hash -o /etc/mail/mailertable')dnl
++FEATURE(`virtusertable',`hash -o /etc/mail/virtusertable')dnl
++MAILER(procmail)dnl
++MAILER(smtp)dnl
++MAILER(usenet)dnl
++MAILER(uucp)dnl
++O DetectTelnet = True
++O ExitOnTelnet = True
++O MaxMimeHeaderLength=256/128

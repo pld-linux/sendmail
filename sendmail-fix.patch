@@ -1,0 +1,11 @@
+--- sendmail-8.11.2/sendmail/queue.c.fix	Wed Feb 14 13:13:12 2001
++++ sendmail-8.11.2/sendmail/queue.c	Wed Feb 14 13:20:49 2001
+@@ -3013,7 +3013,7 @@
+ 		return;
+ 	}
+ 
+-	if (NumQueues == 1)
++	if (NumQueues <= 1)
+ 		idx = 0;
+ 	else
+ 	{

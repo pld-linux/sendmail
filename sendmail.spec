@@ -1,8 +1,13 @@
 #
+# TODO:
+# - make sid-milter support:
+#   http://sourceforge.net/projects/sid-milter/
+#   http://www.sendmail.net/
+#
 # Conditional build:
+%bcond_without	db3	# use db instead of db3 package
 %bcond_without	ldap	# without LDAP support
 %bcond_without	tls	# without TLS (SSL) support
-%bcond_with	db3	# use db3 instead of db package
 %bcond_with	pgsql	# with PostgreSQL support (bluelabs)
 #
 Summary:	A widely used Mail Transport Agent (MTA)
@@ -16,12 +21,12 @@ Summary(ru):	Почтовый транспортный агент sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.12.11
-Release:	9
+Version:	8.13.1
+Release:	1.1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	fafda7f8043f0c34b9aa295618aa598c
+# Source0-md5:	5407db289086261d7e7a09920d2ea14e
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
@@ -37,7 +42,7 @@ Source10:	%{name}.mailertable
 Source11:	%{name}.virtusertable
 Source12:	%{name}.domaintable
 Source13:	%{name}-smtp.pamd
-Source14:	%{name}-monitrc
+Source14:	%{name}.monitrc
 Patch0:		%{name}-makemapman.patch
 Patch1:		%{name}-smrsh-paths.patch
 Patch2:		%{name}-rmail.patch
@@ -51,7 +56,7 @@ BuildRequires:	cyrus-sasl-devel
 %{!?with_db3:BuildRequires:	db-devel >= 4.1.25}
 BuildRequires:	man
 %{?with_ldap:BuildRequires:	openldap-devel}
-%{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
+%{?with_tls:BuildRequires:	openssl-devel >= 0.9.6m}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
@@ -67,7 +72,6 @@ Requires:	m4
 Requires:	procmail
 Requires:	pam >= 0.77.3
 Provides:	smtpdaemon
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	courier
 Obsoletes:	exim
 Obsoletes:	masqmail
@@ -81,6 +85,7 @@ Obsoletes:	smail
 Obsoletes:	smtpdaemon
 Obsoletes:	ssmtp
 Obsoletes:	zmailer
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/mail
 
@@ -178,11 +183,6 @@ Pliki nagЁСwkowe i statyczna biblioteka libmilter.
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
 install %{SOURCE7} config.m4
-
-# Ac-specific hack - ac-i386 builder has not fully operational shm
-%ifarch i386
-%{__perl} -pi -e 's/^(smtest.*t-shm)/dnl $1/' libsm/Makefile.m4
-%endif
 
 %build
 echo "define(\`confCC', \`%{__cc}')" >> config.m4
@@ -304,12 +304,11 @@ install %{SOURCE9} $RPM_BUILD_ROOT%{_sysconfdir}/access
 install %{SOURCE10} $RPM_BUILD_ROOT%{_sysconfdir}/mailertable
 install %{SOURCE11} $RPM_BUILD_ROOT%{_sysconfdir}/virtusertable
 install %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable
-install %{SOURCE14} $RPM_BUILD_ROOT/etc/monit/
+install %{SOURCE14} $RPM_BUILD_ROOT/etc/monit
 
 mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
 mv -f doc/op/op.me .
-
 
 bzip2 -dc %{SOURCE4} | tar xf -
 
@@ -331,7 +330,8 @@ if [ -n "`/bin/id -u smmsp 2>/dev/null`" ]; then
 		exit 1
 	fi
 else
-	/usr/sbin/useradd -u 25 -r -d /var/spool/clientqueue -s /bin/false -c "Sendmail Message Submission Program" -g smmsp smmsp 1>&2
+	/usr/sbin/useradd -u 25 -r -d /var/spool/clientqueue -s /bin/false \
+		-c "Sendmail Message Submission Program" -g smmsp smmsp 1>&2
 fi
 
 %post
