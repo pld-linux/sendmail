@@ -2,7 +2,7 @@
 # Conditional build:
 # _without_ldap		without LDAP support
 # _without_tls		without TLS (SSL) support
-#
+
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-Übertragungsagent
 Summary(fr):	Agent de transport de courrier sendmail
@@ -40,13 +40,15 @@ BuildRequires:	db3-devel
 %{!?_without_ldap:BuildRequires:	openldap-devel}
 %{!?_without_tls:BuildRequires:	openssl-devel}
 Requires:	m4
-Prereq:		/sbin/chkconfig
-Prereq:		/usr/sbin/groupadd
-Prereq:		/usr/sbin/useradd
-Prereq:		/usr/sbin/groupdel
-Prereq:		/usr/sbin/userdel
-Prereq:		/usr/bin/getgid
-Prereq:		/bin/id
+PreReq:		/sbin/chkconfig
+PreReq:		/usr/sbin/groupadd
+PreReq:		/usr/sbin/useradd
+PreReq:		/usr/sbin/groupdel
+PreReq:		/usr/sbin/userdel
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/bin/id
+Requires(post):	awk
+Requires(post):	textutils
 Provides:	smtpdaemon
 Obsoletes:	smtpdaemon
 Obsoletes:	exim
@@ -203,7 +205,7 @@ EOF
 
 for map in virtusertable access domaintable mailertable ; do
 	touch $RPM_BUILD_ROOT%{_sysconfdir}/${map}
-		$RPM_BUILD_ROOT%{_bindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf hash \
+	$RPM_BUILD_ROOT%{_bindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf hash \
 		$RPM_BUILD_ROOT%{_sysconfdir}/${map}.db < $RPM_BUILD_ROOT%{_sysconfdir}/${map}
 done
 
