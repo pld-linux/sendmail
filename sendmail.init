@@ -45,7 +45,6 @@ case "$1" in
 		done 
 		deltext;ok
 		msg_starting sendmail
-		daemon /usr/sbin/sendmail $SENDMAIL_CF
 		daemon /usr/sbin/sendmail $([ "$DAEMON" = "yes" ] && echo -bd) \
 					$([ -n "$QUEUE" ] && echo -q$QUEUE) \
 					$([ "$ENABLE_IPV6" = "yes" ] && 
