@@ -1,5 +1,5 @@
 define(`confMAPDEF', `-DNEWDB -DNIS')
-define(`confENVDEF', `$(RPM_OPT_FLAGS) -DXDEBUG=0')
+define(`confENVDEF', `-DXDEBUG=0')
 define(`confLIBS', `-lnsl')
 define(`confMANOWN', `root')
 define(`confMANGRP', `root')

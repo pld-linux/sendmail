@@ -2,8 +2,9 @@
 # Conditional build:
 # _without_ldap		without LDAP support
 # _without_tls		without TLS (SSL) support
+# _with_db3		use db3 instead of db package
 # _with_pgsql		without pgsql support (bluelabs)
-
+#
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-Übertragungsagent
 Summary(es):	Sendmail - agente de transporte de mail
@@ -42,12 +43,11 @@ Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
 Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
 BuildRequires:	cyrus-sasl-devel
-BuildRequires:	db3-devel
+%{?_with_db3:BuildRequires:	db3-devel}
+%{!?_with_db3:BuildRequires:	db-devel >= 4.1.25}
 %{!?_without_ldap:BuildRequires:	openldap-devel}
 %{!?_without_tls:BuildRequires:	openssl-devel}
 %{?_with_pgsql:BuildRequires: postgresql-devel}
-Requires:	m4
-Requires:	procmail
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
@@ -57,6 +57,9 @@ Requires(post):	textutils
 Requires(post,preun):/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
+%{!?_with_db3:Requires:	db >= 4.1.25}
+Requires:	m4
+Requires:	procmail
 Provides:	smtpdaemon
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	smtpdaemon
