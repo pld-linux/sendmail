@@ -6,13 +6,15 @@
 
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de):	sendmail-Mail-Übertragungsagent
+Summary(es):	Sendmail - agente de transporte de mail
 Summary(fr):	Agent de transport de courrier sendmail
 Summary(pl):	Sendmail - serwer poczty elektronicznej
+Summary(pt_BR):	Sendmail - agente de transporte de mail
 Summary(ru):	ðÏÞÔÏ×ÙÊ ÔÒÁÎÓÐÏÒÔÎÙÊ ÁÇÅÎÔ sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	ðÏÛÔÏ×ÉÊ ÔÒÁÎÓÐÏÒÔÎÉÊ ÁÇÅÎÔ sendmail
 Name:		sendmail
-Version:	8.12.4
+Version:	8.12.7
 Release:	1
 License:	BSD
 Group:		Networking/Daemons
@@ -42,19 +44,19 @@ Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db3-devel
 %{!?_without_ldap:BuildRequires:	openldap-devel}
-%{!?_without_tls:BuildRequires:	openssl-devel}
-%{?_with_pgsql:BuildRequires: postgresql-devel}
-Requires:	m4
-Requires:	procmail
-PreReq:		/sbin/chkconfig
+%{!?_without_tls:BuildRequires:		openssl-devel}
+%{?_with_pgsql:BuildRequires:		postgresql-devel}
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires(post):	awk
 Requires(post):	textutils
+Requires(post,preun):/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
+Requires:	m4
+Requires:	procmail
 Provides:	smtpdaemon
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	smtpdaemon
@@ -84,6 +86,14 @@ Weiterleiten von Nachrichten, automatischem Routing an
 Netzwerk-Gateways und flexible Konfiguration. Wenn Sie E-Mails über
 das Internet senden und empfangen möchten, brauchen Sie sendmail.
 
+%description -l es
+sendmail es un agente de transporte de correo electrónico, que mueve
+mensajes entre máquinas. Implementa facilidades de internetwork y
+rutado, caracterizando cambio de nombres (aliases) y envío a nuevas
+direcciones ( forwarding ), rutado automático para gateways de la red
+y configuración flexible. Necesitarás del sendmail si deseas enviar y
+recibir mensajes a través de la Internet.
+
 %description -l fr
 Sendmail est un agent de transport de courrier, qui est le programme
 transférent le courrier d'une machine à l'autre. Sendmail implémente
@@ -99,6 +109,13 @@ konta docelowe. Bardzo dobrze obs³uguje aliasy pocztowe a jego
 dodatkowym atutem jest prosta konfiguracja. Dziêki rozbudowanym
 mo¿liwo¶ciom konfiguracyjnym jest w stanie dostarczaæ przesy³ki za
 po¶rednictwem protoko³ów: SMTP, ESMTP, UUCP, X.400 i innych.
+
+%description -l pt_BR
+O sendmail é um agente de transporte de correio eletrônico, que move
+mensagens entre máquinas. Ele implementa facilidades de internetwork e
+roteamento, caracterizando troca de nomes (aliases) e remessa a novos
+endereços ( forwarding ), roteamento automático para gateways da rede
+e configuração flexível.
 
 %description -l ru
 Sendmail - ÜÔÏ Mail Transport Agent, ÐÒÏÇÒÁÍÍÁ ÐÅÒÅÓÙÌÁÀÝÁÑ ÐÏÞÔÕ Ó
@@ -137,6 +154,7 @@ install %{SOURCE7} config.m4
 %build
 echo "define(\`confCC', \`%{__cc}')" >> config.m4
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
+echo "define(\`confLIBSEARCH', \`db')" >> config.m4
 %if %{?debug:0}%{!?debug:1}
 echo "define(\`confLDOPTS', \`-s')" >> config.m4
 %endif
@@ -186,7 +204,7 @@ SMINSTOPT="DESTDIR=$RPM_BUILD_ROOT SBINOWN=$IDNU SBINGRP=$IDNG \
 %{__make} $SMINSTOPT install -C $OBJDIR/praliases
 %{__make} $SMINSTOPT force-install -C $OBJDIR/rmail
 %{__make} $SMINSTOPT install -C $OBJDIR/makemap
-ln -sf ../sbin/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
+ln -sf /usr/sbin/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
 %{__make} $SMINSTOPT install -C $OBJDIR/smrsh
 
 # install the cf files
@@ -210,22 +228,21 @@ install cf/cf/submit.mc $RPM_BUILD_ROOT%{_sysconfdir}
 echo "# local-host-names - include all aliases for your machine here." \
 	> $RPM_BUILD_ROOT%{_sysconfdir}/local-host-names
 
-ln -sf ../sbin/sendmail $RPM_BUILD_ROOT%{_libdir}/sendmail
+ln -sf /usr/sbin/sendmail $RPM_BUILD_ROOT%{_libdir}/sendmail
 
 # dangling symlinks
 for f in hoststat mailq newaliases purgestat ; do
-	ln -sf ../sbin/sendmail $RPM_BUILD_ROOT%{_bindir}/${f}
+	ln -sf /usr/sbin/sendmail $RPM_BUILD_ROOT%{_bindir}/${f}
 done
-
 
 for map in virtusertable access domaintable mailertable ; do
 	touch $RPM_BUILD_ROOT%{_sysconfdir}/${map}
-	$RPM_BUILD_ROOT%{_bindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf hash \
+	$RPM_BUILD_ROOT%{_sbindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf hash \
 		$RPM_BUILD_ROOT%{_sysconfdir}/${map}.db < $RPM_BUILD_ROOT%{_sysconfdir}/${map}
 done
 
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/aliases
-$RPM_BUILD_ROOT%{_bindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf hash \
+$RPM_BUILD_ROOT%{_sbindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf hash \
 	$RPM_BUILD_ROOT%{_sysconfdir}/aliases.db < %{SOURCE3}
 
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sendmail
@@ -250,7 +267,7 @@ rm -rf $RPM_BUILD_ROOT
 %pre
 if [ -n "`/usr/bin/getgid smmsp`" ]; then
 	if [ "`/usr/bin/getgid smmsp`" != "25" ]; then
-		echo "Warning: group smmsp haven't gid=25. Correct this before installing sendmail." 1>&2
+		echo "Error: group smmsp doesn't have gid=25. Correct this before installing sendmail." 1>&2
 		exit 1
 	fi
 else
@@ -258,7 +275,7 @@ else
 fi
 if [ -n "`/bin/id -u smmsp 2>/dev/null`" ]; then
 	if [ "`/bin/id -u smmsp`" != "25" ]; then
-		echo "Warning: user smmsp haven't uid=25. Correct this before installing sendmail." 1>&2
+		echo "Error: user smmsp doesn't have uid=25. Correct this before installing sendmail." 1>&2
 		exit 1
 	fi
 else
@@ -346,14 +363,15 @@ fi
 %attr(755,root,root) %{_sbindir}/smrsh
 %{_libdir}/sendmail
 
-%{_mandir}/man8/rmail.8*
-%{_mandir}/man8/praliases.8*
+%{_mandir}/man1/mailq.1*
+%{_mandir}/man1/newaliases.1*
+%{_mandir}/man5/aliases.5*
 %{_mandir}/man8/mailstats.8*
 %{_mandir}/man8/makemap.8*
+%{_mandir}/man8/praliases.8*
+%{_mandir}/man8/rmail.8*
 %{_mandir}/man8/sendmail.8*
-%{_mandir}/man5/aliases.5*
-%{_mandir}/man1/newaliases.1*
-%{_mandir}/man1/mailq.1*
+%{_mandir}/man8/smrsh.8*
 
 %dir /etc/smrsh
 %dir %{_sysconfdir}
@@ -364,7 +382,7 @@ fi
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/submit.mc
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/local-host-names
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/aliases
-%{?_with_pgsql:%attr(644,root,root) /etc/mail/bluelabs.mc}
+%{?_with_pgsql:%{_sysconfdir}/bluelabs.mc}
 %attr(644,root,mail) %ghost %{_sysconfdir}/aliases.db
 %attr(770,root,smmsp) %dir /var/spool/clientmqueue
 %attr(750,root,mail) %dir /var/spool/mqueue
