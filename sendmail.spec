@@ -58,7 +58,7 @@ BuildRequires:	man
 %{?with_ldap:BuildRequires:	openldap-devel}
 %{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
-BuildRequires:	rpmbuild(macros) >= 1.159
+BuildRequires:	rpmbuild(macros) >= 1.202
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
@@ -286,6 +286,7 @@ install cf/cf/submit.mc $RPM_BUILD_ROOT%{_sysconfdir}
 
 echo "# local-host-names - include all aliases for your machine here." \
 	> $RPM_BUILD_ROOT%{_sysconfdir}/local-host-names
+#"vim ruuls
 
 ln -sf /usr/sbin/sendmail $RPM_BUILD_ROOT%{_prefix}/lib/sendmail
 
@@ -326,23 +327,8 @@ bzip2 -dc %{SOURCE4} | tar xf -
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-if [ -n "`/usr/bin/getgid smmsp`" ]; then
-	if [ "`/usr/bin/getgid smmsp`" != "25" ]; then
-		echo "Error: group smmsp doesn't have gid=25. Correct this before installing sendmail." 1>&2
-		exit 1
-	fi
-else
-	/usr/sbin/groupadd -g 25 smmsp 1>&2
-fi
-if [ -n "`/bin/id -u smmsp 2>/dev/null`" ]; then
-	if [ "`/bin/id -u smmsp`" != "25" ]; then
-		echo "Error: user smmsp doesn't have uid=25. Correct this before installing sendmail." 1>&2
-		exit 1
-	fi
-else
-	/usr/sbin/useradd -u 25 -d /var/spool/clientqueue -s /bin/false \
-		-c "Sendmail Message Submission Program" -g smmsp smmsp 1>&2
-fi
+%groupadd -g 25 smmsp
+%useradd -u 25 -d /var/spool/clientqueue -s /bin/false -c "Sendmail Message Submission Program" -g smmsp smmsp
 
 %post
 umask 022
