@@ -22,7 +22,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.13.3
-Release:	1
+Release:	2
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -71,7 +71,7 @@ Requires(postun):	/usr/sbin/userdel
 %{!?with_db3:Requires:	db >= 4.1.25}
 Requires:	m4
 Requires:	procmail
-Requires:	pam >= 0.77.3
+Requires:	pam >= 0.79.0
 Provides:	group(smmsp)
 Provides:	smtpdaemon
 Provides:	user(smmsp)
