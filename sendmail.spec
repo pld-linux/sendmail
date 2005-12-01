@@ -1,4 +1,4 @@
-# 
+#
 # TODO:
 # - make sid-milter support:
 #   http://sourceforge.net/projects/sid-milter/
@@ -51,27 +51,28 @@ Patch4:		%{name}-m4path.patch
 Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
 Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
+%{!?with_db3:BuildRequires:	db-devel >= 4.1.25}
+%{!?with_db3:Requires:	db >= 4.1.25}
 BuildRequires:	cyrus-sasl-devel
 %{?with_db3:BuildRequires:	db3-devel}
-%{!?with_db3:BuildRequires:	db-devel >= 4.1.25}
 BuildRequires:	man
 %{?with_ldap:BuildRequires:	openldap-devel}
 %{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 BuildRequires:	rpmbuild(macros) >= 1.202
+Requires(post):	awk
+Requires(post):	textutils
+Requires(post,preun):/sbin/chkconfig
+Requires(post,preun):	rc-scripts >= 0.4.0.20
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
-Requires(post):	awk
-Requires(post):	textutils
-Requires(post,preun):/sbin/chkconfig
-Requires(postun):	/usr/sbin/groupdel
-Requires(postun):	/usr/sbin/userdel
-%{!?with_db3:Requires:	db >= 4.1.25}
 Requires:	m4
-Requires:	procmail
 Requires:	pam >= 0.79.0
+Requires:	procmail
 Provides:	group(smmsp)
 Provides:	smtpdaemon
 Provides:	user(smmsp)
@@ -425,33 +426,33 @@ fi
 %dir /etc/smrsh
 %dir %{_sysconfdir}
 /var/log/statistics
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/sendmail.cf
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/sendmail.mc
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/submit.cf
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/submit.mc
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/local-host-names
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/aliases
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sendmail.cf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sendmail.mc
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/submit.cf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/submit.mc
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/local-host-names
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/aliases
 %{?with_pgsql:%{_sysconfdir}/bluelabs.mc}
 %attr(644,root,mail) %ghost %{_sysconfdir}/aliases.db
 %attr(770,root,smmsp) %dir /var/spool/clientmqueue
 %attr(750,root,mail) %dir /var/spool/mqueue
 
 %config %{_sysconfdir}/Makefile
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/access
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/access
 %ghost %{_sysconfdir}/access.db
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/domaintable
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/domaintable
 %ghost %{_sysconfdir}/domaintable.db
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/mailertable
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/mailertable
 %ghost %{_sysconfdir}/mailertable.db
-%config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/virtusertable
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/virtusertable
 %ghost %{_sysconfdir}/virtusertable.db
 %config(noreplace) %{_sysconfdir}/helpfile
 
 %attr(754,root,root) /etc/rc.d/init.d/sendmail
-%config(noreplace) %verify(not md5 size mtime) /etc/sysconfig/sendmail
-%config(noreplace) %verify(not md5 size mtime) /etc/sasl/Sendmail.conf
-%config(noreplace) %verify(not md5 size mtime) /etc/pam.d/smtp
-%attr(750,root,root) %config(noreplace) %verify(not md5 size mtime) /etc/monit/*.monitrc
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sendmail
+%config(noreplace) %verify(not md5 mtime size) /etc/sasl/Sendmail.conf
+%config(noreplace) %verify(not md5 mtime size) /etc/pam.d/smtp
+%attr(750,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/monit/*.monitrc
 
 %dir %{_datadir}/sendmail-cf
 %dir %{_datadir}/sendmail-cf/cf
