@@ -64,8 +64,6 @@ case "$1" in
 	fi
 	if [ ! -f /var/lock/subsys/sm-client ]; then
 		msg_starting sm-client
-		touch /var/run/sm-client.pid
-		chown smmsp:smmsp /var/run/sm-client.pid
 		daemon /usr/sbin/sendmail -L sm-msp-queue -Ac -q$SMQUEUE
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/sm-client
@@ -77,16 +75,16 @@ case "$1" in
 	if [ -f /var/lock/subsys/sendmail ]; then
 		# Stop daemons.
 		msg_stopping sendmail
-		killproc sendmail
-		rm -f /var/lock/subsys/sendmail
+		killproc --pidfile sendmail.pid sendmail
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/sendmail
 	else
 		msg_not_running sendmail
 	fi
 	if [ -f /var/lock/subsys/sm-client ]; then
 		msg_stopping sm-client
-		killproc sendmail
+		killproc --pidfile /var/spool/clientmqueue/sm-client.pid sendmail
 		RETVAL=$?
-		[ $RETVAL -eq 0 ] && rm -f /var/run/sm-client.pid
 		[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/sm-client
 	else
 		msg_not_running sm-client
