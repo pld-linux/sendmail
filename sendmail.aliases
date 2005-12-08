@@ -55,5 +55,8 @@ ftp-admin:	ftp
 # trap decode to catch security attacks
 decode:		root
 
+# Standard users added by PLD:
+stats:		root
+
 # Person who should get root's mail
 #root:		marc
