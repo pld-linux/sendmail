@@ -50,12 +50,12 @@ case "$1" in
 				makemap -v hash /etc/mail/$i < /etc/mail/$i >/dev/null 2>&1
 				[ $RETVAL -eq 0 ] && RETVAL=$?
 			fi
-		done 
+		done
 		[ $RETVAL -eq 0 ] && ok || fail
 		msg_starting sendmail
 		daemon /usr/sbin/sendmail $([ "$DAEMON" = "yes" ] && echo -bd) \
 					$([ -n "$QUEUE" ] && echo -q$QUEUE) \
-					$([ "$ENABLE_IPV6" = "yes" ] && 
+					$([ "$ENABLE_IPV6" = "yes" ] &&
 						echo -ODaemonPortOptions=Family=inet6 )
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/sendmail
