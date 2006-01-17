@@ -22,7 +22,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.13.3
-Release:	4
+Release:	5
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -56,7 +56,7 @@ Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
 BuildRequires:	cyrus-sasl-devel
 %{?with_db3:BuildRequires:	db3-devel}
 BuildRequires:	man
-%{?with_ldap:BuildRequires:	openldap-devel}
+%{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
 %{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 BuildRequires:	rpmbuild(macros) >= 1.202
