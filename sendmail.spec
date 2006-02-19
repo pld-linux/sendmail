@@ -7,7 +7,6 @@
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
 %bcond_without	tls	# without TLS (SSL) support
-%bcond_with	db3	# use db3 instead of db package
 %bcond_with	pgsql	# with PostgreSQL support (bluelabs)
 #
 Summary:	A widely used Mail Transport Agent (MTA)
@@ -21,12 +20,12 @@ Summary(ru):	Почтовый транспортный агент sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.13.3
-Release:	5
+Version:	8.13.5
+Release:	1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	2809fbf9c8b067947b650d0128928d05
+# Source0-md5:	f4550d8dcc55771f4a81e999c7d6df20
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
@@ -51,10 +50,8 @@ Patch4:		%{name}-m4path.patch
 Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
 Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
-%{!?with_db3:BuildRequires:	db-devel >= 4.1.25}
-%{!?with_db3:Requires:	db >= 4.1.25}
+BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	cyrus-sasl-devel
-%{?with_db3:BuildRequires:	db3-devel}
 BuildRequires:	man
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
 %{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
@@ -70,6 +67,7 @@ Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
+Requires:	db >= 4.1.25
 Requires:	m4
 Requires:	pam >= 0.79.0
 Requires:	procmail
