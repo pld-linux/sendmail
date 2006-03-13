@@ -50,16 +50,16 @@ Patch4:		%{name}-m4path.patch
 Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
 Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
-BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	cyrus-sasl-devel
+BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	man
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
 %{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
-BuildRequires:	rpmbuild(macros) >= 1.202
+BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(post):	awk
 Requires(post):	textutils
-Requires(post,preun):/sbin/chkconfig
+Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun):	rc-scripts >= 0.4.0.20
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
@@ -371,17 +371,11 @@ fi
 } > /dev/null 2>&1
 
 /sbin/chkconfig --add sendmail
-if [ -f /var/lock/subsys/sendmail ]; then
-	/etc/rc.d/init.d/sendmail restart >&2
-else
-	echo "Run \"/etc/rc.d/init.d/sendmail start\" to start sendmail daemon." >&2
-fi
+%service sendmail restart "sendmail daemon"
 
 %preun
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/sendmail ]; then
-		/etc/rc.d/init.d/sendmail stop >&2
-	fi
+	%service sendmail stop
 	/sbin/chkconfig --del sendmail
 fi
 
