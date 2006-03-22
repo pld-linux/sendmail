@@ -1,3 +1,5 @@
+# SECURITY:
+# - possible remote root; http://xforce.iss.net/xforce/alerts/id/216
 #
 # TODO:
 # - make sid-milter support:
