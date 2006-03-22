@@ -6,17 +6,17 @@
  
 +#define MAXHDRZ 512
 +
- static void	collecttimeout __P((int));
  static void	eatfrom __P((char *volatile, ENVELOPE *));
  static void	collect_doheader __P((ENVELOPE *));
-@@ -288,6 +290,7 @@
+ static SM_FILE_T *collect_dfopen __P((ENVELOPE *));
+@@ -283,6 +285,7 @@
  	register ENVELOPE *e;
  	bool rsetsize;
  {
 +	int hdrz = 0;
- 	register SM_FILE_T *volatile df;
- 	volatile bool ignrdot;
- 	volatile int dbto;
+ 	register SM_FILE_T *df;
+ 	bool ignrdot;
+ 	int dbto;
 @@ -613,6 +616,16 @@
  				mstate = MS_BODY;
  				goto nextstate;
