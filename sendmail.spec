@@ -5,6 +5,7 @@
 # - make sid-milter support:
 #   http://sourceforge.net/projects/sid-milter/
 #   http://www.sendmail.net/
+# - http://blue-labs.org/clue/bluelabs.patch-8.12.3 has been updated upstream
 #
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
@@ -22,12 +23,12 @@ Summary(ru):	Почтовый транспортный агент sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.13.5
+Version:	8.13.6
 Release:	1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	f4550d8dcc55771f4a81e999c7d6df20
+# Source0-md5:	484cca51f74b5e562b3cf119ceb2f900
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
