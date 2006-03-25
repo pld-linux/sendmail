@@ -21,7 +21,7 @@ Summary(ru):	Почтовый транспортный агент sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.13.1
+Version:	8.13.6
 Release:	1.1
 License:	BSD
 Group:		Networking/Daemons
