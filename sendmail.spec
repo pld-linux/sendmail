@@ -26,7 +26,7 @@ Release:	1.1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	5407db289086261d7e7a09920d2ea14e
+# Source0-md5:	484cca51f74b5e562b3cf119ceb2f900
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
