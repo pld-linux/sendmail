@@ -22,7 +22,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.13.6
-Release:	3
+Release:	4
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -320,8 +320,11 @@ mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
 mv -f doc/op/op.me .
 
-
 bzip2 -dc %{SOURCE4} | tar xf -
+
+# for perl-Sendmail-Milter
+install $OBJDIR/libsm/libsm.a $OBJDIR/libsmutil/libsmutil.a \
+	$RPM_BUILD_ROOT%{_libdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -462,4 +465,6 @@ fi
 %files devel
 %defattr(644,root,root,755)
 %{_libdir}/libmilter.a
+%{_libdir}/libsm.a
+%{_libdir}/libsmutil.a
 %{_includedir}/libmilter
