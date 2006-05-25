@@ -22,7 +22,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.13.6
-Release:	4
+Release:	5
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -91,6 +91,7 @@ Obsoletes:	zmailer
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/mail
+%define		specflags	-fPIC
 
 %description
 The Sendmail program is a very widely used Mail Transport Agent (MTA).
@@ -315,6 +316,9 @@ install %{SOURCE10} $RPM_BUILD_ROOT%{_sysconfdir}/mailertable
 install %{SOURCE11} $RPM_BUILD_ROOT%{_sysconfdir}/virtusertable
 install %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable
 install %{SOURCE14} $RPM_BUILD_ROOT/etc/monit/
+
+# make rpm strip possible
+chmod u+w $RPM_BUILD_ROOT{%{_bindir},%{_sbindir},%{_libdir}}/*
 
 mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
