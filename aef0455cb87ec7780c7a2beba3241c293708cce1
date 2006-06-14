@@ -1,0 +1,3 @@
+- fix in %files
+- one more fix in dtelnet patch, DESTDIR-related fix in makefile patch
+- added STARTTLS support
