@@ -1,0 +1,5 @@
+- added sample config files for mailtertable, access, virtusertable and
+  domaintable
+- fixed missing /etc/pam.d/smtp (required by /etc/sasl/Sendmail.conf)
+- relesase 3?
+- All changes made by Baseciq
