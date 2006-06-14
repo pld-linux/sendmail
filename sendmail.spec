@@ -1,9 +1,9 @@
-#
 # TODO:
 # - make sid-milter support:
 #   http://sourceforge.net/projects/sid-milter/
 #   http://www.sendmail.net/
 # - http://blue-labs.org/clue/bluelabs.patch-8.12.3 has been updated upstream
+# - move compilation from install to build section, fix re-entrancy of install
 #
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
@@ -21,12 +21,12 @@ Summary(ru):	Почтовый транспортный агент sendmail
 Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.13.6
-Release:	5
+Version:	8.13.7
+Release:	1
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	484cca51f74b5e562b3cf119ceb2f900
+# Source0-md5:	5327e065cb0c1919122c8cecbeddbc28
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
@@ -296,7 +296,7 @@ for f in hoststat mailq newaliases purgestat ; do
 	ln -sf /usr/sbin/sendmail $RPM_BUILD_ROOT%{_bindir}/${f}
 done
 
-for map in virtusertable access domaintable mailertable ; do
+for map in virtusertable access domaintable mailertable; do
 	touch $RPM_BUILD_ROOT%{_sysconfdir}/${map}
 	$RPM_BUILD_ROOT%{_sbindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf hash \
 		$RPM_BUILD_ROOT%{_sysconfdir}/${map}.db < $RPM_BUILD_ROOT%{_sysconfdir}/${map}
@@ -318,7 +318,7 @@ install %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable
 install %{SOURCE14} $RPM_BUILD_ROOT/etc/monit/
 
 # make rpm strip possible
-chmod u+w $RPM_BUILD_ROOT{%{_bindir},%{_sbindir},%{_libdir}}/*
+%{_fixperms} $RPM_BUILD_ROOT{%{_bindir},%{_sbindir},%{_libdir}}
 
 mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
