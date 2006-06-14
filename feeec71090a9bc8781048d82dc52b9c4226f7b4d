@@ -1,0 +1,1 @@
+- removed /etc/pam.d dir from package; new %doc; release 5
