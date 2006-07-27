@@ -51,6 +51,7 @@ Patch4:		%{name}-m4path.patch
 Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
 Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
+URL:		http://www.sendmail.org/
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	man
