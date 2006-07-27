@@ -57,7 +57,7 @@ BuildRequires:	man
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
 %{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
-BuildRequires:	rpmbuild(macros) >= 1.268
+BuildRequires:	rpmbuild(macros) >= 1.310
 Requires(post):	awk
 Requires(post):	textutils
 Requires(post,preun):	/sbin/chkconfig
@@ -197,7 +197,7 @@ install %{SOURCE7} config.m4
 echo "define(\`confCC', \`%{__cc}')" >> config.m4
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
 echo "APPENDDEF(\`confINCDIRS', \`-I/usr/include/sasl')" >> config.m4
-echo "define(\`confLIBSEARCHPATH', \`/%{_lib} /usr/%{_lib}')" >> config.m4
+echo "define(\`confLIBSEARCHPATH', \`/%{_lib} %{_prefix}/%{_lib}')" >> config.m4
 echo "define(\`confLIBSEARCH', \`db resolv')" >> config.m4
 %if 0%{!?debug:1}
 echo "define(\`confLDOPTS', \`-s')" >> config.m4
@@ -289,11 +289,11 @@ echo "# local-host-names - include all aliases for your machine here." \
 	> $RPM_BUILD_ROOT%{_sysconfdir}/local-host-names
 #"vim ruuls
 
-ln -sf /usr/sbin/sendmail $RPM_BUILD_ROOT%{_prefix}/lib/sendmail
+ln -sf %{_sbindir}/sendmail $RPM_BUILD_ROOT%{_prefix}/lib/sendmail
 
 # dangling symlinks
-for f in hoststat mailq newaliases purgestat ; do
-	ln -sf /usr/sbin/sendmail $RPM_BUILD_ROOT%{_bindir}/${f}
+for f in hoststat mailq newaliases purgestat; do
+	ln -sf %{_sbindir}/sendmail $RPM_BUILD_ROOT%{_bindir}/${f}
 done
 
 for map in virtusertable access domaintable mailertable; do
@@ -316,9 +316,6 @@ install %{SOURCE10} $RPM_BUILD_ROOT%{_sysconfdir}/mailertable
 install %{SOURCE11} $RPM_BUILD_ROOT%{_sysconfdir}/virtusertable
 install %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable
 install %{SOURCE14} $RPM_BUILD_ROOT/etc/monit/
-
-# make rpm strip possible
-%{_fixperms} $RPM_BUILD_ROOT{%{_bindir},%{_sbindir},%{_libdir}}
 
 mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
