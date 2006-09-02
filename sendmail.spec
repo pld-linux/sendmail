@@ -271,7 +271,7 @@ ln -sf %{_sbindir}/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
 # install the cf files
 cd cf
 rm -f cf/{Build,Makefile} feature/*~
-cp -ar * $RPM_BUILD_ROOT%{_datadir}/sendmail-cf
+cp -a * $RPM_BUILD_ROOT%{_datadir}/sendmail-cf
 cd -
 
 # sendmail.{cf,mc}
