@@ -4,6 +4,7 @@
 #   http://www.sendmail.net/
 # - http://blue-labs.org/clue/bluelabs.patch-8.12.3 has been updated upstream
 # - move compilation from install to build section, fix re-entrancy of install
+# - add tests bcond and/or disable tests tha fail on (AC-)builders
 #
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
@@ -59,6 +60,7 @@ BuildRequires:	man
 %{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 BuildRequires:	rpmbuild(macros) >= 1.310
+BuildRequires:	sed >= 4.0
 Requires(post):	awk
 Requires(post):	textutils
 Requires(post,preun):	/sbin/chkconfig
@@ -120,7 +122,7 @@ recibir mensajes a través de la Internet.
 Sendmail est un agent de transport de courrier, qui est le programme
 transférent le courrier d'une machine à l'autre. Sendmail implémente
 une facilité générale de routage de courrier entre les réseaux, permet
-l'\"aliasing\" et le \"forwarding\", un routage automatique sur les
+l'"aliasing" et le "forwarding", un routage automatique sur les
 passerelles du réseau, et une configuration flexible.
 
 %description -l ko
@@ -191,7 +193,7 @@ install %{SOURCE7} config.m4
 
 # Ac-specific hack - ac-i386 builder has not fully operational shm
 %ifarch i386 i586 i686 amd64
-%{__perl} -pi -e 's/^(smtest.*t-shm)/dnl $1/' libsm/Makefile.m4
+%{__sed} -i -e 's/^\(smtest.*t-shm\)/dnl \1/' libsm/Makefile.m4
 %endif
 
 %build
