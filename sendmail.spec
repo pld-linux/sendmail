@@ -192,8 +192,9 @@ sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 install %{SOURCE7} config.m4
 
 # Ac-specific hack - ac-i386 builder has not fully operational shm
-%ifarch i386 i586 i686 amd64
+%ifarch i386 i586 amd64
 %{__sed} -i -e 's/^\(smtest.*t-shm\)/dnl \1/' libsm/Makefile.m4
+%{__sed} -i -e 's/^\(smtest.*t-sem\)/dnl \1/' libsm/Makefile.m4
 %endif
 
 %build
