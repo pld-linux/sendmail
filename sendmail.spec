@@ -23,7 +23,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.13.8
-Release:	2
+Release:	3
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -459,7 +459,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sendmail
 %config(noreplace) %verify(not md5 mtime size) /etc/sasl/Sendmail.conf
 %config(noreplace) %verify(not md5 mtime size) /etc/pam.d/smtp
-%attr(750,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/monit/*.monitrc
+%config(noreplace) %verify(not md5 mtime size) /etc/monit/*.monitrc
 
 %dir %{_datadir}/sendmail-cf
 %dir %{_datadir}/sendmail-cf/cf
