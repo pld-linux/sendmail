@@ -169,6 +169,8 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 Summary:	Header files and static libmilter library
 Summary(pl):	Pliki nagЁСwkowe i statyczna biblioteka libmilter
 Group:		Development/Libraries
+Provides:	sendmail-devel
+Obsoletes:	sendmail-devel
 
 %description -n libmilter-devel
 Header files and static libmilter library.
