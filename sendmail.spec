@@ -23,7 +23,7 @@ Summary(tr):	Elektronik posta hizmetleri sunucusu
 Summary(uk):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.13.8
-Release:	4
+Release:	5
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -165,16 +165,15 @@ Sendmail - це Mail Transport Agent, програма що пересила╓ пошту з
 маршрутизац╕╖ пошти, aliasing, forwarding, автоматичну маршрутизац╕ю
 для мережевих шлюз╕в та гнучкий механ╕зм маршрутизац╕╖.
 
-%package devel
+%package -n libmilter-devel
 Summary:	Header files and static libmilter library
 Summary(pl):	Pliki nagЁСwkowe i statyczna biblioteka libmilter
 Group:		Development/Libraries
-Provides:	/usr/lib/libmilter.a
 
-%description devel
+%description -n libmilter-devel
 Header files and static libmilter library.
 
-%description devel -l pl
+%description -n libmilter-devel -l pl
 Pliki nagЁСwkowe i statyczna biblioteka libmilter.
 
 %prep
@@ -474,7 +473,7 @@ fi
 %{_datadir}/sendmail-cf/sh/makeinfo.sh
 %{_datadir}/sendmail-cf/siteconfig
 
-%files devel
+%files -n libmilter-devel
 %defattr(644,root,root,755)
 %{_libdir}/libmilter.a
 %{_libdir}/libsm.a
