@@ -12,15 +12,15 @@
 %bcond_with	pgsql	# with PostgreSQL support (bluelabs)
 #
 Summary:	A widely used Mail Transport Agent (MTA)
-Summary(de.UTF-8):   sendmail-Mail-Übertragungsagent
-Summary(es.UTF-8):   Sendmail - agente de transporte de mail
-Summary(fr.UTF-8):   Agent de transport de courrier sendmail
-Summary(ko.UTF-8):   SMTP_AUTH와 TLS를 지원하는 Mail 전송 프로그램(MTA)
-Summary(pl.UTF-8):   Sendmail - serwer poczty elektronicznej
-Summary(pt_BR.UTF-8):   Sendmail - agente de transporte de mail
-Summary(ru.UTF-8):   Почтовый транспортный агент sendmail
-Summary(tr.UTF-8):   Elektronik posta hizmetleri sunucusu
-Summary(uk.UTF-8):   Поштовий транспортний агент sendmail
+Summary(de.UTF-8):	sendmail-Mail-Übertragungsagent
+Summary(es.UTF-8):	Sendmail - agente de transporte de mail
+Summary(fr.UTF-8):	Agent de transport de courrier sendmail
+Summary(ko.UTF-8):	SMTP_AUTH와 TLS를 지원하는 Mail 전송 프로그램(MTA)
+Summary(pl.UTF-8):	Sendmail - serwer poczty elektronicznej
+Summary(pt_BR.UTF-8):	Sendmail - agente de transporte de mail
+Summary(ru.UTF-8):	Почтовый транспортный агент sendmail
+Summary(tr.UTF-8):	Elektronik posta hizmetleri sunucusu
+Summary(uk.UTF-8):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.13.8
 Release:	5
@@ -167,7 +167,7 @@ Sendmail - це Mail Transport Agent, програма що пересилає �
 
 %package -n libmilter-devel
 Summary:	Header files and static libmilter library
-Summary(pl.UTF-8):   Pliki nagłówkowe i statyczna biblioteka libmilter
+Summary(pl.UTF-8):	Pliki nagłówkowe i statyczna biblioteka libmilter
 Group:		Development/Libraries
 Provides:	sendmail-devel
 Obsoletes:	sendmail-devel
