@@ -12,18 +12,18 @@
 %bcond_with	pgsql	# with PostgreSQL support (bluelabs)
 #
 Summary:	A widely used Mail Transport Agent (MTA)
-Summary(de.UTF-8):	sendmail-Mail-Ãœbertragungsagent
-Summary(es.UTF-8):	Sendmail - agente de transporte de mail
-Summary(fr.UTF-8):	Agent de transport de courrier sendmail
-Summary(ko.UTF-8):	SMTP_AUTHì™€ TLSë¥¼ ì§€ì›í•˜ëŠ” Mail ì „ì†¡ í”„ë¡œê·¸ë¨(MTA)
-Summary(pl.UTF-8):	Sendmail - serwer poczty elektronicznej
-Summary(pt_BR.UTF-8):	Sendmail - agente de transporte de mail
-Summary(ru.UTF-8):	ĞŸĞ¾Ñ‡Ñ‚Ğ¾Ğ²Ñ‹Ğ¹ Ñ‚Ñ€Ğ°Ğ½ÑĞ¿Ğ¾Ñ€Ñ‚Ğ½Ñ‹Ğ¹ Ğ°Ğ³ĞµĞ½Ñ‚ sendmail
-Summary(tr.UTF-8):	Elektronik posta hizmetleri sunucusu
-Summary(uk.UTF-8):	ĞŸĞ¾ÑˆÑ‚Ğ¾Ğ²Ğ¸Ğ¹ Ñ‚Ñ€Ğ°Ğ½ÑĞ¿Ğ¾Ñ€Ñ‚Ğ½Ğ¸Ğ¹ Ğ°Ğ³ĞµĞ½Ñ‚ sendmail
+Summary(de):	sendmail-Mail-Übertragungsagent
+Summary(es):	Sendmail - agente de transporte de mail
+Summary(fr):	Agent de transport de courrier sendmail
+Summary(ko):	SMTP_AUTH¿Í TLS¸¦ Áö¿øÇÏ´Â Mail Àü¼Û ÇÁ·Î±×·¥(MTA)
+Summary(pl):	Sendmail - serwer poczty elektronicznej
+Summary(pt_BR):	Sendmail - agente de transporte de mail
+Summary(ru):	ğÏŞÔÏ×ÙÊ ÔÒÁÎÓĞÏÒÔÎÙÊ ÁÇÅÎÔ sendmail
+Summary(tr):	Elektronik posta hizmetleri sunucusu
+Summary(uk):	ğÏÛÔÏ×ÉÊ ÔÒÁÎÓĞÏÒÔÎÉÊ ÁÇÅÎÔ sendmail
 Name:		sendmail
 Version:	8.13.8
-Release:	5
+Release:	6
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -103,71 +103,71 @@ program, which you use to read your e-mail. Sendmail is a
 behind-the-scenes program which actually moves your e-mail over
 networks or the Internet to where you want it to go.
 
-%description -l de.UTF-8
-Sendmail Ã¼bertrÃ¤gt Mails zwischen Rechnern. Es implementiert eine
-allgemeine Mail-Routing-Funktion Ã¼ber das Netzwerk mit Aliasing und
+%description -l de
+Sendmail überträgt Mails zwischen Rechnern. Es implementiert eine
+allgemeine Mail-Routing-Funktion über das Netzwerk mit Aliasing und
 Weiterleiten von Nachrichten, automatischem Routing an
-Netzwerk-Gateways und flexible Konfiguration. Wenn Sie E-Mails Ã¼ber
-das Internet senden und empfangen mÃ¶chten, brauchen Sie sendmail.
+Netzwerk-Gateways und flexible Konfiguration. Wenn Sie E-Mails über
+das Internet senden und empfangen möchten, brauchen Sie sendmail.
 
-%description -l es.UTF-8
-sendmail es un agente de transporte de correo electrÃ³nico, que mueve
-mensajes entre mÃ¡quinas. Implementa facilidades de internetwork y
-rutado, caracterizando cambio de nombres (aliases) y envÃ­o a nuevas
-direcciones ( forwarding ), rutado automÃ¡tico para gateways de la red
-y configuraciÃ³n flexible. NecesitarÃ¡s del sendmail si deseas enviar y
-recibir mensajes a travÃ©s de la Internet.
+%description -l es
+sendmail es un agente de transporte de correo electrónico, que mueve
+mensajes entre máquinas. Implementa facilidades de internetwork y
+rutado, caracterizando cambio de nombres (aliases) y envío a nuevas
+direcciones ( forwarding ), rutado automático para gateways de la red
+y configuración flexible. Necesitarás del sendmail si deseas enviar y
+recibir mensajes a través de la Internet.
 
-%description -l fr.UTF-8
+%description -l fr
 Sendmail est un agent de transport de courrier, qui est le programme
-transfÃ©rent le courrier d'une machine Ã  l'autre. Sendmail implÃ©mente
-une facilitÃ© gÃ©nÃ©rale de routage de courrier entre les rÃ©seaux, permet
+transférent le courrier d'une machine à l'autre. Sendmail implémente
+une facilité générale de routage de courrier entre les réseaux, permet
 l'"aliasing" et le "forwarding", un routage automatique sur les
-passerelles du rÃ©seau, et une configuration flexible.
+passerelles du réseau, et une configuration flexible.
 
-%description -l ko.UTF-8
-Sendamilì€ ë§¤ìš° ë„ë¦¬ ì‚¬ìš©ë˜ëŠ” Mail ì „ì†¡ í”„ë¡œê·¸ë¨ì´ë‹¤(MTA). Mail ì „ì†¡
-í”„ë¡œê·¸ë¨ë“¤(MTA)ì€ ì–´ë– í•œ machineì—ì„œ ë‹¤ë¥¸ machineìœ¼ë¡œ ë©”ì¼ì„ ë³´ë‚´ë©°
-Sendmailì€ e-mailì„ ì½ê¸°ìœ„í•´ ì‚¬ìš©í•˜ëŠ” client programì€ ì•„ë‹ˆë‹¤.
-Sendamilì€ ì›í•˜ëŠ” ê³³ìœ¼ë¡œ Internetì´ë‚˜ Networkë¥¼ í†µí•´ e-mailì„ ë³´ë‚´ëŠ”
-ì—­í• ì„ í•˜ëŠ” backgrondì—ì„œ ì‘ì—…ì„ í•˜ëŠ” í”„ë¡œê·¸ë¨ì´ë‹¤.
+%description -l ko
+SendamilÀº ¸Å¿ì ³Î¸® »ç¿ëµÇ´Â Mail Àü¼Û ÇÁ·Î±×·¥ÀÌ´Ù(MTA). Mail Àü¼Û
+ÇÁ·Î±×·¥µé(MTA)Àº ¾î¶°ÇÑ machine¿¡¼­ ´Ù¸¥ machineÀ¸·Î ¸ŞÀÏÀ» º¸³»¸ç
+SendmailÀº e-mailÀ» ÀĞ±âÀ§ÇØ »ç¿ëÇÏ´Â client programÀº ¾Æ´Ï´Ù.
+SendamilÀº ¿øÇÏ´Â °÷À¸·Î InternetÀÌ³ª Network¸¦ ÅëÇØ e-mailÀ» º¸³»´Â
+¿ªÇÒÀ» ÇÏ´Â backgrond¿¡¼­ ÀÛ¾÷À» ÇÏ´Â ÇÁ·Î±×·¥ÀÌ´Ù.
 
-%description -l pl.UTF-8
-Sendmail jest programem umoÅ¼liwiajÄ…cym wymianÄ™ poczty elektronicznej
-miÄ™dzy komputerami w sieci (MTA). Zajmuje siÄ™ przekazywaniem poczty
-elektronicznej miÄ™dzy bramkami pocztowymi i dostarczaniem przesyÅ‚ek na
-konta docelowe. Bardzo dobrze obsÅ‚uguje aliasy pocztowe a jego
-dodatkowym atutem jest prosta konfiguracja. DziÄ™ki rozbudowanym
-moÅ¼liwoÅ›ciom konfiguracyjnym jest w stanie dostarczaÄ‡ przesyÅ‚ki za
-poÅ›rednictwem protokoÅ‚Ã³w: SMTP, ESMTP, UUCP, X.400 i innych.
+%description -l pl
+Sendmail jest programem umo¿liwiaj±cym wymianê poczty elektronicznej
+miêdzy komputerami w sieci (MTA). Zajmuje siê przekazywaniem poczty
+elektronicznej miêdzy bramkami pocztowymi i dostarczaniem przesy³ek na
+konta docelowe. Bardzo dobrze obs³uguje aliasy pocztowe a jego
+dodatkowym atutem jest prosta konfiguracja. Dziêki rozbudowanym
+mo¿liwo¶ciom konfiguracyjnym jest w stanie dostarczaæ przesy³ki za
+po¶rednictwem protoko³ów: SMTP, ESMTP, UUCP, X.400 i innych.
 
-%description -l pt_BR.UTF-8
-O sendmail Ã© um agente de transporte de correio eletrÃ´nico, que move
-mensagens entre mÃ¡quinas. Ele implementa facilidades de internetwork e
+%description -l pt_BR
+O sendmail é um agente de transporte de correio eletrônico, que move
+mensagens entre máquinas. Ele implementa facilidades de internetwork e
 roteamento, caracterizando troca de nomes (aliases) e remessa a novos
-endereÃ§os ( forwarding ), roteamento automÃ¡tico para gateways da rede
-e configuraÃ§Ã£o flexÃ­vel.
+endereços ( forwarding ), roteamento automático para gateways da rede
+e configuração flexível.
 
-%description -l ru.UTF-8
-Sendmail - ÑÑ‚Ğ¾ Mail Transport Agent, Ğ¿Ñ€Ğ¾Ğ³Ñ€Ğ°Ğ¼Ğ¼Ğ° Ğ¿ĞµÑ€ĞµÑÑ‹Ğ»Ğ°ÑÑ‰Ğ°Ñ Ğ¿Ğ¾Ñ‡Ñ‚Ñƒ Ñ
-Ğ¼Ğ°ÑˆĞ¸Ğ½Ñ‹ Ğ½Ğ° Ğ¼Ğ°ÑˆĞ¸Ğ½Ñƒ. Sendmail Ğ¿Ñ€ĞµĞ´Ğ¾ÑÑ‚Ğ°Ğ²Ğ»ÑĞµÑ‚ ÑÑ‚Ğ°Ğ½Ğ´Ğ°Ñ€Ñ‚Ğ½Ñ‹Ğµ ÑÑ€ĞµĞ´ÑÑ‚Ğ²Ğ°
-Ğ¼ĞµĞ¶ÑĞµÑ‚ĞµĞ²Ğ¾Ğ¹ Ğ¼Ğ°Ñ€ÑˆÑ€ÑƒÑ‚Ğ¸Ğ·Ğ°Ñ†Ğ¸Ğ¸ Ğ¿Ğ¾Ñ‡Ñ‚Ñ‹, aliasing, forwarding, Ğ°Ğ²Ñ‚Ğ¾Ğ¼Ğ°Ñ‚Ğ¸Ñ‡ĞµÑĞºÑƒÑ
-Ğ¼Ğ°Ñ€ÑˆÑ€ÑƒÑ‚Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ Ğ´Ğ»Ñ ÑĞµÑ‚ĞµĞ²Ñ‹Ñ… ÑˆĞ»ÑĞ·Ğ¾Ğ² Ğ¸ Ğ³Ğ¸Ğ±ĞºĞ¸Ğ¹ Ğ¼ĞµÑ…Ğ°Ğ½Ğ¸Ğ·Ğ¼ ĞºĞ¾Ğ½Ñ„Ğ¸Ğ³ÑƒÑ€Ğ°Ñ†Ğ¸Ğ¸.
+%description -l ru
+Sendmail - ÜÔÏ Mail Transport Agent, ĞÒÏÇÒÁÍÍÁ ĞÅÒÅÓÙÌÁÀİÁÑ ĞÏŞÔÕ Ó
+ÍÁÛÉÎÙ ÎÁ ÍÁÛÉÎÕ. Sendmail ĞÒÅÄÏÓÔÁ×ÌÑÅÔ ÓÔÁÎÄÁÒÔÎÙÅ ÓÒÅÄÓÔ×Á
+ÍÅÖÓÅÔÅ×ÏÊ ÍÁÒÛÒÕÔÉÚÁÃÉÉ ĞÏŞÔÙ, aliasing, forwarding, Á×ÔÏÍÁÔÉŞÅÓËÕÀ
+ÍÁÒÛÒÕÔÉÚÁÃÉÀ ÄÌÑ ÓÅÔÅ×ÙÈ ÛÌÀÚÏ× É ÇÉÂËÉÊ ÍÅÈÁÎÉÚÍ ËÏÎÆÉÇÕÒÁÃÉÉ.
 
-%description -l tr.UTF-8
-Sendmail, bir mektubu bir makineden diÄŸerine taÅŸÄ±r. Pek Ã§ok davranÄ±ÅŸÄ±
-ayarlanabilir. Internet Ã¼zerinden mektup almak veya gÃ¶ndermek
-istiyorsanÄ±z bu pakete gereksiniminiz olacaktÄ±r.
+%description -l tr
+Sendmail, bir mektubu bir makineden diğerine taşır. Pek çok davranışı
+ayarlanabilir. Internet üzerinden mektup almak veya göndermek
+istiyorsanız bu pakete gereksiniminiz olacaktır.
 
-%description -l uk.UTF-8
-Sendmail - Ñ†Ğµ Mail Transport Agent, Ğ¿Ñ€Ğ¾Ğ³Ñ€Ğ°Ğ¼Ğ° Ñ‰Ğ¾ Ğ¿ĞµÑ€ĞµÑĞ¸Ğ»Ğ°Ñ” Ğ¿Ğ¾ÑˆÑ‚Ñƒ Ğ·
-Ğ¼Ğ°ÑˆĞ¸Ğ½Ğ¸ Ğ½Ğ° Ğ¼Ğ°ÑˆĞ¸Ğ½Ñƒ. Sendmail Ğ½Ğ°Ğ´Ğ°Ñ” ÑÑ‚Ğ°Ğ½Ğ´Ğ°Ñ€Ñ‚Ğ½Ñ– Ğ·Ğ°ÑĞ¾Ğ±Ğ¸ Ğ¼Ñ–Ğ¶Ğ¼ĞµÑ€ĞµĞ¶ĞµĞ²Ğ¾Ñ—
-Ğ¼Ğ°Ñ€ÑˆÑ€ÑƒÑ‚Ğ¸Ğ·Ğ°Ñ†Ñ–Ñ— Ğ¿Ğ¾ÑˆÑ‚Ğ¸, aliasing, forwarding, Ğ°Ğ²Ñ‚Ğ¾Ğ¼Ğ°Ñ‚Ğ¸Ñ‡Ğ½Ñƒ Ğ¼Ğ°Ñ€ÑˆÑ€ÑƒÑ‚Ğ¸Ğ·Ğ°Ñ†Ñ–Ñ
-Ğ´Ğ»Ñ Ğ¼ĞµÑ€ĞµĞ¶ĞµĞ²Ğ¸Ñ… ÑˆĞ»ÑĞ·Ñ–Ğ² Ñ‚Ğ° Ğ³Ğ½ÑƒÑ‡ĞºĞ¸Ğ¹ Ğ¼ĞµÑ…Ğ°Ğ½Ñ–Ğ·Ğ¼ Ğ¼Ğ°Ñ€ÑˆÑ€ÑƒÑ‚Ğ¸Ğ·Ğ°Ñ†Ñ–Ñ—.
+%description -l uk
+Sendmail - ÃÅ Mail Transport Agent, ĞÒÏÇÒÁÍÁ İÏ ĞÅÒÅÓÉÌÁ¤ ĞÏÛÔÕ Ú
+ÍÁÛÉÎÉ ÎÁ ÍÁÛÉÎÕ. Sendmail ÎÁÄÁ¤ ÓÔÁÎÄÁÒÔÎ¦ ÚÁÓÏÂÉ Í¦ÖÍÅÒÅÖÅ×Ï§
+ÍÁÒÛÒÕÔÉÚÁÃ¦§ ĞÏÛÔÉ, aliasing, forwarding, Á×ÔÏÍÁÔÉŞÎÕ ÍÁÒÛÒÕÔÉÚÁÃ¦À
+ÄÌÑ ÍÅÒÅÖÅ×ÉÈ ÛÌÀÚ¦× ÔÁ ÇÎÕŞËÉÊ ÍÅÈÁÎ¦ÚÍ ÍÁÒÛÒÕÔÉÚÁÃ¦§.
 
 %package -n libmilter-devel
 Summary:	Header files and static libmilter library
-Summary(pl.UTF-8):	Pliki nagÅ‚Ã³wkowe i statyczna biblioteka libmilter
+Summary(pl):	Pliki nag³ówkowe i statyczna biblioteka libmilter
 Group:		Development/Libraries
 Provides:	sendmail-devel
 Obsoletes:	sendmail-devel
@@ -175,8 +175,8 @@ Obsoletes:	sendmail-devel
 %description -n libmilter-devel
 Header files and static libmilter library.
 
-%description -n libmilter-devel -l pl.UTF-8
-Pliki nagÅ‚Ã³wkowe i statyczna biblioteka libmilter.
+%description -n libmilter-devel -l pl
+Pliki nag³ówkowe i statyczna biblioteka libmilter.
 
 %prep
 %setup -q
