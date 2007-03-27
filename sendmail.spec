@@ -23,7 +23,7 @@ Summary(tr.UTF-8):	Elektronik posta hizmetleri sunucusu
 Summary(uk.UTF-8):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.13.8
-Release:	5
+Release:	6
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -329,6 +329,8 @@ install %{SOURCE11} $RPM_BUILD_ROOT%{_sysconfdir}/virtusertable
 install %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable
 install %{SOURCE14} $RPM_BUILD_ROOT/etc/monit/
 
+touch $RPM_BUILD_ROOT/etc/security/blacklist.smtp
+
 mv -f smrsh/README README.smrsh
 mv -f cf/README README.cf
 mv -f doc/op/op.me .
@@ -461,6 +463,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sendmail
 %config(noreplace) %verify(not md5 mtime size) /etc/sasl/Sendmail.conf
 %config(noreplace) %verify(not md5 mtime size) /etc/pam.d/smtp
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/security/blacklist.smtp
 %config(noreplace) %verify(not md5 mtime size) /etc/monit/*.monitrc
 
 %dir %{_datadir}/sendmail-cf
