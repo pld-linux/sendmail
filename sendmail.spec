@@ -246,13 +246,13 @@ m4 pld.mc > pld.cf
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_mandir}/man{1,5,8} \
-	$RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,monit,sysconfig,sasl,smrsh} \
+	$RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,monit,sysconfig,sasl,smrsh,security} \
 	$RPM_BUILD_ROOT{%{_bindir},%{_sbindir},%{_prefix}/lib} \
 	$RPM_BUILD_ROOT{%{_datadir}/sendmail-cf,%{_libdir}} \
 	$RPM_BUILD_ROOT/var/{log,spool/mqueue} \
 	$RPM_BUILD_ROOT{%{_sysconfdir},%{_includedir}}
 
-OBJDIR=obj.$(uname -s).$(uname -r).$(arch)
+OBJDIR=obj.$(uname -s).$(uname -r).%{_target_base_arch}
 
 IDNU=`id -nu`
 IDNG=`id -ng`
