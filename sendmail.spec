@@ -78,7 +78,6 @@ Requires:	procmail
 Provides:	group(smmsp)
 Provides:	smtpdaemon
 Provides:	user(smmsp)
-Provides:	/usr/lib/sendmail
 Obsoletes:	courier
 Obsoletes:	exim
 Obsoletes:	masqmail
