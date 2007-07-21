@@ -61,6 +61,9 @@ BuildRequires:	man
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 BuildRequires:	rpmbuild(macros) >= 1.310
 BuildRequires:	sed >= 4.0
+%ifarch sparc
+BuildRequires:	sparc32
+%endif
 Requires(post):	awk
 Requires(post):	textutils
 Requires(post,preun):	/sbin/chkconfig
@@ -233,13 +236,19 @@ echo "APPENDDEF(\`confENVDEF', \`-D_FFR_SMTP_SSL')" >> config.m4
 
 echo "APPENDDEF(\`confENVDEF', \`-DMILTER')" >> config.m4
 
-cd sendmail	&& sh Build -f ../config.m4
-cd ../mailstats	&& sh Build -f ../config.m4
-cd ../rmail	&& sh Build -f ../config.m4
-cd ../makemap	&& sh Build -f ../config.m4
-cd ../praliases	&& sh Build -f ../config.m4
-cd ../smrsh	&& sh Build -f ../config.m4
-cd ../libmilter	&& sh Build -f ../config.m4
+%ifarch sparc
+%define		Build		sparc32 sh Build
+%else
+%define		Build		sh Build
+%endif
+
+cd sendmail	&& %{Build} -f ../config.m4
+cd ../mailstats	&& %{Build} -f ../config.m4
+cd ../rmail	&& %{Build} -f ../config.m4
+cd ../makemap	&& %{Build} -f ../config.m4
+cd ../praliases	&& %{Build} -f ../config.m4
+cd ../smrsh	&& %{Build} -f ../config.m4
+cd ../libmilter	&& %{Build} -f ../config.m4
 cd ../cf/cf
 m4 pld.mc > pld.cf
 
