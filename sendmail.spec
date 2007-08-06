@@ -23,7 +23,7 @@ Summary(tr.UTF-8):	Elektronik posta hizmetleri sunucusu
 Summary(uk.UTF-8):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.13.8
-Release:	8
+Release:	9
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -81,19 +81,9 @@ Requires:	procmail
 Provides:	group(smmsp)
 Provides:	smtpdaemon
 Provides:	user(smmsp)
-Obsoletes:	courier
-Obsoletes:	exim
-Obsoletes:	masqmail
-Obsoletes:	nullmailer
-Obsoletes:	omta
-Obsoletes:	postfix
-Obsoletes:	qmail
 Obsoletes:	sendmail-cf
 Obsoletes:	sendmail-doc
-Obsoletes:	smail
 Obsoletes:	smtpdaemon
-Obsoletes:	ssmtp
-Obsoletes:	zmailer
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/mail
