@@ -23,7 +23,7 @@ Summary(tr.UTF-8):	Elektronik posta hizmetleri sunucusu
 Summary(uk.UTF-8):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.13.8
-Release:	9
+Release:	10
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -251,7 +251,7 @@ install -d $RPM_BUILD_ROOT%{_mandir}/man{1,5,8} \
 	$RPM_BUILD_ROOT/var/{log,spool/mqueue} \
 	$RPM_BUILD_ROOT{%{_sysconfdir},%{_includedir}}
 
-OBJDIR=obj.$(uname -s).$(uname -r).%{_target_base_arch}
+OBJDIR=obj.$(uname -s).$(uname -r).$(uname -m)
 
 IDNU=`id -nu`
 IDNG=`id -ng`
