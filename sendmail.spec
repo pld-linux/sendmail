@@ -200,7 +200,11 @@ install %{SOURCE7} config.m4
 
 %build
 echo "define(\`confCC', \`%{__cc}')" >> config.m4
+%ifarch sparc64
+echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DSM_CONF_SEM=0 -DNETINET6')" >> config.m4
+%else
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
+%endif
 echo "APPENDDEF(\`confINCDIRS', \`-I/usr/include/sasl')" >> config.m4
 echo "define(\`confLIBSEARCHPATH', \`/%{_lib} %{_prefix}/%{_lib}')" >> config.m4
 echo "define(\`confLIBSEARCH', \`db resolv')" >> config.m4
