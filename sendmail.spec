@@ -200,7 +200,7 @@ install %{SOURCE7} config.m4
 
 %build
 echo "define(\`confCC', \`%{__cc}')" >> config.m4
-%ifarch sparc64
+%ifarch sparc sparc64
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DSM_CONF_SEM=0 -DNETINET6')" >> config.m4
 %else
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
@@ -255,7 +255,11 @@ install -d $RPM_BUILD_ROOT%{_mandir}/man{1,5,8} \
 	$RPM_BUILD_ROOT/var/{log,spool/mqueue} \
 	$RPM_BUILD_ROOT{%{_sysconfdir},%{_includedir}}
 
-OBJDIR=obj.$(uname -s).$(uname -r).$(uname -m)
+OBJDIR=obj.$(uname -s).$(uname -r).$(\
+%ifarch sparc
+sparc32 \
+%endif
+uname -m)
 
 IDNU=`id -nu`
 IDNG=`id -ng`
