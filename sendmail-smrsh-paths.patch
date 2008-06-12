@@ -27,7 +27,7 @@
 -As root, install smrsh in /usr/libexec.  Using the Build script:
 +As root, install smrsh in /usr/sbin.  Using the Build script:
  
- 	host.domain# sh Build install
+ 	host.domain# sh ./Build install
  
 -For manual installation: install smrsh in the /usr/libexec
 +For manual installation: install smrsh in the /usr/sbin
