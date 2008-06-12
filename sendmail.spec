@@ -23,7 +23,7 @@ Summary(tr.UTF-8):	Elektronik posta hizmetleri sunucusu
 Summary(uk.UTF-8):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.14.3
-Release:	1
+Release:	2
 License:	BSD
 Group:		Networking/Daemons
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -43,7 +43,6 @@ Source10:	%{name}.mailertable
 Source11:	%{name}.virtusertable
 Source12:	%{name}.domaintable
 Source13:	%{name}-smtp.pamd
-Source14:	%{name}.monitrc
 Patch0:		%{name}-makemapman.patch
 Patch1:		%{name}-smrsh-paths.patch
 Patch2:		%{name}-rmail.patch
@@ -334,7 +333,6 @@ install %{SOURCE9} $RPM_BUILD_ROOT%{_sysconfdir}/access
 install %{SOURCE10} $RPM_BUILD_ROOT%{_sysconfdir}/mailertable
 install %{SOURCE11} $RPM_BUILD_ROOT%{_sysconfdir}/virtusertable
 install %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable
-install %{SOURCE14} $RPM_BUILD_ROOT/etc/monit/
 
 touch $RPM_BUILD_ROOT/etc/security/blacklist.smtp
 
@@ -471,7 +469,6 @@ fi
 %config(noreplace) %verify(not md5 mtime size) /etc/sasl/Sendmail.conf
 %config(noreplace) %verify(not md5 mtime size) /etc/pam.d/smtp
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/security/blacklist.smtp
-%config(noreplace) %verify(not md5 mtime size) /etc/monit/*.monitrc
 
 %dir %{_datadir}/sendmail-cf
 %dir %{_datadir}/sendmail-cf/cf
