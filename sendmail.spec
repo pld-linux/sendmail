@@ -25,7 +25,7 @@ Name:		sendmail
 Version:	8.14.3
 Release:	2
 License:	BSD
-Group:		Networking/Daemons
+Group:		Networking/Daemons/SMTP
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
 # Source0-md5:	a5ee5d26e1f546a2da5fb9a513bd6bce
 Source1:	%{name}.init
