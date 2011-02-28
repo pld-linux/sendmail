@@ -10,7 +10,7 @@
 %bcond_without	ldap	# without LDAP support
 %bcond_without	tls	# without TLS (SSL) support
 %bcond_with	pgsql	# with PostgreSQL support (bluelabs)
-#
+
 Summary:	A widely used Mail Transport Agent (MTA)
 Summary(de.UTF-8):	sendmail-Mail-Übertragungsagent
 Summary(es.UTF-8):	Sendmail - agente de transporte de mail
@@ -23,7 +23,7 @@ Summary(tr.UTF-8):	Elektronik posta hizmetleri sunucusu
 Summary(uk.UTF-8):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.14.3
-Release:	3
+Release:	4
 License:	BSD
 Group:		Networking/Daemons/SMTP
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -183,7 +183,7 @@ Pliki nagłówkowe i statyczna biblioteka libmilter.
 
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
-install %{SOURCE7} config.m4
+cp -p %{SOURCE7} config.m4
 
 # Ac-specific hack:
 # It's problem with _simultanous_ building when builders are on the same
@@ -287,25 +287,25 @@ ln -sf %{_sbindir}/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
 
 # install the cf files
 cd cf
-rm -f cf/{Build,Makefile} feature/*~
+rm -f cf/{Build,Makefile}
+rm -f feature/*~  feature/*.orig
 cp -a * $RPM_BUILD_ROOT%{_datadir}/sendmail-cf
 cd -
 
 # sendmail.{cf,mc}
-install cf/cf/pld.cf $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf
+cp -p cf/cf/pld.cf $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf
 sed -e 's|@@PATH@@|%{_datadir}/sendmail-cf|' < %{SOURCE6} \
 	> $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.mc
 
 %if %{with pgsql}
-install bluelabs.mc $RPM_BUILD_ROOT%{_sysconfdir}/bluelabs.mc
+cp -p bluelabs.mc $RPM_BUILD_ROOT%{_sysconfdir}/bluelabs.mc
 %endif
 
 # submit.mc (submit.cf is installed automatically)
-install cf/cf/submit.mc $RPM_BUILD_ROOT%{_sysconfdir}
+cp -p cf/cf/submit.mc $RPM_BUILD_ROOT%{_sysconfdir}
 
 echo "# local-host-names - include all aliases for your machine here." \
 	> $RPM_BUILD_ROOT%{_sysconfdir}/local-host-names
-#"vim ruuls
 
 ln -sf %{_sbindir}/sendmail $RPM_BUILD_ROOT%{_prefix}/lib/sendmail
 
@@ -324,15 +324,15 @@ install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/aliases
 $RPM_BUILD_ROOT%{_sbindir}/makemap -C $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf hash \
 	$RPM_BUILD_ROOT%{_sysconfdir}/aliases.db < %{SOURCE3}
 
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sendmail
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sendmail
-install %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/Makefile
-install %{SOURCE8} $RPM_BUILD_ROOT/etc/sasl/Sendmail.conf
-install %{SOURCE13} $RPM_BUILD_ROOT/etc/pam.d/smtp
-install %{SOURCE9} $RPM_BUILD_ROOT%{_sysconfdir}/access
-install %{SOURCE10} $RPM_BUILD_ROOT%{_sysconfdir}/mailertable
-install %{SOURCE11} $RPM_BUILD_ROOT%{_sysconfdir}/virtusertable
-install %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable
+cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sendmail
+install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sendmail
+cp -p %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/Makefile
+cp -p %{SOURCE8} $RPM_BUILD_ROOT/etc/sasl/Sendmail.conf
+cp -p %{SOURCE13} $RPM_BUILD_ROOT/etc/pam.d/smtp
+cp -p %{SOURCE9} $RPM_BUILD_ROOT%{_sysconfdir}/access
+cp -p %{SOURCE10} $RPM_BUILD_ROOT%{_sysconfdir}/mailertable
+cp -p %{SOURCE11} $RPM_BUILD_ROOT%{_sysconfdir}/virtusertable
+cp -p %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable
 
 touch $RPM_BUILD_ROOT/etc/security/blacklist.smtp
 
