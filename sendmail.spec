@@ -55,7 +55,7 @@ URL:		http://www.sendmail.org/
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db-devel >= 4.1.25
 BuildRequires:	man
-%{?with_ldap:BuildRequires:	openldap-devel >= 2.4.6}
+%{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
 %{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 BuildRequires:	rpmbuild(macros) >= 1.310
