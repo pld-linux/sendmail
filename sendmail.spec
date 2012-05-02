@@ -249,7 +249,7 @@ m4 pld.mc > pld.cf
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_mandir}/man{1,5,8} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,pam.d,monit,sysconfig,sasl,smrsh,security} \
-	$RPM_BUILD_ROOT{%{_bindir},%{_sbindir},%{_prefix}/lib} \
+	$RPM_BUILD_ROOT{%{_bindir},%{_sbindir},/usr/lib} \
 	$RPM_BUILD_ROOT{%{_datadir}/sendmail-cf,%{_libdir}} \
 	$RPM_BUILD_ROOT/var/{log,spool/mqueue} \
 	$RPM_BUILD_ROOT{%{_sysconfdir},%{_includedir}}
@@ -307,7 +307,7 @@ cp -p cf/cf/submit.mc $RPM_BUILD_ROOT%{_sysconfdir}
 echo "# local-host-names - include all aliases for your machine here." \
 	> $RPM_BUILD_ROOT%{_sysconfdir}/local-host-names
 
-ln -sf %{_sbindir}/sendmail $RPM_BUILD_ROOT%{_prefix}/lib/sendmail
+ln -sf %{_sbindir}/sendmail $RPM_BUILD_ROOT/usr/lib/sendmail
 
 # dangling symlinks
 for f in hoststat mailq newaliases purgestat; do
@@ -427,7 +427,7 @@ fi
 %attr(755,root,root) %{_bindir}/newaliases
 %attr(755,root,root) %{_bindir}/mailq
 %attr(755,root,root) %{_sbindir}/smrsh
-%{_prefix}/lib/sendmail
+/usr/lib/sendmail
 
 %{_mandir}/man1/mailq.1*
 %{_mandir}/man1/newaliases.1*
