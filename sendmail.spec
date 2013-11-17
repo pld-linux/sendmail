@@ -22,12 +22,12 @@ Summary(ru.UTF-8):	Почтовый транспортный агент sendmail
 Summary(tr.UTF-8):	Elektronik posta hizmetleri sunucusu
 Summary(uk.UTF-8):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.14.3
-Release:	7
+Version:	8.14.7
+Release:	1
 License:	BSD
 Group:		Networking/Daemons/SMTP
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	a5ee5d26e1f546a2da5fb9a513bd6bce
+# Source0-md5:	348eedfab0ed00931f2df94e78f22c43
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
@@ -50,11 +50,14 @@ Patch3:		%{name}-os-paths.patch
 Patch4:		%{name}-m4path.patch
 Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
-Patch7:		http://blue-labs.org/clue/bluelabs.patch-8.12.3
+Patch7:		%{name}-db.patch
+# originally from http://blue-labs.org/clue/bluelabs.patch-8.12.3
+Patch8:		bluelabs.patch-8.12.3
 URL:		http://www.sendmail.org/
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db-devel >= 4.1.25
-BuildRequires:	man
+# man or man-db
+BuildRequires:	man-db
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
 %{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
@@ -179,7 +182,8 @@ Pliki nagłówkowe i statyczna biblioteka libmilter.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%{?with_pgsql:%patch7 -p1}
+%patch7 -p1
+%{?with_pgsql:%patch8 -p1}
 
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
@@ -342,6 +346,21 @@ mv -f doc/op/op.me .
 
 bzip2 -dc %{SOURCE4} | tar xf -
 
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/sendmail-cf{,/cf}/README
+# foreign systems
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/sendmail-cf/cf/cs-{hpux*,osf1,solaris*,sunos*,ultrix*}.mc
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/sendmail-cf/cf/generic-{bsd*,hpux*,mpeix,nextstep*,osf1,solaris,sunos*,ultrix*}.{cf,mc}
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/sendmail-cf/cf/s2k-{osf1,ultrix*}.mc
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/sendmail-cf/ostype/{a-ux,aix*,altos,amdahl-uts,bsd*,darwin,dgux,domainos,dragonfly,dynix*,freebsd*,gnu,hpux*,irix*,isc*,maxion,mklinux,mpeix,nextstep,openbsd,osf1,powerux,ptx2,qnx,riscos*,sco*,sinix,solaris*,sunos*,svr4,ultrix*,unicos*,unixware*,unknown,uxpds}.m4
+# foreign machines
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/sendmail-cf/cf/{chez.cs,huginn.cs,knecht,mail.cs,mail.eecs,mailspool.cs,python.cs,ucbarpa,ucbvax,vangogh.cs}.mc
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/sendmail-cf/domain/{Berkeley.EDU,CS.Berkeley.EDU,EECS.Berkeley.EDU,S2K.Berkeley.EDU,berkeley-only}.m4
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/sendmail-cf/hack/cssubdomain.m4
+# precompiled files
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/sendmail-cf/cf/*.cf
+# MIB (package as mibs-*?)
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/sendmail-cf/sendmail.schema
+
 # for perl-Sendmail-Milter
 install $OBJDIR/libsm/libsm.a $OBJDIR/libsmutil/libsmutil.a \
 	$RPM_BUILD_ROOT%{_libdir}
@@ -472,7 +491,15 @@ fi
 
 %dir %{_datadir}/sendmail-cf
 %dir %{_datadir}/sendmail-cf/cf
+%{_datadir}/sendmail-cf/cf/clientproto.mc
+%{_datadir}/sendmail-cf/cf/cyrusproto.mc
+%{_datadir}/sendmail-cf/cf/generic-linux.mc
 %{_datadir}/sendmail-cf/cf/pld.mc
+%{_datadir}/sendmail-cf/cf/submit.mc
+%{_datadir}/sendmail-cf/cf/tcpproto.mc
+%{_datadir}/sendmail-cf/cf/uucpproto.mc
+%dir %{_datadir}/sendmail-cf/domain
+%{_datadir}/sendmail-cf/domain/generic.m4
 %{_datadir}/sendmail-cf/feature
 %{_datadir}/sendmail-cf/m4
 %{_datadir}/sendmail-cf/mailer
