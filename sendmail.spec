@@ -3,7 +3,7 @@
 #   http://sourceforge.net/projects/sid-milter/
 #   http://www.sendmail.net/
 # - http://blue-labs.org/clue/bluelabs.patch-8.12.3 has been updated upstream
-# - move compilation from install to build section, fix re-entrancy of install
+# - fix re-entrancy of install
 # - add tests bcond and/or disable tests tha fail on (AC-)builders
 #
 # Conditional build:
@@ -22,12 +22,12 @@ Summary(ru.UTF-8):	Почтовый транспортный агент sendmail
 Summary(tr.UTF-8):	Elektronik posta hizmetleri sunucusu
 Summary(uk.UTF-8):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.14.7
+Version:	8.14.8
 Release:	1
 License:	BSD
 Group:		Networking/Daemons/SMTP
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	348eedfab0ed00931f2df94e78f22c43
+# Source0-md5:	73bfc621c75dbdd3d719e54685d92577
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
@@ -202,36 +202,26 @@ cp -p %{SOURCE7} config.m4
 %endif
 
 %build
+echo "define(\`confLIBSEARCHPATH', \`/%{_lib} %{_prefix}/%{_lib}')" >> config.m4
 echo "define(\`confCC', \`%{__cc}')" >> config.m4
 %ifarch sparc sparc64
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DSM_CONF_SEM=0 -DNETINET6')" >> config.m4
 %else
 echo "define(\`confOPTIMIZE', \`%{rpmcflags} -DUSE_VENDOR_CF_PATH=1 -DNETINET6')" >> config.m4
 %endif
-echo "APPENDDEF(\`confINCDIRS', \`-I/usr/include/sasl')" >> config.m4
-echo "define(\`confLIBSEARCHPATH', \`/%{_lib} %{_prefix}/%{_lib}')" >> config.m4
-echo "define(\`confLIBSEARCH', \`db resolv')" >> config.m4
-%if 0%{!?debug:1}
-echo "define(\`confLDOPTS', \`-s')" >> config.m4
-%endif
+echo "define(\`confLDOPTS', \`%{rpmldflags}')" >> config.m4
 %if %{with ldap}
 echo "APPENDDEF(\`confMAPDEF', \`-DLDAPMAP')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lldap -llber')" >> config.m4
 %endif
 %if %{with pgsql}
-echo "APPENDDEF(\`confENVDEF', \`-DSASL')" >> config.m4
 echo "APPENDDEF(\`confMAPDEF', \`-DPGSQLMAP')" >> config.m4
-echo "APPENDDEF(\`confLIBS', \`-lpq -lresolv')" >> config.m4
-echo "APPENDDEF(\`confLIBS', \`-lsasl -lcrypto')" >> config.m4
+echo "APPENDDEF(\`confLIBS', \`-lpq -lresolv -lcrypto')" >> config.m4
 %endif
 %if %{with tls}
 echo "APPENDDEF(\`confENVDEF', \`-DSTARTTLS')" >> config.m4
-echo "APPENDDEF(\`confENVDEF', \`-D_FFR_DEAL_WITH_ERROR_SSL')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lssl -lcrypto')" >> config.m4
-echo "APPENDDEF(\`confENVDEF', \`-D_FFR_SMTP_SSL')" >> config.m4
 %endif
-
-echo "APPENDDEF(\`confENVDEF', \`-DMILTER')" >> config.m4
 
 %ifarch sparc
 %define		Build		sparc32 sh Build
@@ -291,8 +281,8 @@ ln -sf %{_sbindir}/makemap $RPM_BUILD_ROOT%{_bindir}/makemap
 
 # install the cf files
 cd cf
-rm -f cf/{Build,Makefile}
-rm -f feature/*~  feature/*.orig
+%{__rm} cf/{Build,Makefile}
+find . -name '*~' -o -name '*.orig' | xargs -r %{__rm}
 cp -a * $RPM_BUILD_ROOT%{_datadir}/sendmail-cf
 cd -
 
