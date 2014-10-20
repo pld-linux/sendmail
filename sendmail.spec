@@ -220,6 +220,7 @@ echo "APPENDDEF(\`confLIBS', \`-lpq -lresolv -lcrypto')" >> config.m4
 %endif
 %if %{with tls}
 echo "APPENDDEF(\`confENVDEF', \`-DSTARTTLS')" >> config.m4
+echo "APPENDDEF(\`confENVDEF', \`-D_FFR_TLS_1')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lssl -lcrypto')" >> config.m4
 %endif
 
