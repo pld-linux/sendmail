@@ -22,12 +22,12 @@ Summary(ru.UTF-8):	Почтовый транспортный агент sendmail
 Summary(tr.UTF-8):	Elektronik posta hizmetleri sunucusu
 Summary(uk.UTF-8):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.14.8
-Release:	2
+Version:	8.15.2
+Release:	1
 License:	BSD
 Group:		Networking/Daemons/SMTP
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	73bfc621c75dbdd3d719e54685d92577
+# Source0-md5:	a824fa7dea4d3341efb6462ccd816f00
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
@@ -50,7 +50,7 @@ Patch3:		%{name}-os-paths.patch
 Patch4:		%{name}-m4path.patch
 Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
-Patch7:		%{name}-db.patch
+Patch7:		%{name}-format_string.patch
 # originally from http://blue-labs.org/clue/bluelabs.patch-8.12.3
 Patch8:		bluelabs.patch-8.12.3
 URL:		http://www.sendmail.org/
