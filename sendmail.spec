@@ -23,7 +23,7 @@ Summary(tr.UTF-8):	Elektronik posta hizmetleri sunucusu
 Summary(uk.UTF-8):	Поштовий транспортний агент sendmail
 Name:		sendmail
 Version:	8.15.2
-Release:	2
+Release:	3
 License:	BSD
 Group:		Networking/Daemons/SMTP
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
@@ -53,6 +53,7 @@ Patch6:		%{name}-hprescan-dos.patch
 Patch7:		%{name}-format_string.patch
 # originally from http://blue-labs.org/clue/bluelabs.patch-8.12.3
 Patch8:		bluelabs.patch-8.12.3
+Patch9:		openssl-1.1.0.patch
 URL:		http://www.sendmail.org/
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	db-devel >= 4.1.25
@@ -184,6 +185,7 @@ Pliki nagłówkowe i statyczna biblioteka libmilter.
 %patch6 -p1
 %patch7 -p1
 %{?with_pgsql:%patch8 -p1}
+%patch9 -p1
 
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
