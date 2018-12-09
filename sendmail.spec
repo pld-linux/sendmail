@@ -333,9 +333,9 @@ cp -p %{SOURCE12} $RPM_BUILD_ROOT%{_sysconfdir}/domaintable
 
 touch $RPM_BUILD_ROOT/etc/security/blacklist.smtp
 
-mv -f smrsh/README README.smrsh
-mv -f cf/README README.cf
-mv -f doc/op/op.me .
+%{__mv} smrsh/README README.smrsh
+%{__mv} cf/README README.cf
+%{__mv} doc/op/op.me .
 
 bzip2 -dc %{SOURCE4} | tar xf -
 
@@ -494,6 +494,7 @@ fi
 %dir %{_datadir}/sendmail-cf/domain
 %{_datadir}/sendmail-cf/domain/generic.m4
 %{_datadir}/sendmail-cf/feature
+%{_datadir}/sendmail-cf/hack
 %{_datadir}/sendmail-cf/m4
 %{_datadir}/sendmail-cf/mailer
 %dir %{_datadir}/sendmail-cf/ostype
