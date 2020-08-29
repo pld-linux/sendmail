@@ -2,9 +2,8 @@
 # - make sid-milter support:
 #   http://sourceforge.net/projects/sid-milter/
 #   http://www.sendmail.net/
-# - http://blue-labs.org/clue/bluelabs.patch-8.12.3 has been updated upstream
 # - fix re-entrancy of install
-# - add tests bcond and/or disable tests tha fail on (AC-)builders
+# - add tests bcond?
 #
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
@@ -22,12 +21,12 @@ Summary(ru.UTF-8):	Почтовый транспортный агент sendmail
 Summary(tr.UTF-8):	Elektronik posta hizmetleri sunucusu
 Summary(uk.UTF-8):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.15.2
-Release:	3
+Version:	8.16.1
+Release:	1
 License:	BSD
 Group:		Networking/Daemons/SMTP
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	a824fa7dea4d3341efb6462ccd816f00
+# Source0-md5:	055f1d76c8027993a01ab6425aea4ae7
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
@@ -50,18 +49,19 @@ Patch3:		%{name}-os-paths.patch
 Patch4:		%{name}-m4path.patch
 Patch5:		%{name}-redirect.patch
 Patch6:		%{name}-hprescan-dos.patch
-Patch7:		%{name}-format_string.patch
-# originally from http://blue-labs.org/clue/bluelabs.patch-8.12.3
-Patch8:		bluelabs.patch-8.12.3
-Patch9:		openssl-1.1.0.patch
+Patch7:		%{name}-cyrus.patch
+# https://blue-labs.org/software/sm-pgsql/sendmail.php
+# https://blue-labs.org/software/sm-pgsql/bluelabs-smpgsql-8.14.3.patch.bz2
+Patch8:		bluelabs-smpgsql-8.14.3.patch
 URL:		http://www.sendmail.org/
-BuildRequires:	cyrus-sasl-devel
-BuildRequires:	db-devel >= 4.1.25
+BuildRequires:	cyrus-sasl-devel >= 2.1.21
+BuildRequires:	db-devel >= 4.2
+BuildRequires:	libnsl-devel
 # man or man-db
 BuildRequires:	man-db
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
-%{?with_tls:BuildRequires:	openssl-devel >= 0.9.7d}
-%{?with_pgsql:BuildRequires:	postgresql-devel}
+%{?with_tls:BuildRequires:	openssl-devel >= 0.9.8}
+%{?with_pgsql:BuildRequires:	postgresql-devel >= 8.1}
 BuildRequires:	rpmbuild(macros) >= 1.310
 BuildRequires:	sed >= 4.0
 %ifarch sparc
@@ -185,23 +185,10 @@ Pliki nagłówkowe i statyczna biblioteka libmilter.
 %patch6 -p1
 %patch7 -p1
 %{?with_pgsql:%patch8 -p1}
-%patch9 -p1
 
 sed -e 's|@@PATH@@|\.\.|' < %{SOURCE6} > cf/cf/pld.mc
 
 cp -p %{SOURCE7} config.m4
-
-# Ac-specific hack:
-# It's problem with _simultanous_ building when builders are on the same
-# machine. These are anonymous SHM tests (AFAIR) which must fail when called
-# simultanously...
-#
-# send on builders requests only for some arch - it won't fail.
-#- blues
-%ifarch i386 i586 athlon
-%{__sed} -i -e 's/^\(smtest.*t-shm\)/dnl \1/' libsm/Makefile.m4
-%{__sed} -i -e 's/^\(smtest.*t-sem\)/dnl \1/' libsm/Makefile.m4
-%endif
 
 %build
 echo "define(\`confLIBSEARCHPATH', \`/%{_lib} %{_prefix}/%{_lib}')" >> config.m4
@@ -293,10 +280,6 @@ cd -
 cp -p cf/cf/pld.cf $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.cf
 sed -e 's|@@PATH@@|%{_datadir}/sendmail-cf|' < %{SOURCE6} \
 	> $RPM_BUILD_ROOT%{_sysconfdir}/sendmail.mc
-
-%if %{with pgsql}
-cp -p bluelabs.mc $RPM_BUILD_ROOT%{_sysconfdir}/bluelabs.mc
-%endif
 
 # submit.mc (submit.cf is installed automatically)
 cp -p cf/cf/submit.mc $RPM_BUILD_ROOT%{_sysconfdir}
@@ -460,7 +443,6 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/submit.mc
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/local-host-names
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/aliases
-%{?with_pgsql:%{_sysconfdir}/bluelabs.mc}
 %attr(644,root,mail) %ghost %{_sysconfdir}/aliases.db
 %attr(770,root,smmsp) %dir /var/spool/clientmqueue
 %attr(750,root,mail) %dir /var/spool/mqueue

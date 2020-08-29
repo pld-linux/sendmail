@@ -182,23 +182,23 @@
 +/etc/smrsh \- directory for restricted programs
  .PP
  /var/adm/sm.bin \- directory for restricted programs on HP UX and Solaris
---- ./smrsh/smrsh.c.org	Tue Sep 30 10:12:59 2003
-+++ ./smrsh/smrsh.c	Tue Sep 30 10:14:02 2003
+--- sendmail-8.16.1/smrsh/smrsh.c.orig	2020-08-28 23:00:20.515734197 +0200
++++ sendmail-8.16.1/smrsh/smrsh.c	2020-08-29 09:13:31.036422852 +0200
 @@ -77,7 +77,7 @@
  # ifdef SMRSH_CMDDIR
  #  define CMDDIR	SMRSH_CMDDIR
- # else /* SMRSH_CMDDIR */
+ # else
 -#  define CMDDIR	"/usr/adm/sm.bin"
 +#  define CMDDIR	"/etc/smrsh"
- # endif /* SMRSH_CMDDIR */
+ # endif
  #endif /* ! CMDDIR */
  
 @@ -89,7 +89,7 @@
  # ifdef SMRSH_PATH
  #  define PATH		SMRSH_PATH
- # else /* SMRSH_PATH */
+ # else
 -#  define PATH		"/bin:/usr/bin:/usr/ucb"
 +#  define PATH		"/bin:/usr/bin:/usr/sbin"
- # endif /* SMRSH_PATH */
+ # endif
  #endif /* ! PATH */
  

@@ -1,0 +1,891 @@
+diff -ruN sendmail-8.14.3/cf/feature/pg_accessdb.m4 sendmail-8.14.3.pgsql/cf/feature/pg_accessdb.m4
+--- sendmail-8.14.3/cf/feature/pg_accessdb.m4	1969-12-31 16:00:00.000000000 -0800
++++ sendmail-8.14.3.pgsql/cf/feature/pg_accessdb.m4	2007-03-26 13:19:46.000000000 -0700
+@@ -0,0 +1,19 @@
++divert(-1)
++# By using this file, you agree to be cool and share your knowledge
++#
++# David, http://blue-labs.org/software/sm-pgsql/sendmail.php
++#
++
++divert(0)
++VERSIONID(`$Id: pg_accessdb.m4,v 2.0 2000/07/19 18:15:16 blu3 Exp $')
++divert(-1)
++
++define(`_ACCESS_TABLE_', `')
++define(`_PG_ACCESS_TABLE_', `')
++define(`_TAG_DELIM_', `:')dnl should be in OperatorChars
++
++LOCAL_CONFIG
++# PostgreSQL based access list
++Kaccess ifelse(defn(`_ARG_'), `',
++		 DATABASE_MAP_TYPE MAIL_SETTINGS_DIR`access',
++		 `_ARG_')
+diff -ruN sendmail-8.14.3/cf/feature/pg_aliases.m4 sendmail-8.14.3.pgsql/cf/feature/pg_aliases.m4
+--- sendmail-8.14.3/cf/feature/pg_aliases.m4	1969-12-31 16:00:00.000000000 -0800
++++ sendmail-8.14.3.pgsql/cf/feature/pg_aliases.m4	2007-03-26 13:19:46.000000000 -0700
+@@ -0,0 +1,19 @@
++divert(-1)
++# By using this file, you agree to be cool and share your knowledge
++#
++# David, http://blue-labs.org/software/sm-pgsql/sendmail.php
++#
++
++divert(0)
++VERSIONID(`$Id: pg_aliases.m4,v 2.0 2000/07/19 18:15:16 blu3 Exp $')
++divert(-1)
++
++undefine(`ALIAS_FILE')
++define(`_ALIASES_TABLE_', `')
++define(`_PG_ALIASES_TABLE_', `')
++
++LOCAL_CONFIG
++# PostgreSQL based local aliases
++Kaliases ifelse(defn(`_ARG_'), `',
++		 DATABASE_MAP_TYPE MAIL_SETTINGS_DIR`aliases',
++		 `_ARG_')
+diff -ruN sendmail-8.14.3/cf/feature/pg_domaintable.m4 sendmail-8.14.3.pgsql/cf/feature/pg_domaintable.m4
+--- sendmail-8.14.3/cf/feature/pg_domaintable.m4	1969-12-31 16:00:00.000000000 -0800
++++ sendmail-8.14.3.pgsql/cf/feature/pg_domaintable.m4	2007-03-26 13:19:46.000000000 -0700
+@@ -0,0 +1,18 @@
++divert(-1)
++# By using this file, you agree to be cool and share your knowledge
++#
++# David, http://blue-labs.org/software/sm-pgsql/sendmail.php
++#
++
++divert(0)
++VERSIONID(`$Id: pg_domaintable.m4,v 2.0 2000/07/19 18:15:16 blu3 Exp $')
++divert(-1)
++
++define(`_DOMAIN_TABLE_', `')
++define(`_PG_DOMAIN_TABLE', `')
++
++LOCAL_CONFIG
++# PostgreSQL based domain rewriting table
++Kdomaintable ifelse(defn(`_ARG_'), `',
++		 DATABASE_MAP_TYPE MAIL_SETTINGS_DIR`domaintable',
++		 `_ARG_')
+diff -ruN sendmail-8.14.3/cf/feature/pg_generics.m4 sendmail-8.14.3.pgsql/cf/feature/pg_generics.m4
+--- sendmail-8.14.3/cf/feature/pg_generics.m4	1969-12-31 16:00:00.000000000 -0800
++++ sendmail-8.14.3.pgsql/cf/feature/pg_generics.m4	2007-03-26 13:19:46.000000000 -0700
+@@ -0,0 +1,18 @@
++divert(-1)
++# By using this file, you agree to be cool and share your knowledge
++#
++# David, http://blue-labs.org/software/sm-pgsql/sendmail.php
++#
++
++divert(0)
++VERSIONID(`$Id: pg_genericstable.m4,v 2.0 2000/07/19 18:15:16 blu3 Exp $')
++divert(-1)
++
++define(`_GENERICS_TABLE_', `')
++define(`_PG_GENERICS_TABLE', `')
++
++LOCAL_CONFIG
++# PostgreSQL based generic domain mapping table, similar to userdb
++Kgenerics ifelse(defn(`_ARG_'), `',
++		 DATABASE_MAP_TYPE MAIL_SETTINGS_DIR`generics',
++		 `_ARG_')
+diff -ruN sendmail-8.14.3/cf/feature/pg_mailer.m4 sendmail-8.14.3.pgsql/cf/feature/pg_mailer.m4
+--- sendmail-8.14.3/cf/feature/pg_mailer.m4	1969-12-31 16:00:00.000000000 -0800
++++ sendmail-8.14.3.pgsql/cf/feature/pg_mailer.m4	2007-03-26 13:19:46.000000000 -0700
+@@ -0,0 +1,18 @@
++divert(-1)
++# By using this file, you agree to be cool and share your knowledge
++#
++# David, http://blue-labs.org/software/sm-pgsql/sendmail.php
++#
++
++divert(0)
++VERSIONID(`$Id: pg_mailertable.m4,v 2.0 2000/07/19 18:15:16 blu3 Exp $')
++divert(-1)
++
++define(`_MAILER_TABLE_', `')
++define(`_PG_MAILER_TABLE', `')
++
++LOCAL_CONFIG
++# PostgreSQL based mailer table, for overriding domain and MX
++Kmailertable ifelse(defn(`_ARG_'), `',
++		 DATABASE_MAP_TYPE MAIL_SETTINGS_DIR`mailertable',
++		 `_ARG_')
+diff -ruN sendmail-8.14.3/cf/feature/pg_usersdb.m4 sendmail-8.14.3.pgsql/cf/feature/pg_usersdb.m4
+--- sendmail-8.14.3/cf/feature/pg_usersdb.m4	1969-12-31 16:00:00.000000000 -0800
++++ sendmail-8.14.3.pgsql/cf/feature/pg_usersdb.m4	2007-03-26 13:19:46.000000000 -0700
+@@ -0,0 +1,18 @@
++divert(-1)
++# By using this file, you agree to be cool and share your knowledge
++#
++# David, http://blue-labs.org/software/sm-pgsql/sendmail.php
++#
++
++divert(0)
++VERSIONID(`$Id: pg_usersdb.m4,v 2.0 2000/07/19 18:15:16 blu3 Exp $')
++divert(-1)
++
++define(`_REWRITE_TABLE_', `')
++define(`_PG_REWRITE_TABLE_', `')
++
++LOCAL_CONFIG
++# PostgreSQL based user rewrite table (can turn "John.Doe" into "jdoe")
++Kusersdb ifelse(defn(`_ARG_'), `',
++		 DATABASE_MAP_TYPE MAIL_SETTINGS_DIR`usersdb',
++		 `_ARG_')
+diff -ruN sendmail-8.14.3/cf/feature/pg_virtualusers.m4 sendmail-8.14.3.pgsql/cf/feature/pg_virtualusers.m4
+--- sendmail-8.14.3/cf/feature/pg_virtualusers.m4	1969-12-31 16:00:00.000000000 -0800
++++ sendmail-8.14.3.pgsql/cf/feature/pg_virtualusers.m4	2007-03-26 13:19:46.000000000 -0700
+@@ -0,0 +1,18 @@
++divert(-1)
++# By using this file, you agree to be cool and share your knowledge
++#
++# David, http://blue-labs.org/software/sm-pgsql/sendmail.php
++#
++
++divert(0)
++VERSIONID(`$Id: pg_virtusertable.m4,v 2.0 2000/07/19 18:15:16 blu3 Exp $')
++divert(-1)
++
++define(`_VIRTUSER_TABLE_', `')
++define(`_PG_VIRTUSER_TABLE_', `')
++
++LOCAL_CONFIG
++# PostgreSQL based virtual user table (maps incoming users)
++Kvirtuser ifelse(defn(`_ARG_'), `',
++		 DATABASE_MAP_TYPE MAIL_SETTINGS_DIR`virtusertable',
++		 `_ARG_')
+diff -ruN sendmail-8.14.3/pgsql-build.mc sendmail-8.14.3.pgsql/pgsql-build.mc
+--- sendmail-8.14.3/pgsql-build.mc	1969-12-31 16:00:00.000000000 -0800
++++ sendmail-8.14.3.pgsql/pgsql-build.mc	2007-03-26 13:19:46.000000000 -0700
+@@ -0,0 +1,32 @@
++######################################################################
++# This is the Blue Labs m4 file for the Sendmail w/ Postgres Tables patch.
++#
++# The website for building sendmail with this patch is at
++#   http://blue-labs.org/software/sm-pgsql/sendmail.php
++#
++# This patch may eventually be available to Gentoo (http://gentoo.org/)
++# users with the "USE=postgres" use flag
++#
++# !!! EDIT THE CONFIGURATION SETTINGS TO MATCH YOUR NEEDS !!!
++#
++# NOTE: This is a specialised .cf for the postgresql patch only
++#
++VERSIONID(`(#) Blue Labs bluelabs.mc   v 11.1 (Blue Labs) 12 Jan 2007')
++######################################################################
++
++##
++# See http://blue-labs.org/software/sm-pgsql/sendmail.php for detailed
++# instructions
++#
++# TODO: replace 'newaliases' and 'makemap' targets with "don't run this"
++#       update man pages also
++##
++
++# uncomment these two lines if you use /usr/local/pgsql
++# APPENDDEF(`confINCDIRS',`-I/usr/local/pgsql/include')dnl
++# APPENDDEF(`confLIBDIRS',`-L/usr/local/pgsql/lib')dnl
++
++APPENDDEF(`confLIBS',`-lpq')dnl
++APPENDDEF(`confMAPDEF',`-DPGSQLMAP')dnl
++APPENDDEF(`DATABASE_MAP_TYPE', `pgsql')dnl
++
+diff -ruN sendmail-8.14.3/pgsql-config.mc sendmail-8.14.3.pgsql/pgsql-config.mc
+--- sendmail-8.14.3/pgsql-config.mc	1969-12-31 16:00:00.000000000 -0800
++++ sendmail-8.14.3.pgsql/pgsql-config.mc	2007-03-26 13:19:46.000000000 -0700
+@@ -0,0 +1,51 @@
++######################################################################
++# This is the Blue Labs m4 file for the Sendmail w/ Postgres Tables patch.
++#
++# The website for building sendmail with this patch is at
++#   http://blue-labs.org/software/sm-pgsql/sendmail.php
++#
++# This patch may eventually be available to Gentoo (http://gentoo.org/)
++# users with the "USE=postgres" use flag
++#
++# !!! EDIT THE CONFIGURATION SETTINGS TO MATCH YOUR NEEDS !!!
++#
++# NOTE: This is a specialised .cf for the postgresql patch only
++#
++VERSIONID(`(#) Blue Labs bluelabs.mc   v 12.0 (Blue Labs) 12 Dec 2007')
++######################################################################
++
++##
++# See http://blue-labs.org/software/sm-pgsql/sendmail.php for detailed
++# instructions
++##
++
++dnl ##
++dnl # example line:
++dnl #  pgsql [-h <pgsql server>] -c <connection string> -s <query string>
++dnl ##
++
++#
++# PgSql
++#
++# add the flag -f to force case sensitive queries, by default both the
++# search and the value will be folded to lower case. by default %s will be
++# rewritten to by lower('%s').  if -f is specified, then it will only be
++# written as ('%s') and both the input value and the row value MUST match
++# case exactly.
++#
++
++define(`PG_CONNSTR', "host=localhost dbname=sendmail user=sendmail password=raisins")
++define(`SELECT', "select distinct s_out from )
++define(`WHERE', where ``lower'' (s_in) = %s")
++FEATURE(`pg_aliases',      pgsql -c `PG_CONNSTR' -s `SELECT' `aliases'       `WHERE')dnl
++FEATURE(`pg_virtualusers', pgsql -c `PG_CONNSTR' -s `SELECT' `virtualusers'  `WHERE')dnl
++FEATURE(`pg_usersdb',      pgsql -c `PG_CONNSTR' -s `SELECT' `userrewrite'   `WHERE')dnl
++FEATURE(`pg_accessdb',     pgsql -c `PG_CONNSTR' -s `SELECT' `access'        `WHERE')dnl
++FEATURE(`pg_domaintable',  pgsql -c `PG_CONNSTR' -s `SELECT' `domaintable'   `WHERE')dnl
++FEATURE(`pg_generics',     pgsql -c `PG_CONNSTR' -s `SELECT' `genericstable' `WHERE')dnl
++FEATURE(`pg_mailer',       pgsql -c `PG_CONNSTR' -s `SELECT' `mailertable'   `WHERE')dnl
++
++define(`confPROCESS_TITLE_PREFIX', `[Blue-PgSQL]')dnl
++define(`confSMTP_LOGIN_MSG', `Mail server\
++ \
++ Unauthorized use prohibited\
++ \
++ Spam is prohibited here and any detected spam may be used in prosecution\
++ against the spammer. This setup uses PgSQL (postgresql) for most of it''`s\
++ tables, for information on this, see\
++ http://blue-labs.org/software/sm-pgsql/sendmail.php\
++ Don''`t bitch if your MTA is busted and doesn''`t play well with others.\
++ \
++')dnl
++
++dnl # Don't attempt to rebuild an aliases file, sm-pgsql doesn't use files
++dnl # however if you have multiple alias tables and DO use files, remove this
++dnl # next line
++define(`confALIAS_WAIT', `0')dnl
+diff -ruN sendmail-8.14.3/sendmail/README sendmail-8.14.3.pgsql/sendmail/README
+--- sendmail-8.14.3/sendmail/README	2006-11-13 14:27:27.000000000 -0800
++++ sendmail-8.14.3.pgsql/sendmail/README	2007-03-26 13:19:46.000000000 -0700
+@@ -119,6 +119,11 @@
+ 		have to install the UMich or OpenLDAP
+ 		(http://www.openldap.org/) ldap and lber libraries to use
+ 		this flag.
++PGSQLMAP	PostgreSQL SQL query support.  You will need to have
++		PostgreSQL include files and libraries installed to use this
++		feature.  Information on PostgreSQL can be found at
++		http://www.postgresql.org/  Support for this map may be
++		found at http://blue-labs.org/software/sm-pgsql/sendmail.php
+ MAP_REGEX	Regular Expression support.  You will need to use an
+ 		operating system which comes with the POSIX regex()
+ 		routines or install a regexp library such as libregex from
+--- sendmail-8.16.1/sendmail/conf.c.orig	2020-06-04 08:27:49.000000000 +0200
++++ sendmail-8.16.1/sendmail/conf.c	2020-08-29 10:15:17.896341069 +0200
+@@ -576,6 +576,12 @@
+ 		ldapmap_lookup, null_map_store);
+ #endif
+ 
++#ifdef PGSQLMAP
++	MAPDEF("pgsql", NULL, MCF_ALIASOK|MCF_NOTPERSIST,
++		pgsql_map_parseargs, pgsql_map_open, pgsql_map_close,
++		pgsql_map_lookup, null_map_store);
++#endif
++
+ #if PH_MAP
+ 	MAPDEF("ph", NULL, MCF_NOTPERSIST,
+ 		ph_map_parseargs, ph_map_open, ph_map_close,
+@@ -5864,6 +5870,9 @@
+ #if LDAP_REFERRALS
+ 	"LDAP_REFERRALS",
+ #endif
++#if PGSQLMAP
++	"PGSQLMAP",
++#endif /* PGSQLMAP */
+ #if LOG
+ 	"LOG",
+ #endif
+--- sendmail-8.14.3/sendmail/map.c	2007-10-09 20:06:45.000000000 -0400
++++ sendmail-8.14.3.pgsql/sendmail/map.c	2009-11-09 19:54:47.214965897 -0500
+@@ -4706,6 +4706,588 @@
+ 	}
+ }
+ #endif /* LDAPMAP */
++
++#ifdef PGSQLMAP
++#include <libpq-fe.h>
++
++/* 
++ * PostgreSQL map functionality for Sendmail 8.14.3
++ * Portions Copyright (C) 2000 Jonathan Yarden <jyarden@bluegrass.net>
++ * Remainder copyright (c) 2000-2009 David Ford <david@blue-labs.org>
++ *
++ * For information on PostgreSQL, visit http://www.pgsql.com/
++ * Information on this patch and setup is at
++ * http://blue-labs.org/software/sm-pgsql/sendmail.php
++ *
++ * This patch, because it integrates with and is based on the existing
++ * prior work of Sendmail, is considered by me to be a "derivative
++ * work" subject to the Sendmail licensing terms. Sendmail, Inc. in not
++ * responsible for this code.
++ *
++ * USE AT YOUR OWN RISK. NO WARRANTY OF ANY KIND IS PROVIDED. PLEASE
++ * READ THE INSTRUCTIONS FOR USE OF THIS PATCH BEFORE CONTACTING THE
++ * AUTHOR OR SENDMAIL, INC.	NO SUPPORT OF ANY KIND WILL BE PROVIDED
++ * BY SENDMAIL, INC. FOR THIS PATCH.
++ */
++
++/*
++struct pgsqlmap
++{
++	struct pgsqlmap *p,*n;
++	char    *connstr;
++	PGconn  *conn;
++	pid_t    opener_pid;
++	char    *mapname;
++} *pgsqlmap = NULL; */
++
++char *pgsql_skip_quotes(char *p)
++{
++	p = strchr(p,'"');
++	if (p)
++	{
++		p++;
++		p = strchr(p,'"');
++		if (p) p++;
++	}
++	return p;
++}
++
++/*
++ * Parse PostgreSQL map definition args.
++ *
++ * Nothing really special here, since to be perfectly honest, I have never
++ * seen or used almost all of these options.	Most of this code was taken
++ * directly from existing Sendmail source code.
++ */
++bool pgsql_map_parseargs(MAP *map, char *args)
++{
++	register char *p = args;
++	register int done;
++
++	map->map_mflags |= MF_TRY0NULL | MF_TRY1NULL;
++	for (;;)
++	{
++		while (isascii(*p) && isspace(*p))
++			p++;
++		if (*p != '-')
++			break;
++		switch (*++p)
++		{
++			case 'A':
++				map->map_mflags |= MF_APPEND;
++				break;
++
++			case 'N':
++				map->map_mflags |= MF_INCLNULL;
++				map->map_mflags &= ~MF_TRY0NULL;
++				break;
++
++			case 'O':
++				map->map_mflags &= ~MF_TRY1NULL;
++				break;
++
++			case 'T':
++				map->map_tapp = ++p;
++				break;
++
++			case 'a':
++				map->map_app = ++p;
++				break;
++
++			case 'f':
++				map->map_mflags |= MF_NOFOLDCASE;
++				break;
++
++			case 'h':
++				map->map_db2 = ++p;
++				break;
++
++			case 'm':
++				map->map_mflags |= MF_MATCHONLY;
++				break;
++
++			case 'o':
++				map->map_mflags |= MF_OPTIONAL;
++				break;
++
++			case 'q':
++				map->map_mflags |= MF_KEEPQUOTES;
++				break;
++
++			case 't':
++				map->map_mflags |= MF_NODEFER;
++				break;
++
++/* 
++ * Start of PostgreSQL specific args.	I cheat and use some existing
++ * Sendmail variables here since this map class makes no other use of them.
++ */
++
++			case 'c':			/* connection string */
++				map->map_keycolnm = ++p;
++				p = pgsql_skip_quotes(p);
++				break;
++
++			case 's':			/* select statement */
++				map->map_valcolnm = ++p;
++				p = pgsql_skip_quotes(p);
++				break;
++		}
++
++		if (*p != '\0')
++			*p++ = '\0';
++	}
++
++	if (map->map_app != NULL)
++		map->map_app = newstr(map->map_app);
++
++	if (map->map_tapp != NULL)
++		map->map_tapp = newstr(map->map_tapp);
++	
++	if (map->map_keycolnm != NULL) { /* database connect string */
++		map->map_keycolnm = newstr(map->map_keycolnm);
++		stripquotes(map->map_keycolnm);
++		p = map->map_keycolnm;
++		while(*p==' ')
++			p++;
++		map->map_keycolnm = p;
++	} else {
++		sm_syslog(LOG_WARNING, CurEnv->e_id, "No PostgreSQL connect string for %s map %s",
++				map->map_class->map_cname, map->map_mname);
++		syserr("451 4.3.5 No PostgreSQL connect string for map %s",
++				map->map_mname);
++		SM_SET_H_ERRNO(TRY_AGAIN);
++		errno = DB_NOTFOUND;
++		return false;
++	}
++
++	if (map->map_valcolnm != NULL) { /* select statement */
++		map->map_valcolnm = newstr(map->map_valcolnm);
++		stripquotes(map->map_valcolnm);
++		p = map->map_valcolnm;
++		while(*p==' ')
++			p++;
++		map->map_valcolnm = p;
++	} else {
++		sm_syslog(LOG_WARNING, CurEnv->e_id, "No PostgreSQL select statement for %s map %s",
++				map->map_class->map_cname, map->map_mname);
++		syserr("451 5.3.5 No PostgreSQL select statement for map %s",
++				map->map_mname);
++		SM_SET_H_ERRNO(TRY_AGAIN);
++		errno = DB_NOTFOUND;
++		return false;
++	}
++
++	return true;
++}
++
++#if 0
++/*
++ * search our list of map connections for a entry that matches our
++ * connection.  it should have the same host and connection string, as well
++ * as the same PID.  someone can choose to put their maps on different
++ * databases, so we cannot share a connection.
++ */
++
++PGconn *pgsql_getconn(char *connstr, char *mapname)
++{
++	pid_t p = getpid();
++	
++	// if no map has been allocated, return immediately
++	if(!pgsqlmap) return NULL;
++
++	// rewind
++	while(pgsqlmap->p) pgsqlmap = pgsqlmap->p;
++
++	#ifdef PGSQLDEBUG
++	sm_syslog(LOG_INFO, CurEnv->e_id, "pgsql_getconn (connection string:%s, pid:%i)", connstr, p);
++	#endif
++
++	// only return connections that match everything			
++	do
++	{
++		if(pgsqlmap->conn)
++			if (!strncmp(connstr, pgsqlmap->connstr, strlen(connstr)+1))
++				if (pgsqlmap->opener_pid == p)
++					if (!strncmp(pgsqlmap->mapname, mapname, strlen(mapname))
++						return pgsqlmap->conn;
++
++		// if there is more than one map and we're still searching, bump to the next one
++		if (pgsqlmap->n)
++			pgsqlmap = pgsqlmap->n;
++		else
++			break;
++	} while(1);
++
++	return NULL;
++}
++
++/*
++ * add a new map entry structure and populate it
++ */
++void pgsql_addconn(char *host, char *connstr, PGconn *conn, mapname)
++{
++	int count=1;
++	
++	if (!pgsqlmap)
++		// create a brand new map structure
++		pgsqlmap= (struct pgsqlmap *) xalloc(sizeof(struct pgsqlmap));
++	
++	else
++	{
++		// fast-forward to the end of the list
++		while(pgsqlmap->n)
++		{
++			count++;
++			pgsqlmap = pgsqlmap->n;
++		}
++
++		pgsqlmap->n     = (struct pgsqlmap *) xalloc(sizeof(struct pgsqlmap));
++		pgsqlmap->n->p  = pgsqlmap;
++		pgsqlmap        = pgsqlmap->n;
++	}
++
++	bzero(pgsqlmap, sizeof(struct pgsqlmap));
++	pgsqlmap->connstr       =connstr;
++	pgsqlmap->conn		    =conn;
++	pgsqlmap->opener_pid	=getpid();
++	pgsqlmap->mapname       =mapname;
++
++	#ifdef PGSQLDEBUG
++	sm_syslog(LOG_INFO, CurEnv->e_id, "pgsql_ add map connection (connection string:%s, connptr:%p, pid:%i), maplist size is %i",
++			pgsqlmap->connstr, pgsqlmap->conn, pgsqlmap->opener_pid, count);
++	#endif
++}
++
++int psql_removeconn(PGconn *conn, char *mapname)
++{
++	if(!pgsqlmap) return 0;
++
++	while(pgsqlmap->p) pgsqlmap = pgsqlmap->p;
++
++	do
++	{
++		if (pgsqlmap->conn == conn && !strncmp(pgsqlmap->mapname, mapname, strlen(mapname))
++		{
++			// the map data doesn't belong to us, just deallocate the map pointer
++			struct pgsqlmap *z = pgsqlmap;
++
++			#ifdef PGSQLDEBUG
++				sm_syslog(LOG_INFO, CurEnv->e_id, "pgsql_ delete map connection (connection string:%s, connptr:%p, pid:%i)",
++                       pgsqlmap->connstr, pgsqlmap->conn, pgsqlmap->opener_pid);
++			#endif
++
++			if (z->p && z->n)
++			{
++				z->p->n = z->n;
++				z->n->p = z->p;
++				free(z);
++				pgsqlmap = pgsqlmap->n;
++				return 1;
++			}
++
++			else if (z->p)
++			{
++				z->p->n = NULL;
++				free(z);
++				pgsqlmap = pgsqlmap->p;
++				return 1;
++			}
++
++			else if (z->n)
++			{
++				z->n->p = NULL;
++				free(z);
++				pgsqlmap = pgsqlmap->n;
++				return 1;
++			}
++			
++			// only return 1 if no map references are left so the pgsql connection can be shut down
++			else
++			{
++				free(z);
++				pgsqlmap = NULL;
++				return 1;
++			}
++				
++		}
++
++		if (pgsqlmap->n)
++			pgsqlmap = pgsqlmap->n;
++		else
++			break;
++	} while(1);
++	
++	// no maps found
++	return 0;
++}
++#endif
++
++/*
++ * Open a PostgreSQL database connection using the connection string, the
++ * mode parameter is entirely ignored - it has no purpose in SQL.
++ *
++ * Returns TRUE if the database was opened or FALSE if it choked
++ */
++bool pgsql_map_open(MAP *map, int mode)
++{
++	char *s= NULL;
++	int n, retries;
++
++	/*
++	 * each map can have a different connection, so we can't easily share
++	 * it.  further, each connection is protected between thread instances.
++	 */
++
++	/*
++	 * this is the most likely test so it comes first.  we have a connection
++	 * to the server, if the status appears good, return.  note: the status
++	 * may be misleading, the server may have crashed underneath us or
++	 * terminated our connection for any of several reasons.  we won't know
++	 * that until we actually use it however.
++	 */
++	if (map->map_db1 && PQstatus(map->map_db1) == CONNECTION_OK)
++	{
++		// the connection is shared between all maps, we don't need to differentiate
++		#ifdef PGSQLDEBUG
++		sm_syslog(LOG_INFO, CurEnv->e_id, "Connection is good (connection string:%s, connptr:%p)",
++				map->map_keycolnm, map->map_db1);
++		#endif
++		
++		return true;
++	}
++
++	#ifdef PGSQLDEBUG
++	if (!map->map_db1 || PQstatus(map->map_db1) == CONNECTION_BAD)
++		sm_syslog(LOG_INFO, CurEnv->e_id, "Connection to SQL server not found or stale for map:%s, looking for a new one", map->map_mname);
++	#endif
++
++	retries=10;
++	while ((!map->map_db1 || PQstatus(map->map_db1) == CONNECTION_BAD) && retries-- >0)
++	{
++		/*
++		 * now either conn is still null (not yet allocated), or our connection
++		 * is bad.  synchronous connections only have _OK or _BAD.  looks like
++		 * we have to reset or make a new connection.  allocate space and try to
++		 * connect
++		 */
++		if (!map->map_db1)
++		{
++			map->map_db1 = PQconnectdb(map->map_keycolnm);
++			PQsetErrorVerbosity(map->map_db1, PQERRORS_VERBOSE);
++			//pgsql_addconn(map->map_keycolnm, map->map_db1, map->map_mname);
++			map->map_pid = getpid(); /* save PID for check on close */
++		}
++
++		else
++			PQreset(map->map_db1);
++	
++		if (!map->map_db1)
++		{
++			sm_syslog(LOG_WARNING, CurEnv->e_id, "Cannot open %s map %s using %s, attempt %i",
++					map->map_class->map_cname, map->map_mname, map->map_keycolnm, 10-retries);
++		}
++
++		if (PQstatus(map->map_db1) == CONNECTION_BAD)
++		{
++			sm_syslog(LOG_WARNING, CurEnv->e_id, "Cannot open %s map %s using %s (%s), attempt %i",
++					map->map_class->map_cname, map->map_mname, map->map_keycolnm,
++					PQerrorMessage(map->map_db1), 10-retries);
++		}
++	}
++
++	if (!map->map_db1 || PQstatus(map->map_db1) == CONNECTION_BAD)
++	{
++		syserr("451 4.3.5 Map database unreachable");
++		if (map->map_db1)
++		{
++			//psql_removeconn(conn, map->map_mname);
++			PQfinish(map->map_db1);
++			map->map_db1 = NULL;
++		}
++		
++		errno = DB_NOTFOUND;
++		SM_SET_H_ERRNO(TRY_AGAIN);
++		
++		return false;
++	}
++	
++	return true;
++}	
++
++/*
++ * Close the PostgreSQL database connection, check that the opening process
++ * is the closing process; ignore if not.
++ */
++void pgsql_map_close(MAP *map)
++{
++	int r;
++	
++	if (map->map_pid == getpid())
++	{
++		//conn = map->map_db1;
++/*
++		r = psql_removeconn(conn, map->map_mname);
++		if(r)
++		{
++*/			PQfinish(map->map_db1);
++			map->map_db1 = NULL;
++			#ifdef PGSQLDEBUG
++			sm_syslog(LOG_INFO, CurEnv->e_id, "Closed connection for map %s", map->map_mname);
++			#endif
++/*		}
++
++		#ifdef PGSQLDEBUG
++		else
++			sm_syslog(LOG_INFO, CurEnv->e_id, "No connection found for map: %s", map->map_mname);
++		#endif
++*/	}
++}
++
++/*
++** PGSQL_MAP_LOOKUP -- look up a datum in a PGSQL map
++**
++** Attempt to map an incoming key value with a PostgreSQL query.
++**
++** This performs the query specified in the Sendmail config file and
++** uses the value of the first row and column as the map data value.
++** All other rows and columns are ignored.
++*/
++char *
++pgsql_map_lookup(MAP *map, char *name, char **av, int *statp)
++{
++	int len,esc_len,ntuples,r,retries;
++	char *format,*workingbuf,*trustedbuf;
++	char sname[MAXNAME+1];
++	char resbuf[MAXNAME+1];
++	PGresult *res;
++
++	/*
++	 * Check the backend to make sure it's still valid.	If it's not, try and
++	 * reset the connection.
++	 */
++	if (!map->map_db1 || PQstatus(map->map_db1) == CONNECTION_BAD)
++	{
++		#ifdef PGSQLDEBUG
++		sm_syslog(LOG_INFO, NOQID, "Connection bad for map: %s, reconnecting to SQL server using: %s", map->map_mname, map->map_keycolnm);
++		#endif
++		if (!pgsql_map_open(map, 0))
++		{
++			#ifdef PGSQLDEBUG
++			sm_syslog(LOG_INFO, CurEnv->e_id, "dbg> aborting map lookup");
++			#endif
++			return NULL;
++		}
++	}				
++
++	bzero(sname,sizeof sname);
++	bzero(resbuf,sizeof resbuf);
++
++	/* Buffer overflow check. */
++	len = strlen(name);
++	if (len > MAXNAME)
++		len = MAXNAME;
++	bcopy(name,sname,len);
++	
++	if (!bitset(MF_NOFOLDCASE, map->map_mflags))
++	{
++		//#ifdef PGSQLDEBUG
++		//sm_syslog(LOG_INFO, CurEnv->e_id, "dbg> making querystring value lowercase");
++		//#endif
++		makelower(sname);
++	}
++
++	/* Allocate query buffer (select statement + key value) */
++	len			 = strlen(map->map_valcolnm);
++	esc_len	     = strlen(sname);
++	workingbuf	 = xalloc(esc_len*2+1+9);
++	trustedbuf   = xalloc(len+(esc_len*2)+1+9);
++	bzero(trustedbuf,len);
++
++	// escape untrusted data passed to us from network
++	PQescapeStringConn(map->map_db1, trustedbuf, sname, strlen(sname), NULL);
++	
++	// if MF_NOFOLDCASE is set, don't wrap this in lower()
++	if (!bitset(MF_NOFOLDCASE, map->map_mflags))
++		format="lower('%s')";
++	else
++		format="'%s'";
++	
++	sprintf(workingbuf, format, trustedbuf);
++	sprintf(trustedbuf, map->map_valcolnm, workingbuf);
++	free(workingbuf);
++	
++	#ifdef PGSQLDEBUG
++	sm_syslog(LOG_INFO, CurEnv->e_id, "dbg-sql> %s", trustedbuf);
++	#endif
++	
++	retries = 2;
++	while (retries--)
++	{
++		res = PQexec(map->map_db1, trustedbuf);
++		if (PQresultStatus(res) == PGRES_TUPLES_OK)
++			break;
++
++		sm_syslog(LOG_WARNING, CurEnv->e_id, "Cannot query PGSQL database (attempt:%i) \"%s\" using \"%s\" because of: %s",
++				10-retries, map->map_keycolnm, trustedbuf, PQresultErrorMessage(res));
++		PQclear(res);
++
++		// try to reset connection
++		if (!pgsql_map_open(map, 0))
++		{
++			#ifdef PGSQLDEBUG
++			sm_syslog(LOG_INFO, CurEnv->e_id, "dbg> aborting map lookup");
++			#endif
++			return NULL;
++		}
++	}
++
++	if (!map->map_db1 || PQresultStatus(res) != PGRES_TUPLES_OK)
++	{
++		syserr("451 4.3.1 Cannot query PGSQL database");
++		SM_SET_H_ERRNO(TRY_AGAIN);
++		errno = DB_NOTFOUND;
++		free(trustedbuf);
++		return NULL;
++	}
++
++	/*
++	 * See if anything came back. If no rows were returned, nothing there for
++	 * this query.
++	 */
++	ntuples = PQntuples(res);
++	#ifdef PGSQLDEBUG
++	sm_syslog(LOG_INFO, CurEnv->e_id, "dbg> finishing map lookup, ntuples:%i", ntuples);
++	#endif
++
++	if (ntuples <= 0)
++	{
++		PQclear(res);
++		return NULL;
++	}
++
++	/*
++	 * Get the result from column 0 and clear the rest of the result.
++	 * If the result data is too big, then it's truncated.
++	 */	
++	len = PQgetlength(res,0,0);
++	if (len > MAXNAME)
++		len = MAXNAME;
++	bcopy(PQgetvalue(res,0,0),resbuf,len);
++	PQclear(res);
++
++	/* Process results like the other map classes do. */
++
++	#ifdef PGSQLDEBUG
++	sm_syslog(LOG_INFO, CurEnv->e_id, "dbg> finishing map lookup, result:\"%s\"", resbuf);
++	#endif
++
++	if (bitset(MF_MATCHONLY, map->map_mflags))
++		return map_rewrite(map, name, strlen(name), NULL);
++	else
++		return map_rewrite(map, resbuf, len, av);
++}
++#endif /* PGSQLMAP */
+ /*
+ **  PH map
+ */
