@@ -1,15 +1,16 @@
---- sendmail-8.13.3/sendmail/collect.c~	2004-12-01 00:29:15.000000000 +0100
-+++ sendmail-8.13.3/sendmail/collect.c	2005-03-08 09:43:40.848804648 +0100
+diff -urNp -x '*.orig' sendmail-8.16.1.org/sendmail/collect.c sendmail-8.16.1/sendmail/collect.c
+--- sendmail-8.16.1.org/sendmail/collect.c	2020-05-19 21:54:33.000000000 +0200
++++ sendmail-8.16.1/sendmail/collect.c	2021-10-03 22:30:58.038924399 +0200
 @@ -15,6 +15,8 @@
  
- SM_RCSID("@(#)$Id$")
+ #include <sm/sendmail.h>
  
 +#define MAXHDRZ 512
 +
  static void	eatfrom __P((char *volatile, ENVELOPE *));
  static void	collect_doheader __P((ENVELOPE *));
  static SM_FILE_T *collect_dfopen __P((ENVELOPE *));
-@@ -283,6 +285,7 @@
+@@ -283,6 +285,7 @@ collect(fp, smtpmode, hdrp, e, rsetsize)
  	register ENVELOPE *e;
  	bool rsetsize;
  {
@@ -17,7 +18,7 @@
  	register SM_FILE_T *df;
  	bool ignrdot;
  	int dbto;
-@@ -613,6 +616,16 @@
+@@ -612,6 +615,16 @@ nextstate:
  				mstate = MS_BODY;
  				goto nextstate;
  			}

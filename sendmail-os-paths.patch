@@ -1,8 +1,9 @@
---- sendmail-8.12.0/devtools/OS/Linux.orig	Mon Sep 24 09:48:15 2001
-+++ sendmail-8.12.0/devtools/OS/Linux	Mon Sep 24 09:56:53 2001
-@@ -1,9 +1,10 @@
- #	$Id$
+diff -urNp -x '*.orig' sendmail-8.16.1.org/devtools/OS/Linux sendmail-8.16.1/devtools/OS/Linux
+--- sendmail-8.16.1.org/devtools/OS/Linux	2020-05-19 21:54:32.000000000 +0200
++++ sendmail-8.16.1/devtools/OS/Linux	2021-10-03 22:30:57.502258314 +0200
+@@ -6,9 +6,10 @@ dnl	Place personal settings in devtools/
  define(`confDEPEND_TYPE', `CC-M')
+ define(`confCCOPTS_SO', `-fPIC')
  define(`confSM_OS_HEADER', `sm_os_linux')
 -define(`confMANROOT', `/usr/man/man')
 +define(`confMANROOT', `/usr/share/man/man')

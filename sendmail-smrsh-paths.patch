@@ -1,6 +1,7 @@
---- ./smrsh/README.org	Tue Sep 30 09:59:46 2003
-+++ ./smrsh/README	Tue Sep 30 10:04:24 2003
-@@ -6,7 +6,7 @@
+diff -urNp -x '*.orig' sendmail-8.16.1.org/smrsh/README sendmail-8.16.1/smrsh/README
+--- sendmail-8.16.1.org/smrsh/README	2020-05-19 21:54:33.000000000 +0200
++++ sendmail-8.16.1/smrsh/README	2021-10-03 22:30:57.155592021 +0200
+@@ -6,7 +6,7 @@ Software Engineering Institute, Carnegie
  intended as a supplement to the CERT advisory CA-93:16.sendmail.vulnerability,
  and to the software, smrsh.c, written by Eric Allman.
  
@@ -9,7 +10,7 @@
  
  The smrsh(8) program is intended as a replacement for /bin/sh in the
  program mailer definition of sendmail(8).  This README file describes
-@@ -47,24 +47,24 @@
+@@ -47,24 +47,24 @@ With gcc, the GNU C compiler, use the -s
  The following C defines can be set defined to change the search path and
  the bin directory used by smrsh.
  
@@ -40,7 +41,7 @@
  
  
  
-@@ -79,14 +79,14 @@
+@@ -79,14 +79,14 @@ to run.  This list of allowable commands
  
  See the man page for aliases(5) if you are unfamiliar with the format of
  these specifications. Additionally, you should include in the list,
@@ -57,7 +58,7 @@
  it with the programs that your site feels are allowable for sendmail
  to execute.   This directory is explicitly specified in the source
  code for smrsh, so changing this directory must be accompanied with
-@@ -95,22 +95,22 @@
+@@ -95,22 +95,22 @@ a change in smrsh.c.
  
  You will have to be root to make these modifications.
  
@@ -86,7 +87,7 @@
  sendmail to use the restricted shell.  Save the current sendmail.cf
  file prior to modifying it, as a prudent precaution.
  
-@@ -125,7 +125,7 @@
+@@ -125,7 +125,7 @@ help to locate it.
  
  In order to configure sendmail to use smrsh, you must modify the Mprog
  definition in the sendmail.cf file, by replacing the /bin/sh specification
@@ -95,7 +96,7 @@
  
  As an example:
  
-@@ -133,14 +133,14 @@
+@@ -133,14 +133,14 @@ In most Sun Microsystems' sendmail.cf fi
  Mprog,	P=/bin/sh,   F=lsDFMeuP,  S=10, R=20, A=sh -c $u
  
  which should be changed to:
@@ -112,7 +113,7 @@
  
  
  After modifying the Mprog definition in the sendmail.cf file, if a frozen
-@@ -151,7 +151,7 @@
+@@ -151,7 +151,7 @@ or /etc/mail directories.  The specific
  a search of the strings(1) output of the sendmail binary.
  
  In order to create a new frozen configuration, if it is required:
@@ -121,9 +122,10 @@
  
  Now re-start the sendmail process.  An example of how to do this on
  a typical system follows:
---- ./smrsh/smrsh.8.org	Tue Sep 30 10:04:39 2003
-+++ ./smrsh/smrsh.8	Tue Sep 30 10:12:49 2003
-@@ -39,7 +39,7 @@
+diff -urNp -x '*.orig' sendmail-8.16.1.org/smrsh/smrsh.8 sendmail-8.16.1/smrsh/smrsh.8
+--- sendmail-8.16.1.org/smrsh/smrsh.8	2020-05-19 21:54:33.000000000 +0200
++++ sendmail-8.16.1/smrsh/smrsh.8	2021-10-03 22:30:57.155592021 +0200
+@@ -39,7 +39,7 @@ Briefly,
  .I smrsh
  limits programs to be in a single directory,
  by default
@@ -132,7 +134,7 @@
  allowing the system administrator to choose the set of acceptable commands,
  and to the shell builtin commands ``exec'', ``exit'', and ``echo''.
  It also rejects any commands with the characters
-@@ -50,16 +50,16 @@
+@@ -50,16 +50,16 @@ It allows ``||'' and ``&&'' to enable co
  ``"|exec /usr/local/bin/filter || exit 75"''
  .PP
  Initial pathnames on programs are stripped,
@@ -152,7 +154,7 @@
  For example, a reasonable additions is
  .IR vacation (1),
  and the like.
-@@ -68,10 +68,10 @@
+@@ -68,10 +68,10 @@ never include any shell or shell-like pr
  (such as
  .IR perl (1))
  in the
@@ -165,7 +167,7 @@
  it simply disallows execution of arbitrary programs.
  Also, including mail filtering programs such as
  .IR procmail (1)
-@@ -79,15 +79,7 @@
+@@ -79,16 +79,8 @@ is a very bad idea.
  .IR procmail (1)
  allows users to run arbitrary programs in their
  .IR procmailrc (5).
@@ -182,9 +184,11 @@
 +/etc/smrsh \- directory for restricted programs
  .PP
  /var/adm/sm.bin \- directory for restricted programs on HP UX and Solaris
---- sendmail-8.16.1/smrsh/smrsh.c.orig	2020-08-28 23:00:20.515734197 +0200
-+++ sendmail-8.16.1/smrsh/smrsh.c	2020-08-29 09:13:31.036422852 +0200
-@@ -77,7 +77,7 @@
+ .PP
+diff -urNp -x '*.orig' sendmail-8.16.1.org/smrsh/smrsh.c sendmail-8.16.1/smrsh/smrsh.c
+--- sendmail-8.16.1.org/smrsh/smrsh.c	2020-05-19 21:54:33.000000000 +0200
++++ sendmail-8.16.1/smrsh/smrsh.c	2021-10-03 22:30:57.155592021 +0200
+@@ -77,7 +77,7 @@ SM_IDSTR(id, "@(#)$Id: smrsh.c,v 8.66 20
  # ifdef SMRSH_CMDDIR
  #  define CMDDIR	SMRSH_CMDDIR
  # else
@@ -193,7 +197,7 @@
  # endif
  #endif /* ! CMDDIR */
  
-@@ -89,7 +89,7 @@
+@@ -89,7 +89,7 @@ SM_IDSTR(id, "@(#)$Id: smrsh.c,v 8.66 20
  # ifdef SMRSH_PATH
  #  define PATH		SMRSH_PATH
  # else

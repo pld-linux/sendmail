@@ -21,12 +21,12 @@ Summary(ru.UTF-8):	Почтовый транспортный агент sendmail
 Summary(tr.UTF-8):	Elektronik posta hizmetleri sunucusu
 Summary(uk.UTF-8):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.16.1
+Version:	8.17.1
 Release:	1
 License:	BSD
 Group:		Networking/Daemons/SMTP
 Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	055f1d76c8027993a01ab6425aea4ae7
+# Source0-md5:	cd3c3f7b2db60c362f07eecbebd99bf4
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
@@ -55,7 +55,7 @@ Patch7:		%{name}-cyrus.patch
 Patch8:		bluelabs-smpgsql-8.14.3.patch
 URL:		http://www.sendmail.org/
 BuildRequires:	cyrus-sasl-devel >= 2.1.21
-BuildRequires:	db-devel >= 4.2
+BuildRequires:	db-devel >= 5.0
 BuildRequires:	libnsl-devel
 # man or man-db
 BuildRequires:	man-db
@@ -212,6 +212,7 @@ echo "APPENDDEF(\`confENVDEF', \`-DSTARTTLS')" >> config.m4
 echo "APPENDDEF(\`confENVDEF', \`-D_FFR_TLS_1')" >> config.m4
 echo "APPENDDEF(\`confLIBS', \`-lssl -lcrypto')" >> config.m4
 %endif
+echo "APPENDDEF(\`confENVDEF', \`-DHASFLOCK')" >> config.m4
 
 %ifarch sparc
 %define		Build		sparc32 sh Build
