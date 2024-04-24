@@ -21,12 +21,12 @@ Summary(ru.UTF-8):	Почтовый транспортный агент sendmail
 Summary(tr.UTF-8):	Elektronik posta hizmetleri sunucusu
 Summary(uk.UTF-8):	Поштовий транспортний агент sendmail
 Name:		sendmail
-Version:	8.17.1
+Version:	8.18.1
 Release:	1
 License:	BSD
 Group:		Networking/Daemons/SMTP
-Source0:	ftp://ftp.sendmail.org/pub/sendmail/%{name}.%{version}.tar.gz
-# Source0-md5:	cd3c3f7b2db60c362f07eecbebd99bf4
+Source0:	https://ftp.sendmail.org/%{name}.%{version}.tar.gz
+# Source0-md5:	b6b332295b5779036d4c9246f96f673c
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.aliases
@@ -53,7 +53,7 @@ Patch7:		%{name}-cyrus.patch
 # https://blue-labs.org/software/sm-pgsql/sendmail.php
 # https://blue-labs.org/software/sm-pgsql/bluelabs-smpgsql-8.14.3.patch.bz2
 Patch8:		bluelabs-smpgsql-8.14.3.patch
-URL:		http://www.sendmail.org/
+URL:		https://www.sendmail.org/
 BuildRequires:	cyrus-sasl-devel >= 2.1.21
 BuildRequires:	db-devel >= 5.0
 BuildRequires:	libnsl-devel

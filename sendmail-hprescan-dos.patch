@@ -30,7 +30,7 @@ diff -urNp -x '*.orig' sendmail-8.16.1.org/sendmail/collect.c sendmail-8.16.1/se
 +                                CurHostName ? CurHostName : "<local machine>");
 +                                errno = 0;
 +                                usrerr("451 Stop this. You are lame.");
-+                                goto readerr;
++                                goto readdone;
 +                        }
  
  			/* check for possible continuation line */
