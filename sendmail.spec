@@ -84,8 +84,8 @@ Requires:	procmail
 Provides:	group(smmsp)
 Provides:	smtpdaemon
 Provides:	user(smmsp)
-Obsoletes:	sendmail-cf
-Obsoletes:	sendmail-doc
+Obsoletes:	sendmail-cf < 8.11.2-2
+Obsoletes:	sendmail-doc < 8.11.2-2
 Obsoletes:	smtpdaemon
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -166,7 +166,7 @@ Summary:	Header files and static libmilter library
 Summary(pl.UTF-8):	Pliki nagłówkowe i statyczna biblioteka libmilter
 Group:		Development/Libraries
 Provides:	sendmail-devel
-Obsoletes:	sendmail-devel
+Obsoletes:	sendmail-devel < 8.13.8-5
 
 %description -n libmilter-devel
 Header files and static libmilter library.
